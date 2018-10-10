@@ -1,3 +1,40 @@
 <resources>
+    <!-- UI-->
     <string name="app_name">SimpleBili</string>
+    <string name="backslash">/</string>
+    <string name="danmaku_hint">来发弹幕吧</string>
+    <string name="video_list">选集</string>
+    <string name="speed">播放速度</string>
+    <string name="speed_0_5">0.5</string>
+    <string name="speed_0_75">0.75</string>
+    <string name="speed_1">1</string>
+    <string name="speed_1_25">1.25</string>
+    <string name="speed_1_5">1.5</string>
+    <string name="speed_2">2</string>
+    <string name="play_size">画面尺寸</string>
+    <string name="play_size_default">默认</string>
+    <string name="play_size_fullscreen">全屏</string>
+    <string name="play_size_16_9">16:9</string>
+    <string name="play_size_4_3">4:3</string>
+    <string name="play_way">播放方式</string>
+    <string name="play_way_auto">自动连播</string>
+    <string name="play_way_list_recycle">列表循环</string>
+    <string name="play_way_item_recycle">单集循环</string>
+    <string name="play_way_pause">播完暂停</string>
+    <string name="open_file">打开文件</string>
+    <!-- 说明-->
+    <string name="play_desc">播放或暂停按钮</string>
+    <string name="fullscreen_desc">全屏</string>
+    <string name="lock_desc">锁定屏幕或解锁</string>
+    <string name="cover_desc">封面</string>
+    <string name="volume_desc">音量</string>
+    <string name="bright_desc">亮度</string>
+    <string name="danmaku_status_desc">打开或关闭弹幕</string>
+    <string name="back_desc">返回</string>
+    <string name="coin_desc">投币</string>
+    <string name="share_desc">分享</string>
+    <string name="more_desc">更多</string>
+    <!-- 提示或日志-->
+    <string name="uri_null_tip">Uri为空</string>
+    <string name="choose__tip">选择文件</string>
 </resources>
