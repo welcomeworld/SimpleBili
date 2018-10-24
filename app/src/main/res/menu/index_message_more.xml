@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/index_menu_more"
+        android:icon="@mipmap/ic_add"
+        app:showAsAction="always"
+        android:title="@string/contacts">
+        <menu>
+            <item
+                android:title="@string/create_my_group"
+                android:id="@+id/index_menu_more_create_group"
+                android:icon="@mipmap/ic_create_group"/>
+            <item
+                android:title="@string/join_group_guide"
+                android:id="@+id/index_menu_more_join_helper"
+                android:icon="@mipmap/ic_strategy"/>
+            <item
+                android:title="@string/stop_my_group"
+                android:id="@+id/index_menu_more_stop_group"
+                android:icon="@mipmap/ic_stop_group"/>
+            <item
+                android:title="@string/letter_saver"
+                android:id="@+id/index_menu_more_letter_saver"
+                android:icon="@mipmap/ic_private_letter"/>
+            <item
+                android:title="@string/message_setting"
+                android:id="@+id/index_menu_more_setting"
+                android:icon="@mipmap/ic_im_setting"/>
+        </menu>
+    </item>
+</menu>

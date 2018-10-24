@@ -6,9 +6,16 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:background">@color/transparent</item>
     </style>
     <style name="rightPopupWindowTheme">
         <item name="android:windowEnterAnimation">@anim/slide_in</item>
         <item name="android:windowExitAnimation">@anim/slide_out</item>
+    </style>
+    <style name="base_toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+    </style>
+    <style name="base_popup_theme" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:itemBackground">@drawable/selector_white2gray</item>
+        <item name="overlapAnchor">false</item>
     </style>
 </resources>
