@@ -31,18 +31,17 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-public class IndexDefaultSpecialColumnFragment extends Fragment {
+public class IndexDefaultStarFragment extends Fragment {
 
-    @BindView(R.id.index_default_specialcolumn_recyclerView)
+    @BindView(R.id.index_default_star_recyclerView)
     RecyclerView recyclerView;
-    @BindView(R.id.index_default_specialcolumn_swipeRefresh)
+    @BindView(R.id.index_default_star_swipeRefresh)
     SwiperefreshContainer swipeRefreshLayout;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // TODO: 10/22/2018
-        View view=inflater.inflate(R.layout.fragment_index_default_specialcolumn,container,false);
+        View view=inflater.inflate(R.layout.fragment_index_default_star,container,false);
         ButterKnife.bind(this,view);
         GridLayoutManager gridLayoutManager=new GridLayoutManager(recyclerView.getContext(),2, LinearLayoutManager.VERTICAL,false);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
@@ -94,5 +93,4 @@ public class IndexDefaultSpecialColumnFragment extends Fragment {
         });
         return view;
     }
-
 }

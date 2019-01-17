@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +18,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.welcomeworld.simplebili.R;
+import com.github.welcomeworld.simplebili.adapter.IndexCategoryRecyclerViewAdapter;
+import com.github.welcomeworld.simplebili.adapter.IndexDefaultRecyclerViewAdapter;
+import com.github.welcomeworld.simplebili.adapter.IndexPagerAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +33,8 @@ public class CategoryFragment extends Fragment {
     TextView titleView;
     DrawerLayout drawerLayout;
     Activity activity;
+    @BindView(R.id.index_category_detail)
+    RecyclerView recyclerView;
 
     @Override
     public void onAttach(Context context) {
@@ -51,6 +58,8 @@ public class CategoryFragment extends Fragment {
         toolbar.inflateMenu(R.menu.index_downlaod);
         toolbar.inflateMenu(R.menu.index_search);
         titleView.setText(R.string.category);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(new IndexCategoryRecyclerViewAdapter());
         return view;
     }
 

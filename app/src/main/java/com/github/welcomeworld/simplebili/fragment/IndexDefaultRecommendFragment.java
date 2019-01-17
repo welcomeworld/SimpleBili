@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.github.welcomeworld.simplebili.R;
 import com.github.welcomeworld.simplebili.adapter.IndexDefaultRecyclerViewAdapter;
 import com.github.welcomeworld.simplebili.common.IndexGridItemDecoration;
+import com.github.welcomeworld.simplebili.widget.SwiperefreshContainer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +36,7 @@ public class IndexDefaultRecommendFragment extends Fragment {
     @BindView(R.id.index_default_recommend_recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.index_default_recommend_swipeRefresh)
-    SwipeRefreshLayout swipeRefreshLayout;
+    SwiperefreshContainer swipeRefreshLayout;
 
     @Nullable
     @Override
@@ -89,6 +90,13 @@ public class IndexDefaultRecommendFragment extends Fragment {
                         Toast.makeText(getContext(),"更新了数据",Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+        });
+        swipeRefreshLayout.setOnLoadListener(new SwiperefreshContainer.OnLoadListener() {
+            @Override
+            public void onLoad() {
+                Toast.makeText(getContext(),"加载数据",Toast.LENGTH_SHORT).show();
+                swipeRefreshLayout.setLoading(false);
             }
         });
         return view;

@@ -38,6 +38,7 @@ public class NavigationViewUtils {
     }
 
     public static void addFooterView(NavigationView navigationView, int res){
+        navigationView.getMenu();
         Context mContext=navigationView.getContext();
         View view= LayoutInflater.from(mContext).inflate(res,navigationView,false);
         int screenHeight=mContext.getResources().getDisplayMetrics().heightPixels;

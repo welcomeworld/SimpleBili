@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.github.welcomeworld.simplebili.fragment.IndexDefaultFilmFragment;
-import com.github.welcomeworld.simplebili.fragment.IndexDefaultFollowFragment;
+import com.github.welcomeworld.simplebili.fragment.IndexDefaultStarFragment;
 import com.github.welcomeworld.simplebili.fragment.IndexDefaultLiveFragment;
 import com.github.welcomeworld.simplebili.fragment.IndexDefaultRecommendFragment;
 import com.github.welcomeworld.simplebili.fragment.IndexDefaultSpecialColumnFragment;
@@ -26,7 +26,7 @@ public class IndexDefaultPagerAdapter extends FragmentPagerAdapter {
                 fragment=new IndexDefaultRecommendFragment();
                 break;
             case 2:
-                fragment=new IndexDefaultFollowFragment();
+                fragment=new IndexDefaultStarFragment();
                 break;
             case 3:
                 fragment=new IndexDefaultFilmFragment();

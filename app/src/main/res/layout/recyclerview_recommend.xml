@@ -4,7 +4,6 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:foreground="?android:selectableItemBackground"
         app:cardCornerRadius="4dp"
         app:cardElevation="2dp">
         <RelativeLayout
@@ -22,33 +21,33 @@
                 android:layout_alignBottom="@id/card_video_cover"
                 android:layout_marginStart="4dp">
                 <ImageView
-                    android:id="@+id/card_video_play_num"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
+                    android:layout_marginEnd="4dp"
                     android:tint="@color/white"
                     android:src="@mipmap/ic_video_play_num"/>
                 <TextView
+                    android:id="@+id/card_video_play_num"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="4dp"
                     android:textColor="@color/white"
                     android:textSize="10sp"
-                    android:gravity="top"
+                    android:gravity="center_vertical"
                     android:text="186.2万"/>
                 <ImageView
-                    android:id="@+id/card_video_danmaku_num"
                     android:layout_width="16dp"
                     android:layout_height="16dp"
                     android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
                     android:tint="@color/white"
                     android:src="@mipmap/ic_video_danmaku_num"/>
                 <TextView
+                    android:id="@+id/card_video_danmaku_num"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="4dp"
                     android:textColor="@color/white"
                     android:textSize="10sp"
-                    android:gravity="top"
+                    android:gravity="center_vertical"
                     android:text="4735"/>
                 <TextView
                     android:layout_width="0dp"
@@ -57,7 +56,6 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:textColor="@color/white"
                     android:textSize="10sp"
@@ -71,7 +69,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginEnd="12dp"
-                android:lines="2"
+                android:maxLines="2"
                 android:layout_below="@id/card_video_cover"
                 android:ellipsize="end"
                 android:textSize="14sp"

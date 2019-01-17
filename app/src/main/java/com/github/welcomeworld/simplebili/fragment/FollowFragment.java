@@ -10,10 +10,11 @@ import android.view.ViewGroup;
 
 import com.github.welcomeworld.simplebili.R;
 
-public class IndexDefaultFollowFragment extends Fragment {
+public class FollowFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_index_default_follow,container,false);
+        // TODO: 10/15/2018
+        return inflater.inflate(R.layout.fragment_follow,container,false);
     }
 }
