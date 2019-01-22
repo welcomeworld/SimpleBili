@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.welcomeworld.simplebili.R;
+import com.github.welcomeworld.simplebili.bean.IndexRecommendDataBean;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public class IndexDefaultRecyclerViewAdapter extends RecyclerView.Adapter<IndexD
 
     @Override
     public void onBindViewHolder(@NonNull MyInnerViewHolder holder, int position) {
-        //holder.titleView.setText(data.get(position));
+        //holder.titleView.setText(data.get(position).getTitle()+"");
     }
 
     @Override
@@ -41,8 +42,9 @@ public class IndexDefaultRecyclerViewAdapter extends RecyclerView.Adapter<IndexD
     }
 
     class MyInnerViewHolder extends RecyclerView.ViewHolder{
-        @BindView(R.id.card_video_label)
+        @BindView(R.id.card_video_title)
         TextView titleView;
+
         public MyInnerViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);

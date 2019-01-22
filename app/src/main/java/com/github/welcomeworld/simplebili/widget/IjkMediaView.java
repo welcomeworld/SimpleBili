@@ -339,8 +339,13 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
     }
 
     public void setVideoPath(Uri uri){
+        paths=new ArrayList<>();
+        titles=new ArrayList<>();
         if(uri.getScheme().equalsIgnoreCase("http")||uri.getScheme().equalsIgnoreCase("https")){
             Log.e(TAG,""+uri.getScheme());
+            paths.add(uri.toString());
+            titles.add("http");
+            setVideoPaths(paths,titles,0);
             return;
         }
         String path= FileUtils.getPath(mContext,uri);
@@ -350,8 +355,6 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
         }else{
             return;
         }
-        paths=new ArrayList<>();
-        titles=new ArrayList<>();
         if(pathDir.listFiles()==null||pathDir.listFiles().length<1){
             paths.add(path);
             titles.add(path);

@@ -40,8 +40,17 @@
         </activity>
         <activity android:name=".LoginActivity" />
         <activity android:name=".BrowserActivity" />
-        <activity android:name=".SettingsActivity"></activity>
-        <activity android:name=".ThemeActivity"></activity>
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".ThemeActivity" />
+        <activity android:name=".VideoDetailActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="video"
+                    android:scheme="bilibili" />
+            </intent-filter>
+        </activity>
     </application>
-
 </manifest>
