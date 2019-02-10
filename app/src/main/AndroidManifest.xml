@@ -44,6 +44,18 @@
         <activity android:name=".ThemeActivity" />
         <activity android:name=".VideoDetailActivity">
             <intent-filter>
+                <action android:name="com.github.welcomeworld.simplebili.action.VIDEODETAIL"/>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data
+                    android:host="video"
+                    android:scheme="bilibili" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".LivePlayActivity">
+            <intent-filter>
+                <action android:name="com.github.welcomeworld.simplebili.action.LIVEPLAY"/>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE"/>

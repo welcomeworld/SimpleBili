@@ -60,7 +60,7 @@ public class IndexRecommendRecyclerViewAdapter extends RecyclerView.Adapter<Inde
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent playIntent=new Intent();
+                Intent playIntent=new Intent("com.github.welcomeworld.simplebili.action.VIDEODETAIL");
                 playIntent.setData(Uri.parse(currentData.getUri()));
                 context.startActivity(playIntent);
             }

@@ -5,10 +5,16 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import com.github.welcomeworld.simplebili.utils.FileUtils;
 import com.github.welcomeworld.simplebili.widget.IjkMediaView;
+
+import java.io.File;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +38,31 @@ public class PlayActivity extends Activity {
         }
         Uri uri=getIntent().getData();
         if(uri!=null) {
-            ijkMediaView.setVideoPath(uri);
+            ArrayList<String> paths=new ArrayList<>();
+            ArrayList<String> titles=new ArrayList<>();
+            String path= FileUtils.getPath(this,uri);
+            File pathDir;
+            if(path!=null&&path.lastIndexOf('/')>0){
+                pathDir=new File(path.substring(0,path.lastIndexOf('/')));
+            }else{
+                return;
+            }
+            if(pathDir.listFiles()==null||pathDir.listFiles().length<1){
+                paths.add(path);
+                titles.add(path);
+                ijkMediaView.setVideoPaths(paths,titles,0);
+                ijkMediaView.changeToLandscape();
+                return;
+            }
+            for(File child:pathDir.listFiles()){
+                if(!child.isDirectory()){
+                    if(child.getName().endsWith("mp4")){
+                        paths.add(child.getAbsolutePath());
+                        titles.add(child.getAbsolutePath().substring(child.getAbsolutePath().lastIndexOf('/')+1,child.getAbsolutePath().length()));
+                    }
+                }
+            }
+            ijkMediaView.setVideoPaths(paths,titles,paths.indexOf(path));
             ijkMediaView.changeToLandscape();
         }else{
             Toast.makeText(this,R.string.uri_null_tip,Toast.LENGTH_SHORT).show();

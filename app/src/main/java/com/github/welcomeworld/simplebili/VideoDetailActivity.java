@@ -1,13 +1,160 @@
 package com.github.welcomeworld.simplebili;
 
+import android.content.res.Configuration;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.Toast;
+
+import com.github.welcomeworld.simplebili.bean.VideoDetailPageBean;
+import com.github.welcomeworld.simplebili.bean.VideoUrlBean;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicHeaderInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicParameterInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.FixedHeaderInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.FixedParameterInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.SortAndSignInterceptor;
+import com.github.welcomeworld.simplebili.net.retrofit.BaseUrl;
+import com.github.welcomeworld.simplebili.net.retrofit.IndexNetAPI;
+import com.github.welcomeworld.simplebili.net.retrofit.VideoDetailNetAPI;
+import com.github.welcomeworld.simplebili.widget.IjkMediaView;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
 public class VideoDetailActivity extends AppCompatActivity {
 
+    @BindView(R.id.ijkVideoView)
+    IjkMediaView ijkMediaView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_video_detail);
+        ButterKnife.bind(this);
+        try {
+            IjkMediaPlayer.loadLibrariesOnce(null);
+            IjkMediaPlayer.native_profileBegin("libijkplayer.so");
+        } catch (Exception e) {
+            this.finish();
+        }
+        Uri uri=getIntent().getData();
+        if(uri!=null) {
+            Map<String,String> parameters=new HashMap<>();
+            parameters.put("ad_extra","6BCCA2213B3B094292DFF9454EB02128A5CD624F226D40F0B86CA8263CE1D50C927F2F8DF2FD134C361A06FAA537402E66E53155D1C1F218BE42D2AFE4A6A701C496E5196401D81A1E390498A1CA24C20C25C97600C552962682D90C9D9DF8B9EDAD866490BE972EA37F92AA7A1040F2BEA5122D039B942437307F298336AAF27EFB5AF87961F6F852401DD8BBD0BFB92309D3B60C12E307ECD02D9BCBB19725E2964F77CDE07BFAC45A34884CE0167EEDBB0EBC8926A3CC9CB9B27536BF9C0DF87AB6DABAE86D1E6D4E714BC140A1D500E27446265DC85C226B381E10AF2299D961E06FA60A84EE34DFCB65E1253339112FD0D5ECE9C9C58C084D028DD7E26A70DC806C36C46E9D5C08169A2571B8BAC2BC0AE91AE8D36F3CBDCD2768950CD1CE9C3A3F53B5FE145A20B020435E79CA");
+            parameters.put("aid",uri.getPath().substring(1));
+            parameters.put("autoplay","0");
+            parameters.put("fnval","16");
+            parameters.put("fnver","0");
+            parameters.put("from","7");
+            parameters.put("force_host","0");
+            parameters.put("plat","0");
+            parameters.put("trackid","all_16.shylf-ai-recsys-120.1548139653021.82");
+            parameters.put("ts",""+System.currentTimeMillis());
+            parameters.put("qn","32");
+            OkHttpClient.Builder okHttpClientBuilder=new OkHttpClient.Builder()
+                    .addInterceptor(new FixedHeaderInterceptor())
+                    .addInterceptor(new DynamicHeaderInterceptor(null))
+                    .addInterceptor(new FixedParameterInterceptor())
+                    .addInterceptor(new DynamicParameterInterceptor(parameters))
+                    .addInterceptor(new SortAndSignInterceptor())
+                    .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+            Retrofit retrofit=new Retrofit.Builder()
+                    .baseUrl(BaseUrl.APPURL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .client(okHttpClientBuilder.build())
+                    .build();
+            VideoDetailNetAPI videoDetailNetAPI=retrofit.create(VideoDetailNetAPI.class);
+            videoDetailNetAPI.getVideoDetailPageInfo().enqueue(new Callback<VideoDetailPageBean>() {
+                @Override
+                public void onResponse(Call<VideoDetailPageBean> call, Response<VideoDetailPageBean> response) {
+                    String title=response.body().getData().getTitle();
+                    Map<String,String> parameters=new HashMap<>();
+                    parameters.put("device","android");
+                    parameters.put("aid",uri.getPath().substring(1));
+                    parameters.put("expire","0");
+                    parameters.put("fnval","16");
+                    parameters.put("fnver","0");
+                    parameters.put("otype","json");
+                    parameters.put("force_host","0");
+                    parameters.put("cid",response.body().getData().getCid()+"");
+                    parameters.put("npcybs","0");
+                    parameters.put("ts",""+System.currentTimeMillis());
+                    parameters.put("qn","32");
+                    OkHttpClient.Builder okHttpClientBuilder=new OkHttpClient.Builder()
+                            .addInterceptor(new FixedHeaderInterceptor())
+                            .addInterceptor(new DynamicHeaderInterceptor(null))
+                            .addInterceptor(new FixedParameterInterceptor())
+                            .addInterceptor(new DynamicParameterInterceptor(parameters))
+                            .addInterceptor(new SortAndSignInterceptor())
+                            .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+                    Retrofit retrofit=new Retrofit.Builder()
+                            .baseUrl(BaseUrl.APPURL)
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .client(okHttpClientBuilder.build())
+                            .build();
+                    VideoDetailNetAPI videoDetailNetAPI=retrofit.create(VideoDetailNetAPI.class);
+                    videoDetailNetAPI.getVideoUrl().enqueue(new Callback<VideoUrlBean>() {
+                        @Override
+                        public void onResponse(Call<VideoUrlBean> call, Response<VideoUrlBean> response) {
+                            String urlString=response.body().getData().getDash().getVideo().get(0).getBase_url();
+                            Uri url=Uri.parse(urlString);
+                            ijkMediaView.setVideoPath(response.body().getData().getDash().getVideo().get(0).getBase_url(),title);
+                            Toast.makeText(getApplicationContext(),response.body().getData().getDash().getVideo().get(0).getBase_url()+"",Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(Call<VideoUrlBean> call, Throwable t) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call<VideoDetailPageBean> call, Throwable t) {
+
+                }
+            });
+        }else{
+            Toast.makeText(this,R.string.uri_null_tip,Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        IjkMediaPlayer.native_profileEnd();
     }
 }

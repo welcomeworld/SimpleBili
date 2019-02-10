@@ -15,7 +15,7 @@ public class FixedParameterInterceptor implements Interceptor{
         urlBuilder.addQueryParameter("build","591204");
         urlBuilder.addQueryParameter("mobi_app","android_b");
         urlBuilder.addQueryParameter("platform","android");
-        urlBuilder.addQueryParameter("appkey","07da50c9a0bf829f");
+        urlBuilder.addQueryParameter("appkey","1d8b6e7d45233436");
         return chain.proceed(request.newBuilder().url(urlBuilder.build()).build());
     }
 }

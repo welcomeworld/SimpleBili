@@ -43,6 +43,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -338,38 +339,12 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
         wayList.setOnCheckedChangeListener(this);
     }
 
-    public void setVideoPath(Uri uri){
-        paths=new ArrayList<>();
-        titles=new ArrayList<>();
-        if(uri.getScheme().equalsIgnoreCase("http")||uri.getScheme().equalsIgnoreCase("https")){
-            Log.e(TAG,""+uri.getScheme());
-            paths.add(uri.toString());
-            titles.add("http");
-            setVideoPaths(paths,titles,0);
-            return;
-        }
-        String path= FileUtils.getPath(mContext,uri);
-        File pathDir;
-        if(path!=null&&path.lastIndexOf('/')>0){
-            pathDir=new File(path.substring(0,path.lastIndexOf('/')));
-        }else{
-            return;
-        }
-        if(pathDir.listFiles()==null||pathDir.listFiles().length<1){
-            paths.add(path);
-            titles.add(path);
-            setVideoPaths(paths,titles,0);
-            return;
-        }
-        for(File child:pathDir.listFiles()){
-            if(!child.isDirectory()){
-                if(child.getName().endsWith("mp4")){
-                    paths.add(child.getAbsolutePath());
-                    titles.add(child.getAbsolutePath().substring(child.getAbsolutePath().lastIndexOf('/')+1,child.getAbsolutePath().length()));
-                }
-            }
-        }
-        setVideoPaths(paths,titles,paths.indexOf(path));
+    public void setVideoPath(String path,String title){
+        ArrayList<String> paths=new ArrayList<>();
+        ArrayList<String> titles=new ArrayList<>();
+        paths.add(path);
+        titles.add(title);
+        setVideoPaths(paths,titles,0);
     }
 
     public void setVideoPaths(ArrayList<String>paths,ArrayList<String> titles,int currentIndex) {
@@ -532,11 +507,15 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
                     }
                     IjkMediaPlayer ijkMediaPlayer = new IjkMediaPlayer();
                     IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
-                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
+                    //ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"max-buffer-size",500*1024);
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 100);
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"enable-accurate-seek",1);
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"reconnect",1);
+                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"safe",0);
+         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "protocol_whitelist", "rtmp,concat,ffconcat,file,subfile,http,https,tls,rtp,tcp,udp,crypto");
+                    //ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"http_proxy","192.168.0.107");
+                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", "Bilibili Freedoooooom/MarkII");
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"framedrop",5);
                     mMediaPlayer = ijkMediaPlayer;
                     if(listener==null){
