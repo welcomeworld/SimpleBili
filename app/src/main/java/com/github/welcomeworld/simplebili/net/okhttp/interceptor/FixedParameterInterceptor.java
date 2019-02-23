@@ -12,10 +12,11 @@ public class FixedParameterInterceptor implements Interceptor{
     public Response intercept(Chain chain) throws IOException {
         Request request=chain.request();
         HttpUrl.Builder urlBuilder=request.url().newBuilder();
-        urlBuilder.addQueryParameter("build","591204");
+        urlBuilder.addQueryParameter("build","5360000");
         urlBuilder.addQueryParameter("mobi_app","android_b");
         urlBuilder.addQueryParameter("platform","android");
         urlBuilder.addQueryParameter("appkey","1d8b6e7d45233436");
+        urlBuilder.addQueryParameter("device","android");
         return chain.proceed(request.newBuilder().url(urlBuilder.build()).build());
     }
 }

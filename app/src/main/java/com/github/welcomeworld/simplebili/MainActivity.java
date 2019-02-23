@@ -2,6 +2,7 @@ package com.github.welcomeworld.simplebili;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.github.welcomeworld.simplebili.common.BiliLocalStatus;
 import com.github.welcomeworld.simplebili.fragment.DownloadFragment;
 import com.github.welcomeworld.simplebili.fragment.FavoriteFragment;
 import com.github.welcomeworld.simplebili.fragment.HistoryFragment;
@@ -52,10 +54,57 @@ public class MainActivity extends AppCompatActivity {
                         switchFragment("cache");
                         break;
                     case R.id.item_favorite:
-                        switchFragment("favorite");
+                        if(BiliLocalStatus.isLogin(getApplicationContext())){
+                            switchFragment("favorite");
+                        }else{
+                            Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+                            startActivity(intent);
+                        }
                         break;
                     case R.id.item_later:
-                        switchFragment("later");
+                        if(BiliLocalStatus.isLogin(getApplicationContext())){
+                            switchFragment("later");
+                        }else{
+                            Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+                            startActivity(intent);
+                        }
+                        break;
+                    case R.id.item_follow:
+                        if(BiliLocalStatus.isLogin(getApplicationContext())){
+                            switchFragment("follow");
+                        }else{
+                            Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+                            startActivity(intent);
+                        }
+                        break;
+                    case R.id.item_uppercenter:
+                        if(BiliLocalStatus.isLogin(getApplicationContext())){
+                            switchFragment("uppercenter");
+                        }else{
+                            Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+                            startActivity(intent);
+                        }
+                        break;
+                    case R.id.item_live:
+                        if(BiliLocalStatus.isLogin(getApplicationContext())){
+                            switchFragment("live");
+                        }else{
+                            Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+                            startActivity(intent);
+                        }
+                        break;
+                    case R.id.item_myvip:
+                        if(BiliLocalStatus.isLogin(getApplicationContext())){
+                            switchFragment("myvip");
+                        }else{
+                            Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+                            startActivity(intent);
+                        }
+                        break;
+                    case R.id.item_customerservice:
+                        Intent intent=new Intent(MainActivity.this,BrowserActivity.class);
+                        intent.setData(Uri.parse("https://www.bilibili.com/h5/faq"));
+                        startActivity(intent);
                         break;
                 }
                 return true;
@@ -71,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         });
         initFragment("index");
         navigationView.setItemIconTintList(getResources().getColorStateList(R.color.gary2white_color));
-        NavigationViewUtils.addFooterView(navigationView,R.layout.navigation_footer_main);
+        //NavigationViewUtils.addFooterView(navigationView,R.layout.navigation_footer_main);
     }
 
     private void initFragment(String tag) {

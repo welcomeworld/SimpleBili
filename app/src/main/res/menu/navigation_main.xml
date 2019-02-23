@@ -52,9 +52,13 @@
             android:icon="@drawable/vector_navigation_vip"
             android:checkable="true"/>
         <item
-            android:id="@+id/item_customerservice"
-            android:title="@string/contact_service"
-            android:icon="@drawable/vector_navigation_customer_service"
-            android:checkable="true"/>
+        android:id="@+id/item_customerservice"
+        android:title="@string/contact_service"
+        android:icon="@drawable/vector_navigation_customer_service"
+        android:checkable="true"/>
+        <item
+            android:id="@+id/sham_footer"
+            android:title=""
+            android:checkable="false"/>
     </group>
 </menu>

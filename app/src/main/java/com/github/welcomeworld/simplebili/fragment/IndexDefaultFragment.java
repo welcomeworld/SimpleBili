@@ -20,8 +20,6 @@ import android.widget.TextView;
 
 import com.github.welcomeworld.simplebili.R;
 import com.github.welcomeworld.simplebili.adapter.IndexDefaultPagerAdapter;
-import com.github.welcomeworld.simplebili.adapter.IndexPagerAdapter;
-import com.github.welcomeworld.simplebili.adapter.ViewPagerAdapter;
 import com.github.welcomeworld.simplebili.widget.BiliViewPager;
 
 import java.util.ArrayList;
@@ -68,6 +66,7 @@ public class IndexDefaultFragment extends Fragment {
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
         viewPager.setCurrentItem(1);
+        viewPager.setOffscreenPageLimit(3);
         return view;
     }
 

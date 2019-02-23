@@ -42,27 +42,38 @@
         <activity android:name=".BrowserActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ThemeActivity" />
-        <activity android:name=".VideoDetailActivity">
+        <activity
+            android:name=".VideoDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
-                <action android:name="com.github.welcomeworld.simplebili.action.VIDEODETAIL"/>
+                <action android:name="com.github.welcomeworld.simplebili.action.VIDEODETAIL" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="video"
                     android:scheme="bilibili" />
             </intent-filter>
         </activity>
-        <activity android:name=".LivePlayActivity">
+        <activity
+            android:name=".LivePlayActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
             <intent-filter>
-                <action android:name="com.github.welcomeworld.simplebili.action.LIVEPLAY"/>
+                <action android:name="com.github.welcomeworld.simplebili.action.LIVEPLAY" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data
-                    android:host="video"
-                    android:scheme="bilibili" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="http" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".BangumiDetailActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize">
         </activity>
     </application>
+
 </manifest>

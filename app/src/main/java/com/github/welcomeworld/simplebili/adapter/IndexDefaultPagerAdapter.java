@@ -4,11 +4,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.github.welcomeworld.simplebili.fragment.IndexDefaultFilmFragment;
-import com.github.welcomeworld.simplebili.fragment.IndexDefaultStarFragment;
+import com.github.welcomeworld.simplebili.fragment.IndexDefaultBangumiFragment;
+import com.github.welcomeworld.simplebili.fragment.IndexDefaultPopularFragment;
 import com.github.welcomeworld.simplebili.fragment.IndexDefaultLiveFragment;
 import com.github.welcomeworld.simplebili.fragment.IndexDefaultRecommendFragment;
-import com.github.welcomeworld.simplebili.fragment.IndexDefaultSpecialColumnFragment;
 
 public class IndexDefaultPagerAdapter extends FragmentPagerAdapter {
     public IndexDefaultPagerAdapter(FragmentManager fm) {
@@ -26,13 +25,11 @@ public class IndexDefaultPagerAdapter extends FragmentPagerAdapter {
                 fragment=new IndexDefaultRecommendFragment();
                 break;
             case 2:
-                fragment=new IndexDefaultStarFragment();
+                fragment=new IndexDefaultPopularFragment();
                 break;
             case 3:
-                fragment=new IndexDefaultFilmFragment();
+                fragment=new IndexDefaultBangumiFragment();
                 break;
-            case 4:
-                fragment=new IndexDefaultSpecialColumnFragment();
             default:fragment=new IndexDefaultLiveFragment();
         }
         return fragment;
@@ -40,6 +37,6 @@ public class IndexDefaultPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 5;
+        return 4;
     }
 }

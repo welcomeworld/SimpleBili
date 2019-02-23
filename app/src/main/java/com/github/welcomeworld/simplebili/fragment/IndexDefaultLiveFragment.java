@@ -5,9 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +17,22 @@ import android.widget.Toast;
 
 import com.github.welcomeworld.simplebili.R;
 import com.github.welcomeworld.simplebili.adapter.IndexDefaultRecyclerViewAdapter;
+import com.github.welcomeworld.simplebili.adapter.IndexLiveRecyclerViewAdapter;
+import com.github.welcomeworld.simplebili.bean.IndexLiveBean;
 import com.github.welcomeworld.simplebili.common.IndexGridItemDecoration;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicHeaderInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicParameterInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.FixedHeaderInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.FixedParameterInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.SortAndSignInterceptor;
+import com.github.welcomeworld.simplebili.net.retrofit.BaseUrl;
+import com.github.welcomeworld.simplebili.net.retrofit.IndexNetAPI;
 import com.github.welcomeworld.simplebili.widget.SwiperefreshContainer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +43,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class IndexDefaultLiveFragment extends Fragment {
 
@@ -43,50 +63,56 @@ public class IndexDefaultLiveFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_index_default_live,container,false);
         ButterKnife.bind(this,view);
-        GridLayoutManager gridLayoutManager=new GridLayoutManager(recyclerView.getContext(),2, LinearLayoutManager.VERTICAL,false);
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+        //GridLayoutManager gridLayoutManager=new GridLayoutManager(recyclerView.getContext(),2, LinearLayoutManager.VERTICAL,false);
+        /*gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
                 return 1;
             }
-        });
-        recyclerView.setLayoutManager(gridLayoutManager);
-        recyclerView.addItemDecoration(new IndexGridItemDecoration(recyclerView.getContext(),5,2));
-        List<String> data=new ArrayList<>();
-        data.add("测试");
-        data.add("测试");
-        data.add("测试");
-        data.add("测试");
-        data.add("测试");
-        data.add("测试");
-        data.add("测试");
-        data.add("测试");
-        data.add("测试");
-        data.add("测试");
-        data.add("测试");
-        data.add("测试");
-        data.add("测试");
-        data.add("测试");
-        data.add("测试");
-        data.add("测试");
-        recyclerView.setAdapter(new IndexDefaultRecyclerViewAdapter(data));
+        });*/
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(recyclerView.getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL));
+        //recyclerView.addItemDecoration(new IndexGridItemDecoration(recyclerView.getContext(),5,2));
+        IndexLiveBean.DataBean data=new IndexLiveBean.DataBean();
+        recyclerView.setAdapter(new IndexLiveRecyclerViewAdapter(data));
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Observable<Boolean> observable=Observable.create(new ObservableOnSubscribe<Boolean>() {
+                Map<String,String> parameters=new HashMap<>();
+                parameters.put("actionKey","appkey");
+                parameters.put("quality","0");
+                parameters.put("rec_page","4");
+                parameters.put("relation_page","2");
+                parameters.put("scale","xxhdpi");
+                parameters.put("ts",""+System.currentTimeMillis());
+                OkHttpClient.Builder okHttpClientBuilder=new OkHttpClient.Builder()
+                        .addInterceptor(new FixedHeaderInterceptor())
+                        .addInterceptor(new DynamicHeaderInterceptor(null))
+                        .addInterceptor(new FixedParameterInterceptor())
+                        .addInterceptor(new DynamicParameterInterceptor(parameters))
+                        .addInterceptor(new SortAndSignInterceptor())
+                        .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+                Retrofit retrofit=new Retrofit.Builder()
+                        .baseUrl(BaseUrl.APILIVEURL)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .client(okHttpClientBuilder.build())
+                        .build();
+                IndexNetAPI indexNetAPI=retrofit.create(IndexNetAPI.class);
+                Call<IndexLiveBean> liveBeanCall=indexNetAPI.getIndexLive();
+                liveBeanCall.enqueue(new Callback<IndexLiveBean>() {
                     @Override
-                    public void subscribe(ObservableEmitter<Boolean> emitter) throws Exception {
-                        Thread.sleep(2000);
-                        emitter.onNext(true);
-                        emitter.onComplete();
-                    }
-                }).subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread());
-                Disposable disposable=observable.subscribe(new Consumer<Boolean>() {
-                    @Override
-                    public void accept(Boolean aBoolean) throws Exception {
+                    public void onResponse(Call<IndexLiveBean> call, Response<IndexLiveBean> response) {
                         swipeRefreshLayout.setRefreshing(false);
-                        Toast.makeText(getContext(),"更新了数据",Toast.LENGTH_SHORT).show();
+                        recyclerView.setAdapter(new IndexLiveRecyclerViewAdapter(response.body().getData()));
+                    }
+
+                    @Override
+                    public void onFailure(Call<IndexLiveBean> call, Throwable t) {
+                        swipeRefreshLayout.setRefreshing(false);
+                        Log.e("Live",t.getMessage());
                     }
                 });
             }

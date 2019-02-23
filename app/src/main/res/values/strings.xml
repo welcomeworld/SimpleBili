@@ -57,6 +57,7 @@
     <string name="recommend">推荐</string>
     <string name="following">追番</string>
     <string name="film">影视</string>
+    <string name="popular">热门</string>
     <string name="film_area">电影区</string>
     <string name="film_more">更多电影</string>
     <string name="record_area">纪录片区</string>
@@ -101,7 +102,10 @@
     <string name="audio">音频</string>
     <string name="album">相簿</string>
     <string name="game_center">游戏中心</string>
-    <string name="see_more">进去看看</string>
+    <string name="see_more">查看更多</string>
+    <string name="schedule">时间表</string>
+    <string name="indexes">索引</string>
+    <string name="loading">加载中</string>
     <!-- 说明-->
     <string name="play_desc">播放或暂停按钮</string>
     <string name="fullscreen_desc">全屏</string>

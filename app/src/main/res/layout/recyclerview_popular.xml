@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/recommend_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+        <ImageView
+            android:id="@+id/card_video_cover"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:scaleType="fitXY"
+            android:src="@mipmap/testcover"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/card_video_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="2"
+                android:ellipsize="end"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:text="用《还珠格格》音乐打开《如懿传》，简直神无违和感"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="" />
+            <TextView
+                android:id="@+id/card_recommend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="潇湘公子寻"
+                android:background="@color/pink"
+                android:textColor="@color/white"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="" />
+            <TextView
+                android:id="@+id/card_upper"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="潇湘公子寻"
+                android:textColor="@color/gray_background"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="" />
+            <TextView
+                android:id="@+id/card_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="1"
+                android:ellipsize="end"
+                android:textSize="12sp"
+                android:textColor="@color/gray_background"
+                android:text="用《还珠格格》音乐打开《如懿传》，简直神无违和感"/>
+        </LinearLayout>
+</LinearLayout>

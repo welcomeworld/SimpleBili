@@ -8,6 +8,7 @@ import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.provider.Settings;
 import android.support.annotation.AttrRes;
@@ -75,6 +76,15 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
     private String TAG="IjkMediaView";
 
     private IjkMediaPlayer mMediaPlayer = null;
+
+    public IjkMediaPlayer getmMediaPlayer() {
+        return mMediaPlayer;
+    }
+
+    public void setmMediaPlayer(IjkMediaPlayer mMediaPlayer) {
+        this.mMediaPlayer = mMediaPlayer;
+    }
+
     /** * 视频文件地址 */
     private ArrayList<String> paths=null;
     private ArrayList<String> titles=null;
@@ -456,8 +466,6 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
         if(isSystemBack()){
             Activity activity= (Activity) mContext;
             activity.onBackPressed();
-            mMediaPlayer.reset();
-            mMediaPlayer.release();
         }else{
             systemBack=true;
             changeToPortrait();
@@ -518,6 +526,7 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", "Bilibili Freedoooooom/MarkII");
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"framedrop",5);
                     mMediaPlayer = ijkMediaPlayer;
+                    mMediaPlayer.setScreenOnWhilePlaying(true);
                     if(listener==null){
                         listener=new IjkMediaListener() {
                             @Override
@@ -576,6 +585,7 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
                                     public void accept(Long ong) {
                                         if(!fastfowarding&&!seekBarTracking&&mMediaPlayer.isPlaying()){
                                             currentPosition.setText(StringUtils.formatTime(mMediaPlayer.getCurrentPosition()));
+                                            if(duration>0)
                                             seekBar.setProgress((int) (mMediaPlayer.getCurrentPosition()*SEEKBAR_MAX/duration));
                                         }
                                     }
@@ -872,6 +882,7 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
     }
 
     public void changeToLandscape(){
+        systemBack=false;
         Activity activity= (Activity) mContext;
         activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         FrameLayout.LayoutParams layoutParams=new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT,Gravity.CENTER);

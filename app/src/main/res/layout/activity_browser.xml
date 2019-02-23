@@ -15,7 +15,7 @@
         app:navigationIcon="@mipmap/player_back"
         app:contentInsetStartWithNavigation="0dp"
         android:background="@color/colorPrimary"
-        app:title="@string/video_list">
+        app:title="@string/loading">
     </android.support.v7.widget.Toolbar>
     <WebView
         android:id="@+id/browser_webView"

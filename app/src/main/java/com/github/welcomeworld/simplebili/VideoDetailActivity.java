@@ -152,6 +152,20 @@ public class VideoDetailActivity extends AppCompatActivity {
         super.onConfigurationChanged(newConfig);
     }
 
+
+    @Override
+    public void onBackPressed() {
+        if(ijkMediaView.isSystemBack()){
+            if(ijkMediaView.getmMediaPlayer()!=null){
+                ijkMediaView.getmMediaPlayer().release();
+                ijkMediaView=null;
+            }
+            super.onBackPressed();
+        }else{
+            ijkMediaView.playBack();
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();

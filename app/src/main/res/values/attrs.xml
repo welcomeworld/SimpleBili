@@ -1,13 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="ImageTextView">
-        <attr name="drawableStartWidth" format="dimension"/>
-        <attr name="drawableStartHeight" format="dimension"/>
-        <attr name="drawableTopWidth" format="dimension"/>
-        <attr name="drawableTopHeight" format="dimension"/>
-        <attr name="android:drawableTop"/>
-        <attr name="android:drawableBottom"/>
-        <attr name="android:drawableStart"/>
-        <attr name="android:drawableEnd"/>
+        <attr name="drawableStartWidth" format="dimension" />
+        <attr name="drawableStartHeight" format="dimension" />
+        <attr name="drawableTopWidth" format="dimension" />
+        <attr name="drawableTopHeight" format="dimension" />
+        <attr name="drawableEndWidth" format="dimension" />
+        <attr name="drawableEndHeight" format="dimension" />
+        <attr name="drawableBottomWidth" format="dimension" />
+        <attr name="drawableBottomHeight" format="dimension" />
+        <attr name="drawableCenter" format="boolean"/>
+        <attr name="android:drawableTop" />
+        <attr name="android:drawableBottom" />
+        <attr name="android:drawableStart" />
+        <attr name="android:drawableEnd" />
+    </declare-styleable>
+
+    <!-- Declare custom theme attributes that allow changing which styles are
+         used for button bars depending on the API level.
+         ?android:attr/buttonBarStyle is new as of API 11 so this is
+         necessary to support previous API levels. -->
+    <declare-styleable name="ButtonBarContainerTheme">
+        <attr name="metaButtonBarStyle" format="reference" />
+        <attr name="metaButtonBarButtonStyle" format="reference" />
     </declare-styleable>
 </resources>
