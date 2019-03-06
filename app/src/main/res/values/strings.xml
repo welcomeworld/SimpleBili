@@ -28,7 +28,8 @@
     <string name="history">历史记录</string>
     <string name="off_line_cache">离线缓存</string>
     <string name="favorites">我的收藏</string>
-    <string name="follow">我的关注</string>
+    <string name="my_follow">我的关注</string>
+    <string name="follow">关注</string>
     <string name="watch_later">稍后再看</string>
     <string name="upper_center">创作中心</string>
     <string name="my_vip">我的大会员</string>
@@ -106,6 +107,8 @@
     <string name="schedule">时间表</string>
     <string name="indexes">索引</string>
     <string name="loading">加载中</string>
+    <string name="dislike">差评</string>
+    <string name="hot_divider_tips">以上为热评</string>
     <!-- 说明-->
     <string name="play_desc">播放或暂停按钮</string>
     <string name="fullscreen_desc">全屏</string>

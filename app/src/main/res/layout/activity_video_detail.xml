@@ -1,26 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".VideoDetailActivity">
     <com.github.welcomeworld.simplebili.widget.IjkMediaView
         android:id="@+id/ijkVideoView"
         android:layout_width="match_parent"
-        android:layout_height="560px"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintDimensionRatio="H,16:9"
         tools:context=".VideoDetailActivity">
     </com.github.welcomeworld.simplebili.widget.IjkMediaView>
-    <LinearLayout
-        android:layout_marginTop="560px"
+    <android.support.constraint.Group
+        android:id="@+id/video_detail_group"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:constraint_referenced_ids="video_detail_tab,video_detail_viewpager"/>
+    <android.support.design.widget.TabLayout
+        android:id="@+id/video_detail_tab"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <TextView
-            android:id="@+id/video_detail_title"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/ijkVideoView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+        <android.support.design.widget.TabItem
+            android:textAlignment="center"
+            android:text="简介"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/login_tips"/>
-    </LinearLayout>
-</FrameLayout>
+            android:layout_height="wrap_content" />
+        <android.support.design.widget.TabItem
+            android:textAlignment="center"
+            android:text="评论"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.design.widget.TabLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/video_detail_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/video_detail_tab"
+        app:layout_constraintBottom_toBottomOf="parent">
+    </android.support.v4.view.ViewPager>
+</android.support.constraint.ConstraintLayout>

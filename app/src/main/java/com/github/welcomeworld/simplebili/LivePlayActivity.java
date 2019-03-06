@@ -8,7 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.github.welcomeworld.simplebili.common.VideoDataSource;
 import com.github.welcomeworld.simplebili.widget.IjkMediaView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,7 +36,12 @@ public class LivePlayActivity extends AppCompatActivity {
         }
         Uri uri=getIntent().getData();
         if(uri!=null){
-            ijkMediaView.setVideoPath(uri.toString(),getIntent().getExtras().getString("title"));
+            VideoDataSource videoDataSource=new VideoDataSource();
+            videoDataSource.setTitle(getIntent().getExtras().getString("title"));
+            List<String> videos=new ArrayList<>();
+            videos.add(uri.toString());
+            videoDataSource.setVideoSources(videos);
+            ijkMediaView.addVideoDataSource(videoDataSource);
             ijkMediaView.changeToLandscape();
         }
     }
@@ -40,17 +49,14 @@ public class LivePlayActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //ijkMediaView.getmMediaPlayer().release();
+        ijkMediaView.release();
         IjkMediaPlayer.native_profileEnd();
     }
 
     @Override
     public void onBackPressed() {
         if(ijkMediaView.isSystemBack()){
-            if(ijkMediaView.getmMediaPlayer()!=null){
-                ijkMediaView.getmMediaPlayer().release();
-                ijkMediaView=null;
-            }
+            ijkMediaView.release();
             super.onBackPressed();
         }else{
             ijkMediaView.playBack();

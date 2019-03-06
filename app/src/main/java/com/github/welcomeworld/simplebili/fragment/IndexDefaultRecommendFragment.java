@@ -105,7 +105,7 @@ public class IndexDefaultRecommendFragment extends Fragment {
                         }
                         data=response.body().getData();
                         for(int i=0;i<data.size();i++){
-                            if(data.get(i).getGotoX().equalsIgnoreCase("login")||data.get(i).getGotoX().equalsIgnoreCase("banner")||data.get(i).getGotoX().equalsIgnoreCase("ad_web_s")){
+                            if(!data.get(i).getGotoX().equalsIgnoreCase("av")){
                                 data.remove(i);
                                 i--;
                             }

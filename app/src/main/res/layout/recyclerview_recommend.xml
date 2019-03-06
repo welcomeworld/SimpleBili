@@ -32,7 +32,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textColor="@color/white"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:gravity="center_vertical"
                     android:text="186.2万"/>
                 <ImageView
@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textColor="@color/white"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:gravity="center_vertical"
                     android:text="4735"/>
                 <TextView
@@ -60,7 +60,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginEnd="4dp"
                     android:textColor="@color/white"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:gravity="top"
                     android:text="03:28"/>
             </LinearLayout>

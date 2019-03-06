@@ -1,5 +1,6 @@
 package com.github.welcomeworld.simplebili.net.retrofit;
 
+import com.github.welcomeworld.simplebili.bean.ReplyCursorBean;
 import com.github.welcomeworld.simplebili.bean.VideoDetailPageBean;
 import com.github.welcomeworld.simplebili.bean.VideoUrlBean;
 
@@ -15,4 +16,7 @@ public interface VideoDetailNetAPI {
     @Streaming
     @GET("x/playurl")
     public Call<VideoUrlBean> getVideoUrl();
+
+    @GET("x/v2/reply/cursor")
+    public Call<ReplyCursorBean> getVideoReply();
 }

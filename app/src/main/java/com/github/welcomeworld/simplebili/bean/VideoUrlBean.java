@@ -80,6 +80,8 @@ public class VideoUrlBean {
         private String seek_param;
         private String seek_type;
         private DashBean dash;
+        private List<String> accept_description;
+        private List<DurlBean> durl;
         private List<Integer> accept_quality;
 
         public String getFrom() {
@@ -184,6 +186,70 @@ public class VideoUrlBean {
 
         public void setDash(DashBean dash) {
             this.dash = dash;
+        }
+
+        public List<String> getAccept_description() {
+            return accept_description;
+        }
+
+        public void setAccept_description(List<String> accept_description) {
+            this.accept_description = accept_description;
+        }
+
+        public List<DurlBean> getDurl() {
+            return durl;
+        }
+
+        public void setDurl(List<DurlBean> durl) {
+            this.durl = durl;
+        }
+
+        public static class DurlBean {
+            private int order;
+            private int length;
+            private int size;
+            private String url;
+            private List<String> backup_url;
+
+            public int getOrder() {
+                return order;
+            }
+
+            public void setOrder(int order) {
+                this.order = order;
+            }
+
+            public int getLength() {
+                return length;
+            }
+
+            public void setLength(int length) {
+                this.length = length;
+            }
+
+            public int getSize() {
+                return size;
+            }
+
+            public void setSize(int size) {
+                this.size = size;
+            }
+
+            public String getUrl() {
+                return url;
+            }
+
+            public void setUrl(String url) {
+                this.url = url;
+            }
+
+            public List<String> getBackup_url() {
+                return backup_url;
+            }
+
+            public void setBackup_url(List<String> backup_url) {
+                this.backup_url = backup_url;
+            }
         }
 
         public List<Integer> getAccept_quality() {

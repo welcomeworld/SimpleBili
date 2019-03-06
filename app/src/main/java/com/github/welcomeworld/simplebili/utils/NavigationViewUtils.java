@@ -37,21 +37,4 @@ public class NavigationViewUtils {
         }
     }
 
-    public static void addFooterView(NavigationView navigationView, int res){
-        navigationView.getMenu();
-        Context mContext=navigationView.getContext();
-        View view= LayoutInflater.from(mContext).inflate(res,navigationView,false);
-        int screenHeight=mContext.getResources().getDisplayMetrics().heightPixels;
-        int statusBarHeight = -1;
-        int resourceId = mContext.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            statusBarHeight = mContext.getResources().getDimensionPixelSize(resourceId);
-        }
-        screenHeight-=statusBarHeight;
-        FrameLayout.LayoutParams lp=new FrameLayout.LayoutParams(view.getLayoutParams());
-        lp.setMargins(0,screenHeight-lp.height,0,0);
-        view.setLayoutParams(lp);
-        navigationView.addView(view);
-    }
-
 }
