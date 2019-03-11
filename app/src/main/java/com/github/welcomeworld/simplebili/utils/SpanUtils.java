@@ -4,6 +4,7 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.SpannedString;
+import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.view.View;
 import android.widget.TextView;
@@ -11,6 +12,16 @@ import android.widget.TextView;
 import com.github.welcomeworld.simplebili.widget.BiliURLSpan;
 
 public class SpanUtils {
+
+    public static void addClickSpan(TextView view, ClickableSpan span,int start,int end){
+        Spannable spannable = (Spannable) view.getText();
+        spannable.setSpan(span,start,end,Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+    }
+
+
+
+
+
     public static void UrlSpanChange(TextView view){
         Spannable spannable = (Spannable) view.getText();
         URLSpan[] spans = spannable.getSpans(0, spannable.length(), URLSpan.class);

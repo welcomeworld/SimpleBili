@@ -109,6 +109,7 @@
     <string name="loading">加载中</string>
     <string name="dislike">差评</string>
     <string name="hot_divider_tips">以上为热评</string>
+    <string name="send">发送</string>
     <!-- 说明-->
     <string name="play_desc">播放或暂停按钮</string>
     <string name="fullscreen_desc">全屏</string>

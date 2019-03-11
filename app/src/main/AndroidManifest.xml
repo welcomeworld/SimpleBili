@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -47,9 +48,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data
-                    android:scheme="https"/>
+                    android:scheme="https"
+                    android:host="*"/>
                 <data
-                    android:scheme="http"/>
+                    android:scheme="http"
+                    android:host="*"/>
             </intent-filter>
         </activity>
         <activity android:name=".SettingsActivity" />
@@ -79,7 +82,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="http" />
+                <data
+                    android:scheme="bilibili"
+                    android:host="live"/>
             </intent-filter>
         </activity>
         <activity

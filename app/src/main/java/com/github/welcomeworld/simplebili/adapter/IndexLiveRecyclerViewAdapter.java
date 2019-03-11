@@ -48,7 +48,9 @@ public class IndexLiveRecyclerViewAdapter extends RecyclerView.Adapter<IndexLive
             @Override
             public void onClick(View v) {
                 Intent playIntent=new Intent("com.github.welcomeworld.simplebili.action.LIVEPLAY");
-                playIntent.setData(Uri.parse(currentData.getList().get(0).getPlay_url()));
+                playIntent.setData(Uri.parse("bilibili://live/"+currentData.getList().get(0).getRoomid()));
+                playIntent.putExtra("url",currentData.getList().get(0).getPlay_url());
+                //playIntent.setData(Uri.parse(currentData.getList().get(0).getPlay_url()));
                 playIntent.putExtra("title",currentData.getList().get(0).getTitle());
                 context.startActivity(playIntent);
             }
@@ -60,7 +62,9 @@ public class IndexLiveRecyclerViewAdapter extends RecyclerView.Adapter<IndexLive
             @Override
             public void onClick(View v) {
                 Intent playIntent=new Intent("com.github.welcomeworld.simplebili.action.LIVEPLAY");
-                playIntent.setData(Uri.parse(currentData.getList().get(1).getPlay_url()));
+                playIntent.setData(Uri.parse("bilibili://live/"+currentData.getList().get(1).getRoomid()));
+                playIntent.putExtra("url",currentData.getList().get(1).getPlay_url());
+                //playIntent.setData(Uri.parse(currentData.getList().get(0).getPlay_url()));
                 playIntent.putExtra("title",currentData.getList().get(1).getTitle());
                 context.startActivity(playIntent);
             }
@@ -72,7 +76,9 @@ public class IndexLiveRecyclerViewAdapter extends RecyclerView.Adapter<IndexLive
             @Override
             public void onClick(View v) {
                 Intent playIntent=new Intent("com.github.welcomeworld.simplebili.action.LIVEPLAY");
-                playIntent.setData(Uri.parse(currentData.getList().get(2).getPlay_url()));
+                playIntent.setData(Uri.parse("bilibili://live/"+currentData.getList().get(2).getRoomid()));
+                playIntent.putExtra("url",currentData.getList().get(2).getPlay_url());
+                //playIntent.setData(Uri.parse(currentData.getList().get(0).getPlay_url()));
                 playIntent.putExtra("title",currentData.getList().get(2).getTitle());
                 context.startActivity(playIntent);
             }
@@ -84,7 +90,9 @@ public class IndexLiveRecyclerViewAdapter extends RecyclerView.Adapter<IndexLive
             @Override
             public void onClick(View v) {
                 Intent playIntent=new Intent("com.github.welcomeworld.simplebili.action.LIVEPLAY");
-                playIntent.setData(Uri.parse(currentData.getList().get(3).getPlay_url()));
+                playIntent.setData(Uri.parse("bilibili://live/"+currentData.getList().get(3).getRoomid()));
+                playIntent.putExtra("url",currentData.getList().get(3).getPlay_url());
+                //playIntent.setData(Uri.parse(currentData.getList().get(0).getPlay_url()));
                 playIntent.putExtra("title",currentData.getList().get(3).getTitle());
                 context.startActivity(playIntent);
             }

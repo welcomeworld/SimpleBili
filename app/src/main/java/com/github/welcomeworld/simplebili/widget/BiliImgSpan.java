@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Binder;
+import android.os.RemoteException;
 import android.text.style.ImageSpan;
 
 public class BiliImgSpan extends ImageSpan {

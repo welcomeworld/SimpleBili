@@ -12,6 +12,7 @@ import android.provider.Settings;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -35,6 +36,7 @@ import android.widget.Toast;
 
 import com.github.welcomeworld.simplebili.R;
 import com.github.welcomeworld.simplebili.adapter.BiliDanmukuParser;
+import com.github.welcomeworld.simplebili.bean.DanmakuBean;
 import com.github.welcomeworld.simplebili.common.VideoDataSource;
 import com.github.welcomeworld.simplebili.listener.IjkMediaListener;
 import com.github.welcomeworld.simplebili.utils.StringUtils;
@@ -68,6 +70,7 @@ import master.flame.danmaku.danmaku.model.BaseDanmaku;
 import master.flame.danmaku.danmaku.model.DanmakuTimer;
 import master.flame.danmaku.danmaku.model.IDisplayer;
 import master.flame.danmaku.danmaku.model.android.DanmakuContext;
+import master.flame.danmaku.danmaku.model.android.Danmakus;
 import master.flame.danmaku.danmaku.parser.BaseDanmakuParser;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -77,13 +80,11 @@ import okhttp3.Response;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChangeListener,View.OnTouchListener,RadioGroup.OnCheckedChangeListener{
+public class LiveMediaView extends FrameLayout implements View.OnTouchListener,RadioGroup.OnCheckedChangeListener{
 
-    private String TAG="IjkMediaView";
+    private String TAG="LiveMediaView";
 
     private IjkMediaPlayer mMediaPlayer = null;
-
-    private IjkMediaPlayer audioPlayer=null;
 
     /** * 视频文件地址 */
     private List<VideoDataSource> videoDataSources=null;
@@ -112,8 +113,7 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
     Observable<Long> videoObservable;
     Disposable videoDisposable;
 
-    private boolean videoPrepared;
-    private boolean audioPrepared;
+    private boolean videoPrepared=false;
 
 
 
@@ -122,22 +122,16 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
     SurfaceView surfaceView;
     @BindView(R.id.pauseOrStart)
     ImageView pauseOrStartButton;
-    @BindView(R.id.seek_bar)
-    SeekBar seekBar;
     @BindView(R.id.current_position)
     TextView currentPosition;
-    @BindView(R.id.duration)
-    TextView durationView;
     @BindView(R.id.player_bottom)
-    LinearLayout bottomLayout;
+    ConstraintLayout bottomLayout;
     @BindView(R.id.fullscreen)
     ImageView fullscreenButton;
     @BindView(R.id.player_top)
-    LinearLayout topLayout;
+    ConstraintLayout topLayout;
     @BindView(R.id.lock)
     ImageView lockView;
-    @BindView(R.id.cover)
-    ImageView coverView;
     @BindView(R.id.share)
     ImageView shareView;
     @BindView(R.id.play_back)
@@ -154,8 +148,6 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
     LinearLayout brightLayout;
     @BindView(R.id.bright_seekbar)
     SeekBar brightSeekBar;
-    @BindView(R.id.fastfoward)
-    TextView fastfowardView;
     @BindView(R.id.danmaku_status)
     ImageView danmakuStatusButton;
     @BindView(R.id.more)
@@ -174,18 +166,14 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
     private boolean locked=false;
     private boolean subViewHidded=false;
     private long progress=0;
-    private long duration=0;
     private final int SEEKBAR_MAX=1000;
     private boolean volumechanging=false;
     private boolean brightchanging=false;
-    private boolean fastfowarding=false;
     private int VOLUME_MAX=INVALID_CODE;
     private int screen_width=INVALID_CODE;
     private int screen_height=INVALID_CODE;
     private double lastXpercentage=0;
     private double lastYpercentage=0;
-    private static final long FASTFORWARD_MAX=180000;
-    private long fastforward_record=0;
     private float speed=1;
     private boolean systemBack=true;
     private int playMode=1;
@@ -193,7 +181,6 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
     private boolean stopChangeSeek=false;
 
     private IjkMediaListener videoListener;
-    private IjkMediaListener audioListener;
 
     public void addVideoDataSource(VideoDataSource videoDataSource){
         if(videoDataSources!=null){
@@ -206,17 +193,17 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
         }
     }
 
-    public IjkMediaView(@NonNull Context context) {
+    public LiveMediaView(@NonNull Context context) {
         super(context);
         mContext=context;
         initVideoView(context);
     }
-    public IjkMediaView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public LiveMediaView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         mContext=context;
         initVideoView(context);
     }
-    public IjkMediaView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public LiveMediaView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         mContext=context;
         initVideoView(context);
@@ -252,7 +239,7 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
 
             @Override
             public void danmakuShown(BaseDanmaku danmaku) {
-                Log.e("danmaku","shown");
+                Log.e("danmaku","shown"+danmaku.text+"color:"+danmaku.textColor+"textSize"+danmaku.textSize+"userId"+danmaku.userId);
             }
 
             @Override
@@ -264,8 +251,32 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
         danmakuView.enableDanmakuDrawingCache(true);
     }
 
+    public void addDanmaku(DanmakuBean danmakuBean){
+        BaseDanmaku baseDanmaku=danmakuContext.mDanmakuFactory.createDanmaku(danmakuBean.getType());
+        if(baseDanmaku==null){
+            return;
+        }
+        baseDanmaku.isLive=true;
+        baseDanmaku.text=danmakuBean.getText();
+        baseDanmaku.textColor=danmakuBean.getTextColor();
+        baseDanmaku.textSize=danmakuBean.getTextSize()*2.1f;
+        baseDanmaku.userId=danmakuBean.getUserId();
+        baseDanmaku.priority=danmakuBean.getPriority();
+        baseDanmaku.setTime(danmakuView.getCurrentTime()+1000);
+        danmakuView.addDanmaku(baseDanmaku);
+    }
+
     private void createDanmakuParser(String uri){
+        baseDanmakuParser=new BiliDanmukuParser();
         if(uri==null){
+            baseDanmakuParser=new BaseDanmakuParser() {
+
+                @Override
+                protected Danmakus parse() {
+                    return new Danmakus();
+                }
+            };
+            danmakuView.prepare(baseDanmakuParser,danmakuContext);
             return;
         }
         ILoader iLoader= DanmakuLoaderFactory.create(DanmakuLoaderFactory.TAG_BILI);
@@ -299,9 +310,7 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
                     e.printStackTrace();
                     Log.e(TAG,"error Uri:"+uri+"message"+e.getMessage());
                 }
-                BaseDanmakuParser parser=new BiliDanmukuParser();
-                parser.load(iLoader.getDataSource());
-                baseDanmakuParser=parser;
+                baseDanmakuParser.load(iLoader.getDataSource());
                 danmakuView.prepare(baseDanmakuParser,danmakuContext);
             }
         });
@@ -318,14 +327,12 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
     @SuppressLint("ClickableViewAccessibility")
     private void initVideoView(Context context) {
         setFocusable(true);
-        View rootView=LayoutInflater.from(context).inflate(R.layout.ijkmediaview,this,true);
-        ButterKnife.bind(rootView);
+        View rootView= LayoutInflater.from(context).inflate(R.layout.live_mediaview,this,true);
+        ButterKnife.bind(this,rootView);
         createSurfaceView();
-        gestureDetector=new GestureDetector(context,new PlayerGestureDetectorListener());
+        gestureDetector=new GestureDetector(context,new LiveMediaView.PlayerGestureDetectorListener());
         audioManager= (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         this.setOnTouchListener(this);
-        seekBar.setMax(SEEKBAR_MAX);
-        seekBar.setOnSeekBarChangeListener(this);
         brightSeekBar.setMax(SEEKBAR_MAX);
         volumeSeekBar.setMax(SEEKBAR_MAX);
         int settingBrightness;
@@ -402,19 +409,19 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
         videoListPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         videoListPopupWindow.setTouchable(true);
         videoListPopupWindow.setAnimationStyle(R.style.rightPopupWindowTheme);
-       RadioGroup radioGroup=videoListView.findViewById(R.id.video_list_radio);
-       for(int i=0;i<videoDataSources.size();i++){
-           RadioButton radioButton=new RadioButton(radioGroup.getContext());
-           radioButton.setButtonDrawable(null);
-           radioButton.setTextColor(getResources().getColorStateList(R.color.radio_color));
-           radioButton.setText(videoDataSources.get(i).getTitle());
-           if(i==currentSourceIndex){
-               radioButton.setChecked(true);
-           }
-           radioButton.setId(i);
-           radioGroup.addView(radioButton);
-       }
-       radioGroup.setOnCheckedChangeListener(this);
+        RadioGroup radioGroup=videoListView.findViewById(R.id.video_list_radio);
+        for(int i=0;i<videoDataSources.size();i++){
+            RadioButton radioButton=new RadioButton(radioGroup.getContext());
+            radioButton.setButtonDrawable(null);
+            radioButton.setTextColor(getResources().getColorStateList(R.color.radio_color));
+            radioButton.setText(videoDataSources.get(i).getTitle());
+            if(i==currentSourceIndex){
+                radioButton.setChecked(true);
+            }
+            radioButton.setId(i);
+            radioGroup.addView(radioButton);
+        }
+        radioGroup.setOnCheckedChangeListener(this);
     }
 
 
@@ -507,7 +514,7 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
 
     @OnClick(R.id.more)
     public void moreOptions(){
-        moreOptions.showAtLocation(this,Gravity.END,0,0);
+        moreOptions.showAtLocation(this, Gravity.END,0,0);
     }
 
     @OnClick(R.id.play_video_list)
@@ -521,227 +528,120 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
         createPlayer();
         try {
             mMediaPlayer.setDataSource(videoDataSources.get(currentSourceIndex).getVideoSources().get(currentQuality));
-            if (audioPlayer != null) {
-                audioPlayer.stop();
-                audioPlayer.setDisplay(null);
-                audioPlayer.release();
-            }
-            audioPlayer=null;
-            if(videoDataSources.get(currentSourceIndex).isDash()){
-                createAudioPlayer();
-                audioPlayer.setDataSource(videoDataSources.get(currentSourceIndex).getAudioSources().get(0));
-                audioPlayer.prepareAsync();
-            }
-            }
-            catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
-            }
-            audioPrepared=false;
+        }
         videoPrepared=false;
         mMediaPlayer.setDisplay(surfaceView.getHolder());
         mMediaPlayer.prepareAsync();
-        }
-
-    private void createAudioPlayer(){
-            IjkMediaPlayer ijkMediaPlayer = new IjkMediaPlayer();
-            IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
-            //ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"max-buffer-size",500*1024);
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 100);
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"enable-accurate-seek",1);
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"reconnect",1);
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"safe",0);
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "protocol_whitelist", "rtmp,concat,ffconcat,file,subfile,http,https,tls,rtp,tcp,udp,crypto");
-            //ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"http_proxy","192.168.0.107");
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", "Bilibili Freedoooooom/MarkII");
-            ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"framedrop",5);
-            audioPlayer = ijkMediaPlayer;
-            audioPlayer.setScreenOnWhilePlaying(true);
-            if(audioListener==null){
-                audioListener=new IjkMediaListener() {
-                    @Override
-                    public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int i) {
-                        //seekBar.setSecondaryProgress(i*SEEKBAR_MAX/100);
-                    }
-
-                    @Override
-                    public void onCompletion(IMediaPlayer iMediaPlayer) {
-                        Log.d(TAG,"audioCompletion");
-                        /*switch (playMode){
-                            case 0:
-                                pause();
-                                break;
-                            case 1:
-                                if(currentSourceIndex<videoDataSources.size()-1){
-                                    currentSourceIndex++;
-                                    load();
-                                }else{
-                                    pause();
-                                }
-                                break;
-                            case 2:
-                                currentSourceIndex=currentSourceIndex>=videoDataSources.size()-1?0:currentSourceIndex+1;
-                                load();
-                                break;
-                            case 3:
-                                break;
-                        }*/
-                    }
-
-                    @Override
-                    public boolean onError(IMediaPlayer iMediaPlayer, int i, int i1) {
-                        Log.e(TAG,"error_code"+i+":"+i1);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onInfo(IMediaPlayer iMediaPlayer, int i, int i1) {
-                        //Log.e(TAG,"onInfo:i:"+i+"i1:"+i1);
-                        return false;
-                    }
-
-                    @Override
-                    public void onPrepared(IMediaPlayer iMediaPlayer) {
-                        Log.e(TAG,"audioPrepared");
-                        audioPrepared=true;
-                        if(videoPrepared){
-                            mediaPrepared();
-                        }
-                    }
-
-                    @Override
-                    public void onSeekComplete(IMediaPlayer iMediaPlayer) {
-                        Log.e(TAG,"Player seek:"+iMediaPlayer.getCurrentPosition());
-                    }
-
-                    @Override
-                    public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int i, int i1, int i2, int i3) {
-
-                    }
-                };
-            }
-            audioPlayer.setOnPreparedListener(audioListener);
-            audioPlayer.setOnInfoListener(audioListener);
-            audioPlayer.setOnSeekCompleteListener(audioListener);
-            audioPlayer.setOnCompletionListener(audioListener);
-            audioPlayer.setOnBufferingUpdateListener(audioListener);
-            audioPlayer.setOnErrorListener(audioListener);
-            audioPlayer.setOnVideoSizeChangedListener(audioListener);
-        }
+    }
 
     private void mediaPrepared(){
-            duration=mMediaPlayer.getDuration();
-            currentPosition.setText(StringUtils.formatTime(0));
-            durationView.setText(StringUtils.formatTime(duration));
-            coverView.setVisibility(GONE);
-            pauseOrStartButton.setSelected(true);
-            if(danmakuView.isPrepared()){
-                danmakuView.start(mMediaPlayer.getCurrentPosition());
-            }else {
-                Log.e(TAG,"but danmaku not");
-            }
-            videoDisposable= videoObservable.subscribe(new Consumer<Long>() {
-                @Override
-                public void accept(Long ong) {
-                    if(!fastfowarding&&!seekBarTracking&&mMediaPlayer.isPlaying()){
-                        currentPosition.setText(StringUtils.formatTime(mMediaPlayer.getCurrentPosition()));
-                        if(duration>0)
-                            seekBar.setProgress((int) (mMediaPlayer.getCurrentPosition()*SEEKBAR_MAX/duration));
-                    }
-                }
-            });
+        currentPosition.setText(StringUtils.formatTime(0));
+        pauseOrStartButton.setSelected(true);
+        if(danmakuView.isPrepared()){
+            danmakuView.start(mMediaPlayer.getCurrentPosition());
+        }else {
+            Log.e(TAG,"but danmaku not");
         }
-    private void createPlayer() {
-                    if (mMediaPlayer != null) {
-                        mMediaPlayer.stop();
-                        mMediaPlayer.setDisplay(null);
-                        mMediaPlayer.release();
-                    }
-                    IjkMediaPlayer ijkMediaPlayer = new IjkMediaPlayer();
-                    IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
-                    //ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
-                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"max-buffer-size",500*1024);
-                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 100);
-                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"enable-accurate-seek",1);
-                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"reconnect",1);
-                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"safe",0);
-         ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "protocol_whitelist", "rtmp,concat,ffconcat,file,subfile,http,https,tls,rtp,tcp,udp,crypto");
-                    //ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"http_proxy","192.168.0.107");
-                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", "Bilibili Freedoooooom/MarkII");
-                    ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"framedrop",5);
-                    mMediaPlayer = ijkMediaPlayer;
-                    mMediaPlayer.setScreenOnWhilePlaying(true);
-                    if(videoListener==null){
-                        videoListener=new IjkMediaListener() {
-                            @Override
-                            public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int i) {
-                                    seekBar.setSecondaryProgress(i*SEEKBAR_MAX/100);
-                            }
-
-                            @Override
-                            public void onCompletion(IMediaPlayer iMediaPlayer) {
-                                Log.d(TAG,"onCompletion");
-                                switch (playMode){
-                                    case 0:
-                                        pause();
-                                        break;
-                                    case 1:
-                                        if(currentSourceIndex<videoDataSources.size()-1){
-                                            currentSourceIndex++;
-                                            load();
-                                        }else{
-                                            pause();
-                                        }
-                                        break;
-                                    case 2:
-                                        currentSourceIndex=currentSourceIndex>=videoDataSources.size()-1?0:currentSourceIndex+1;
-                                        load();
-                                        break;
-                                    case 3:
-                                        break;
-                                }
-                            }
-
-                            @Override
-                            public boolean onError(IMediaPlayer iMediaPlayer, int i, int i1) {
-                                Log.e(TAG,"error_code"+i+":"+i1);
-                                return false;
-                            }
-
-                            @Override
-                            public boolean onInfo(IMediaPlayer iMediaPlayer, int i, int i1) {
-                                Log.e(TAG,"onInfo:i:"+i+"i1:"+i1);
-                                return false;
-                            }
-
-                            @Override
-                            public void onPrepared(IMediaPlayer iMediaPlayer) {
-                                Log.e("video","videoprepared");
-                                videoPrepared=true;
-                                if(audioPlayer==null||audioPrepared){
-                                    mediaPrepared();
-                                }
-                            }
-
-                            @Override
-                            public void onSeekComplete(IMediaPlayer iMediaPlayer) {
-                                Log.e(TAG,"Player seek:"+iMediaPlayer.getCurrentPosition());
-                            }
-
-                            @Override
-                            public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int i, int i1, int i2, int i3) {
-
-                            }
-                        };
-                    }
-                    mMediaPlayer.setOnPreparedListener(videoListener);
-                    mMediaPlayer.setOnInfoListener(videoListener);
-                    mMediaPlayer.setOnSeekCompleteListener(videoListener);
-                    mMediaPlayer.setOnCompletionListener(videoListener);
-                    mMediaPlayer.setOnBufferingUpdateListener(videoListener);
-                    mMediaPlayer.setOnErrorListener(videoListener);
-                    mMediaPlayer.setOnVideoSizeChangedListener(videoListener);
+        videoDisposable= videoObservable.subscribe(new Consumer<Long>() {
+            @Override
+            public void accept(Long ong) {
+                if(!seekBarTracking&&mMediaPlayer.isPlaying()){
+                    Log.e(TAG,""+mMediaPlayer.getTcpSpeed());
+                    currentPosition.setText(StringUtils.formatTime(mMediaPlayer.getCurrentPosition()));
                 }
+            }
+        });
+    }
+    private void createPlayer() {
+        if (mMediaPlayer != null) {
+            mMediaPlayer.stop();
+            mMediaPlayer.setDisplay(null);
+            mMediaPlayer.release();
+        }
+        IjkMediaPlayer ijkMediaPlayer = new IjkMediaPlayer();
+        IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG);
+        //ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"max-buffer-size",5000*1024);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "min-frames", 100);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"enable-accurate-seek",1);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"reconnect",1);
+        //ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"safe",0);
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "protocol_whitelist", "rtmp,concat,ffconcat,file,subfile,http,https,tls,rtp,tcp,udp,crypto");
+        //ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT,"http_proxy","192.168.0.107");
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", "Bilibili Freedoooooom/MarkII");
+        ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"framedrop",5);
+        mMediaPlayer = ijkMediaPlayer;
+        mMediaPlayer.setScreenOnWhilePlaying(true);
+        if(videoListener==null){
+            videoListener=new IjkMediaListener() {
+                @Override
+                public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int i) {
+                }
+
+                @Override
+                public void onCompletion(IMediaPlayer iMediaPlayer) {
+                    Log.d(TAG,"onCompletion");
+                    switch (playMode){
+                        case 0:
+                            pause();
+                            break;
+                        case 1:
+                            if(currentSourceIndex<videoDataSources.size()-1){
+                                currentSourceIndex++;
+                                load();
+                            }else{
+                                pause();
+                            }
+                            break;
+                        case 2:
+                            currentSourceIndex=currentSourceIndex>=videoDataSources.size()-1?0:currentSourceIndex+1;
+                            load();
+                            break;
+                        case 3:
+                            break;
+                    }
+                }
+
+                @Override
+                public boolean onError(IMediaPlayer iMediaPlayer, int i, int i1) {
+                    Log.e(TAG,"error_code"+i+":"+i1);
+                    return false;
+                }
+
+                @Override
+                public boolean onInfo(IMediaPlayer iMediaPlayer, int i, int i1) {
+                    return false;
+                }
+
+                @Override
+                public void onPrepared(IMediaPlayer iMediaPlayer) {
+                    Log.e("video","videoprepared");
+                    videoPrepared=true;
+                    mediaPrepared();
+                }
+
+                @Override
+                public void onSeekComplete(IMediaPlayer iMediaPlayer) {
+                    Log.e(TAG,"Player seek:"+iMediaPlayer.getCurrentPosition());
+                }
+
+                @Override
+                public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int i, int i1, int i2, int i3) {
+
+                }
+            };
+        }
+        mMediaPlayer.setOnPreparedListener(videoListener);
+        mMediaPlayer.setOnInfoListener(videoListener);
+        mMediaPlayer.setOnSeekCompleteListener(videoListener);
+        mMediaPlayer.setOnCompletionListener(videoListener);
+        mMediaPlayer.setOnBufferingUpdateListener(videoListener);
+        mMediaPlayer.setOnErrorListener(videoListener);
+        mMediaPlayer.setOnVideoSizeChangedListener(videoListener);
+    }
     private void hideSubView(){
         subViewHidded=true;
         bottomLayout.setVisibility(GONE);
@@ -758,43 +658,8 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
     }
 
     @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        this.progress=progress;
-        if(seekBarTracking){
-            currentPosition.setText(StringUtils.formatTime(progress*duration/SEEKBAR_MAX));
-        }
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-        seekBarTracking=true;
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        Log.e(TAG,"onStopTracking0:"+mMediaPlayer.getCurrentPosition());
-        mMediaPlayer.seekTo(progress*duration/SEEKBAR_MAX);
-        if(audioPlayer!=null){
-            audioPlayer.seekTo(progress*duration/SEEKBAR_MAX);
-        }
-        danmakuView.seekTo(mMediaPlayer.getCurrentPosition());
-        currentPosition.setText(StringUtils.formatTime(mMediaPlayer.getCurrentPosition()));
-        seekBarTracking=false;
-    }
-
-    @Override
     public boolean onTouch(View v, MotionEvent event) {
         if(event.getAction()==MotionEvent.ACTION_UP){
-            if(fastfowarding){
-                fastfowarding=false;
-                fastfowardView.setVisibility(GONE);
-                mMediaPlayer.seekTo(fastforward_record);
-                if(audioPlayer!=null){
-                    audioPlayer.seekTo(fastforward_record);
-                }
-                fastforward_record=0;
-                lastXpercentage=0;
-            }
             if(brightchanging||volumechanging){
                 Observable<Integer> observable=Observable.create(new ObservableOnSubscribe<Integer>() {
                     @Override
@@ -804,15 +669,15 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
                         emitter.onComplete();
                     }
                 });
-                        Disposable disposable=observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
-                            @Override
-                            public void accept(Integer integer) {
-                                if(!brightchanging&&!volumechanging&&!fastfowarding){
-                                    brightLayout.setVisibility(GONE);
-                                    volumeLayout.setVisibility(GONE);
-                                }
-                            }
-                        });
+                Disposable disposable=observable.subscribeOn(Schedulers.newThread()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<Integer>() {
+                    @Override
+                    public void accept(Integer integer) {
+                        if(!brightchanging&&!volumechanging){
+                            brightLayout.setVisibility(GONE);
+                            volumeLayout.setVisibility(GONE);
+                        }
+                    }
+                });
             }
             brightchanging=false;
             volumechanging=false;
@@ -828,38 +693,26 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
             switch (checkedId){
                 case R.id.speed_0_5:
                     mMediaPlayer.setSpeed(0.5f);
-                    if(audioPlayer!=null)
-                        audioPlayer.setSpeed(0.5f);
                     speed=0.5f;
                     break;
                 case R.id.speed_0_75:
                     mMediaPlayer.setSpeed(0.75f);
-                    if(audioPlayer!=null)
-                        audioPlayer.setSpeed(0.75f);
                     speed=0.75f;
                     break;
                 case R.id.speed_1:
                     mMediaPlayer.setSpeed(1f);
-                    if(audioPlayer!=null)
-                        audioPlayer.setSpeed(0.1f);
                     speed=1f;
                     break;
                 case R.id.speed_1_25:
                     mMediaPlayer.setSpeed(1.25f);
-                    if(audioPlayer!=null)
-                        audioPlayer.setSpeed(1.25f);
                     speed=1.25f;
                     break;
                 case R.id.speed_1_5:
                     mMediaPlayer.setSpeed(1.5f);
-                    if(audioPlayer!=null)
-                        audioPlayer.setSpeed(1.5f);
                     speed=1.5f;
                     break;
                 case R.id.speed_2:
                     mMediaPlayer.setSpeed(2f);
-                    if(audioPlayer!=null)
-                        audioPlayer.setSpeed(2f);
                     speed=2f;
                     break;
             }
@@ -903,26 +756,18 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
                 case R.id.playway_pause:
                     playMode=0;
                     mMediaPlayer.setLooping(false);
-                    if(audioPlayer!=null)
-                        audioPlayer.setLooping(false);
                     break;
                 case R.id.playway_auto:
                     playMode=1;
                     mMediaPlayer.setLooping(false);
-                    if(audioPlayer!=null)
-                        audioPlayer.setLooping(false);
                     break;
                 case R.id.playway_list_recycle:
                     playMode=2;
                     mMediaPlayer.setLooping(false);
-                    if(audioPlayer!=null)
-                        audioPlayer.setLooping(false);
                     break;
                 case R.id.playway_item_recycle:
                     playMode=3;
                     mMediaPlayer.setLooping(true);
-                    if(audioPlayer!=null)
-                        audioPlayer.setLooping(true);
                     break;
             }
         }
@@ -966,25 +811,15 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
             double change;
             double xpercentage= -distanceX/screen_width+lastXpercentage;
             double ypercentage= distanceY/screen_height+lastYpercentage;
-            if(!brightchanging&&!volumechanging&&!fastfowarding){
-                if(xpercentage>0.1||xpercentage<-0.1){
-                    fastfowarding=true;
-                    brightLayout.setVisibility(GONE);
-                    volumeLayout.setVisibility(GONE);
-                    fastforward_record=mMediaPlayer.getCurrentPosition();
-                    fastfowardText=StringUtils.formatTime(fastforward_record)+"/"+StringUtils.formatTime(duration);
-                    fastfowardView.setText(fastfowardText);
-                    fastfowardView.setVisibility(VISIBLE);
-                }else if(ypercentage>0.1||ypercentage<-0.1){
+            if(!brightchanging&&!volumechanging){
+                if(ypercentage>0.1||ypercentage<-0.1){
                     if(e1.getX()<screen_width/2){
                         brightchanging=true;
                         volumeLayout.setVisibility(GONE);
-                        fastfowardView.setVisibility(GONE);
                         brightLayout.setVisibility(VISIBLE);
                     }else{
                         volumechanging  =true;
                         brightLayout.setVisibility(GONE);
-                        fastfowardView.setVisibility(GONE);
                         volumeLayout.setVisibility(VISIBLE);
                         VOLUME_MAX=audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
                     }
@@ -1003,14 +838,6 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
                 activity.getWindow().setAttributes(layoutParams);
                 brightSeekBar.setProgress((int) (brightSeekBar.getProgress()+ypercentage*SEEKBAR_MAX));
                 lastYpercentage=0;
-            }else if(fastfowarding){
-                change=xpercentage*FASTFORWARD_MAX+fastforward_record>duration?duration:xpercentage*FASTFORWARD_MAX+fastforward_record;
-                fastforward_record= (long) change;
-                fastfowardText=StringUtils.formatTime(fastforward_record)+"/"+StringUtils.formatTime(duration);
-                fastfowardView.setText(fastfowardText);
-                seekBar.setProgress((int) (change*SEEKBAR_MAX/duration));
-                currentPosition.setText(StringUtils.formatTime(fastforward_record));
-                lastXpercentage=0;
             }else {
                 int volume_current = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
                 if(1>ypercentage*VOLUME_MAX&&ypercentage*VOLUME_MAX>-1){
@@ -1063,8 +890,6 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
     }
 
     public void pause(){
-        if(audioPlayer!=null)
-            audioPlayer.pause();
         if(mMediaPlayer!=null){
             mMediaPlayer.pause();
             pauseOrStartButton.setSelected(false);
@@ -1073,10 +898,7 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
     }
 
     public void start(){
-        coverView.setVisibility(GONE);
         mMediaPlayer.start();
-        if(audioPlayer!=null)
-            audioPlayer.start();
         pauseOrStartButton.setSelected(true);
         if(danmakuView.isPrepared()){
             danmakuView.start(mMediaPlayer.getCurrentPosition());
@@ -1088,11 +910,6 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
         if(videoDisposable!=null){
             videoDisposable.dispose();
             videoDisposable=null;
-        }
-        if(audioPlayer!=null){
-            audioPlayer.stop();
-            audioPlayer.release();
-            audioPlayer=null;
         }
         if(mMediaPlayer!=null){
             mMediaPlayer.stop();
