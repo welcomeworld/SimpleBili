@@ -1,5 +1,9 @@
 package com.github.welcomeworld.simplebili.adapter;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -17,37 +21,40 @@ import butterknife.ButterKnife;
 public class IndexCategoryRecyclerViewAdapter extends RecyclerView.Adapter<IndexCategoryRecyclerViewAdapter.ViewHolder>{
 
     private final int HEADERVIEWTYPE=0x2233;
-    private int[] detailHeaders={R.string.bangumi_area,R.string.animation_area,R.string.hope_area,R.string.music_area,R.string.dance_area,R.string.game_area,R.string.science_area,R.string.life_area,R.string.art_area,R.string.fashion_area,R.string.amusement_area,R.string.record_area,R.string.film_area,R.string.tv_area};
-    private int[] detailFooters={R.string.bangumi_more,R.string.animation_more,R.string.hope_more,R.string.music_more,R.string.dance_more,R.string.game_more,R.string.science_more,R.string.life_more,R.string.art_more,R.string.fashion_more,R.string.amusement_more,R.string.record_more,R.string.film_more,R.string.tv_more};
+    private int[] categoryIds={1,167,3,129,4,36,160,119,155,5,181};
+    private int[] categoryImages={R.mipmap.ic_category_animation,R.mipmap.ic_category_hope,R.mipmap.ic_category_music,R.mipmap.ic_category_dance,R.mipmap.ic_category_game,R.mipmap.ic_category_science,R.mipmap.ic_category_life,R.mipmap.ic_category_art,R.mipmap.ic_category_fashion,R.mipmap.ic_category_amusement,R.mipmap.ic_category_film,R.mipmap.ic_category_game_center};
+    private int[] detailHeaders={R.string.animation,R.string.hope,R.string.music,R.string.dance,R.string.game,R.string.science,R.string.life,R.string.art,R.string.fashion,R.string.amusement,R.string.film,R.string.game_center};
 
+    private Context context;
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType==HEADERVIEWTYPE)return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_category_header,parent,false));
-        View view=LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_category_detail,parent,false);
-        return new ViewHolder(view);
+        context=parent.getContext();
+        return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.imagetextview,parent,false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        if(getItemViewType(position)!=HEADERVIEWTYPE){
-            holder.headerTitleView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(v.getContext(),holder.headerTitleView.getText(),Toast.LENGTH_SHORT).show();
+        holder.textView.setText(detailHeaders[position]);
+        Drawable drawable=context.getResources().getDrawable(categoryImages[position]);
+        drawable.setBounds(holder.textView.getCompoundDrawables()[1].getBounds());
+        holder.textView.setCompoundDrawables(null,drawable,null,null);
+        holder.textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(position==11){
+                    Intent gameIntent=new Intent();
+                    gameIntent.setData(Uri.parse("https://mobilegame-1.biligame.com/?statusBarHeight=48"));
+                    gameIntent.setPackage(v.getContext().getPackageName());
+                    v.getContext().startActivity(gameIntent);
+                }else{
+                    Intent categoryIntent=new Intent("com.github.welcomeworld.simplebili.action.CATEGORYPAGER");
+                    categoryIntent.putExtra("rid",categoryIds[position]);
+                    v.getContext().startActivity(categoryIntent);
                 }
-            });
-            holder.headerTitleView.setText(detailHeaders[position>detailHeaders.length?detailHeaders.length-1:position-1]);
-            holder.footerMoreView.setText(detailFooters[position>detailFooters.length?detailFooters.length-1:position-1]);
-            holder.footerMoreView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(v.getContext(),holder.footerMoreView.getText(),Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
+            }
+        });
     }
 
     @Override
@@ -58,20 +65,17 @@ public class IndexCategoryRecyclerViewAdapter extends RecyclerView.Adapter<Index
 
     @Override
     public int getItemCount() {
-        return 15;
+        return 12;
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{
-        @Nullable
-        @BindView(R.id.category_detail_header_title)
-        TextView headerTitleView;
-        @Nullable
-        @BindView(R.id.category_detail_footer_more)
-        TextView footerMoreView;
+
+        TextView textView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
+            textView= (TextView) itemView;
         }
     }
 }

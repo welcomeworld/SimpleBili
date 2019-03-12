@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.github.welcomeworld.simplebili.widget.ImageTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/live"
+    android:layout_gravity="center"
+    android:textAlignment="center"
+    android:drawablePadding="8dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:drawableTopWidth="40dp"
+    app:drawableTopHeight="40dp"
+    android:drawableTop="@mipmap/ic_category_live">
+</com.github.welcomeworld.simplebili.widget.ImageTextView>

@@ -134,4 +134,5 @@
     <!-- 提示或日志-->
     <string name="uri_null_tip">Uri为空</string>
     <string name="choose__tip">选择文件</string>
+    <string name="message_login_tips">未登录无法查看消息哦\n点击登录，与小伙伴愉快交流吧</string>
 </resources>

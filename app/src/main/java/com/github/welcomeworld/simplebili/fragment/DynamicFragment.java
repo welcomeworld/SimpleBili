@@ -2,6 +2,7 @@ package com.github.welcomeworld.simplebili.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -59,5 +60,12 @@ public class DynamicFragment extends Fragment {
         if(drawerLayout!=null){
             drawerLayout.openDrawer(Gravity.START);
         }
+    }
+
+    @OnClick(R.id.dynamic_login_guide)
+    public void login(){
+        Intent loginIntent=new Intent("com.github.welcomeworld.simplebili.action.LOGIN");
+        loginIntent.setPackage(getContext().getPackageName());
+        startActivity(loginIntent);
     }
 }

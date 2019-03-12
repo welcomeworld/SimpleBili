@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-
     <application
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
@@ -39,20 +38,26 @@
                     android:scheme="content" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".BrowserActivity" >
+        <activity android:name=".LoginActivity">
+            <intent-filter>
+                <action android:name="com.github.welcomeworld.simplebili.action.LOGIN"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+        <activity android:name=".BrowserActivity">
             <intent-filter>
                 <action android:name="com.github.welcomeworld.simplebili.action.BROWSER" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
-                    android:scheme="https"
-                    android:host="*"/>
+                    android:host="*"
+                    android:scheme="https" />
                 <data
-                    android:scheme="http"
-                    android:host="*"/>
+                    android:host="*"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
         <activity android:name=".SettingsActivity" />
@@ -83,13 +88,19 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="bilibili"
-                    android:host="live"/>
+                    android:host="live"
+                    android:scheme="bilibili" />
             </intent-filter>
         </activity>
         <activity
             android:name=".BangumiDetailActivity"
             android:configChanges="orientation|keyboardHidden|screenSize">
+        </activity>
+        <activity android:name=".CategoryPagerActivity">
+            <intent-filter>
+                <action android:name="com.github.welcomeworld.simplebili.action.CATEGORYPAGER"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
         </activity>
     </application>
 
