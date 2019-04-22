@@ -1,5 +1,7 @@
 package com.github.welcomeworld.simplebili.fragment;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -145,6 +147,14 @@ public class IndexDefaultBangumiFragment extends Fragment {
                         }
                         //BANGUMI
                         Glide.with(getContext()).load(response.body().getResult().getModules().get(1).getItems().get(0).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover1);
+                        bangumiCover1.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
+                                intent.setData(Uri.parse(response.body().getResult().getModules().get(1).getItems().get(0).getLink()));
+                                startActivity(intent);
+                            }
+                        });
                         Glide.with(getContext()).load(response.body().getResult().getModules().get(1).getItems().get(1).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover2);
                         Glide.with(getContext()).load(response.body().getResult().getModules().get(1).getItems().get(2).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover3);
                         bangumiTitle1.setText(response.body().getResult().getModules().get(1).getItems().get(0).getTitle());

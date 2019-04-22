@@ -14,12 +14,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.crashlytics.android.Crashlytics;
 import com.github.welcomeworld.simplebili.common.BiliLocalStatus;
 import com.github.welcomeworld.simplebili.fragment.DownloadFragment;
 import com.github.welcomeworld.simplebili.fragment.FavoriteFragment;
 import com.github.welcomeworld.simplebili.fragment.HistoryFragment;
 import com.github.welcomeworld.simplebili.fragment.IndexFragment;
 import com.github.welcomeworld.simplebili.fragment.WatchLaterFragment;
+import com.github.welcomeworld.simplebili.utils.FirebaseUtils;
 import com.github.welcomeworld.simplebili.utils.NavigationViewUtils;
 
 import butterknife.BindView;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        FirebaseUtils.getInstance(this).logEvent("进入主页","进入主页");
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

@@ -217,6 +217,7 @@ public class LivePlayActivity extends AppCompatActivity {
             timer.cancel();
             timer=null;
         }
+        ijkMediaView.pause();
     }
 
     @Override
