@@ -52,7 +52,7 @@
         android:text="@string/follow"
         android:textSize="14sp"
         android:textColor="@color/white"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/button_solid_pink"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
     <android.support.constraint.Barrier

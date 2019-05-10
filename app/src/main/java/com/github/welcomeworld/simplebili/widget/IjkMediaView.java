@@ -196,6 +196,9 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
     private IjkMediaListener audioListener;
 
     public void addVideoDataSource(VideoDataSource videoDataSource){
+        if(videoDataSource==null||videoDataSource.getVideoSources()==null){
+            return;
+        }
         if(videoDataSources!=null){
             videoDataSources.add(videoDataSource);
             initVideoListWindow();
@@ -539,6 +542,7 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
             audioPrepared=false;
         videoPrepared=false;
         mMediaPlayer.setDisplay(surfaceView.getHolder());
+        mMediaPlayer.setScreenOnWhilePlaying(true);
         mMediaPlayer.prepareAsync();
         }
 
@@ -556,7 +560,6 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
             ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", "Bilibili Freedoooooom/MarkII");
             ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"framedrop",5);
             audioPlayer = ijkMediaPlayer;
-            audioPlayer.setScreenOnWhilePlaying(true);
             if(audioListener==null){
                 audioListener=new IjkMediaListener() {
                     @Override
@@ -604,6 +607,7 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
                     public void onPrepared(IMediaPlayer iMediaPlayer) {
                         Log.e(TAG,"audioPrepared");
                         audioPrepared=true;
+                        audioPlayer.pause();
                         if(videoPrepared){
                             mediaPrepared();
                         }
@@ -630,6 +634,10 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
         }
 
     private void mediaPrepared(){
+        mMediaPlayer.start();
+        if(audioPlayer!=null){
+            audioPlayer.start();
+        }
             duration=mMediaPlayer.getDuration();
             currentPosition.setText(StringUtils.formatTime(0));
             durationView.setText(StringUtils.formatTime(duration));
@@ -637,8 +645,6 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
             pauseOrStartButton.setSelected(true);
             if(danmakuView.isPrepared()){
                 danmakuView.start(mMediaPlayer.getCurrentPosition());
-            }else {
-                Log.e(TAG,"but danmaku not");
             }
             videoDisposable= videoObservable.subscribe(new Consumer<Long>() {
                 @Override
@@ -670,7 +676,6 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "user_agent", "Bilibili Freedoooooom/MarkII");
                     ijkMediaPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER,"framedrop",5);
                     mMediaPlayer = ijkMediaPlayer;
-                    mMediaPlayer.setScreenOnWhilePlaying(true);
                     if(videoListener==null){
                         videoListener=new IjkMediaListener() {
                             @Override
@@ -680,7 +685,6 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
 
                             @Override
                             public void onCompletion(IMediaPlayer iMediaPlayer) {
-                                Log.d(TAG,"onCompletion");
                                 switch (playMode){
                                     case 0:
                                         pause();
@@ -704,20 +708,18 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
 
                             @Override
                             public boolean onError(IMediaPlayer iMediaPlayer, int i, int i1) {
-                                Log.e(TAG,"error_code"+i+":"+i1);
                                 return false;
                             }
 
                             @Override
                             public boolean onInfo(IMediaPlayer iMediaPlayer, int i, int i1) {
-                                Log.e(TAG,"onInfo:i:"+i+"i1:"+i1);
                                 return false;
                             }
 
                             @Override
                             public void onPrepared(IMediaPlayer iMediaPlayer) {
-                                Log.e("video","videoprepared");
                                 videoPrepared=true;
+                                mMediaPlayer.pause();
                                 if(audioPlayer==null||audioPrepared){
                                     mediaPrepared();
                                 }

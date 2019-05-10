@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="@string/preference_key_check_update"
+        android:layout="@layout/settings_default_preference"
+        android:summary="@string/current_version"
+        android:title="@string/check_update"/>
+    <Preference
+        android:key="@string/preference_key_net_check"
+        android:layout="@layout/settings_default_preference_screen"
+        android:title="@string/net_check">
+        <intent android:action="com.github.welcomeworld.simplebili.action.PING"/>
+    </Preference>
+    <Preference
+        android:key="@string/preference_key_clear_cache"
+        android:layout="@layout/settings_default_preference"
+        android:title="@string/clear_cache"/>
+    <CheckBoxPreference
+        android:key="@string/preference_key_download_auto"
+        android:checked="true"
+        android:defaultValue="true"
+        android:title="@string/download_auto"/>
+    <Preference
+        android:key="@string/preference_key_openSource_gratitude"
+        android:layout="@layout/settings_default_preference_screen"
+        android:title="@string/openSource_gratitude">
+        <intent android:action="com.github.welcomeworld.simplebili.action.GRATITUDE"/>
+    </Preference>
+    <Preference
+        android:key="@string/preference_key_reset_preference"
+        android:layout="@layout/settings_default_preference"
+        android:title="@string/reset_preference"/>
+</PreferenceScreen>

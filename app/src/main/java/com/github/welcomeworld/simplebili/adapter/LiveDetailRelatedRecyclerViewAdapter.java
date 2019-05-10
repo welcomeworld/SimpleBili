@@ -1,6 +1,9 @@
 package com.github.welcomeworld.simplebili.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +45,18 @@ public class LiveDetailRelatedRecyclerViewAdapter extends RecyclerView.Adapter<L
 
     @Override
     public void onBindViewHolder(@NonNull MyInnerViewHolder holder, int position) {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent liveIntent = new Intent("com.github.welcomeworld.simplebili.action.LIVEPLAY");
+                Bundle bundle = new Bundle();
+                bundle.putString("url",data.get(position).getPlayUrl());
+                bundle.putString("title",data.get(position).getTitle());
+                liveIntent.putExtras(bundle);
+                liveIntent.setData(Uri.parse("bilibili://live"+data.get(position).getLink()));
+                context.startActivity(liveIntent);
+            }
+        });
         holder.titleView.setText(data.get(position).getTitle());
         holder.upnameView.setText(data.get(position).getUname());
         holder.countView.setText(""+data.get(position).getOnline());

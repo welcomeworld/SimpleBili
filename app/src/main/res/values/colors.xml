@@ -11,7 +11,7 @@
     <color name="transparent_a30">#43000000</color>
     <color name="night_light">#3d3d3d</color>
     <color name="deep_black">#AA000000</color>
-    <color name="black">#FF404040</color>
+    <color name="black">#FF303030</color>
     <color name="gray_dark">#FF999999</color>
     <color name="deep_gray">#FF7F7F7F</color>
     <color name="black_transparent">#21000000</color>
@@ -21,6 +21,7 @@
     <color name="gray_background">#FFBBBBBB</color>
     <color name="gray_light">#FFEBEBEB</color>
     <color name="blue">#FF2196F3</color>
+    <color name="color_FFA726">#FFFFA726</color>
 
     <color name="black_overlay">#66000000</color>
 </resources>

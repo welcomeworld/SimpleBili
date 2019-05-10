@@ -27,7 +27,7 @@ import com.github.welcomeworld.simplebili.utils.NavigationViewUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     @BindView(R.id.main_drawerLayout)
     DrawerLayout drawerLayout;
@@ -123,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
         });
         initFragment("index");
         navigationView.setItemIconTintList(getResources().getColorStateList(R.color.gary2white_color));
+        navigationView.findViewById(R.id.navigation_settings_text).setOnClickListener(this::onClick);
+        navigationView.findViewById(R.id.navigation_settings_image).setOnClickListener(this::onClick);
         //NavigationViewUtils.addFooterView(navigationView,R.layout.navigation_footer_main);
     }
 
@@ -189,6 +191,16 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }else{
             switchFragment("index");
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.navigation_settings_image:
+            case R.id.navigation_settings_text:
+                startActivity(new Intent(this,SettingsActivity.class));
+                break;
         }
     }
 }

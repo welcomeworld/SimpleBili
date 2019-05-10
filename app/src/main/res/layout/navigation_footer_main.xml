@@ -10,6 +10,7 @@
     android:paddingEnd="16dp"
     android:background="@color/white">
     <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/navigation_settings_image"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:padding="8dp"
@@ -17,14 +18,17 @@
         android:tint="@color/deep_gray"
         android:src="@drawable/vector_navigation_setting"/>
     <TextView
+        android:id="@+id/navigation_settings_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:text="@string/setting"/>
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
     <ImageView
+        android:id="@+id/navigation_theme_image"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:padding="8dp"
@@ -32,6 +36,8 @@
         android:tint="@color/deep_gray"
         android:src="@drawable/vector_navigation_theme"/>
     <TextView
+        android:id="@+id/navigation_theme_text"
+        android:layout_marginStart="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/theme"/>
@@ -40,6 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
     <ImageView
+        android:id="@+id/navigation_night_image"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:padding="8dp"
@@ -47,6 +54,8 @@
         android:background="@drawable/selector_gray_ring_32"
         android:src="@drawable/vector_navigation_night"/>
     <TextView
+        android:id="@+id/navigation_night_text"
+        android:layout_marginStart="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/night"/>

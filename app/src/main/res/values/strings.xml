@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- UI-->
     <string name="app_name">SimpleBili</string>
     <string name="backslash">/</string>
@@ -131,8 +131,32 @@
     <string name="login_desc">登录</string>
     <string name="register_desc">注册</string>
     <string name="qrcode_desc">二维码</string>
+    <string name="message_login_tips">未登录无法查看消息哦\n点击登录，与小伙伴愉快交流吧</string>
+    <string name="evaluate_suffix">分</string>
+    <string name="evaluate">点评</string>
+    <string name="more_recommend">更多推荐</string>
+    <string name="check_update">检查更新</string>
+    <string name="net_check">网络诊断</string>
+    <string name="clear_cache">清理存储空间</string>
+    <string name="download_auto">自动开始未完成下载</string>
+    <string name="openSource_gratitude">开源鸣谢</string>
+    <string name="reset_preference">恢复初始设置</string>
+    <string name="current_version" translatable="false">1.0.0 (beta)</string>
+    <string name="ip_show"><xliff:g id="bili">本机IP:%1$s,%2$s %3$s %4$s</xliff:g></string>
+    <string name="ip_error">获取本机IP失败</string>
+    <string name="reset_completed">已恢复初始设置</string>
+    <string name="clear_completed">清理完成</string>
+    <string name="latest_version">您当前已经是最新版本了^_^</string>
     <!-- 提示或日志-->
     <string name="uri_null_tip">Uri为空</string>
     <string name="choose__tip">选择文件</string>
-    <string name="message_login_tips">未登录无法查看消息哦\n点击登录，与小伙伴愉快交流吧</string>
+
+    <!-- Preference Key -->
+    <string name="preference_key_check_update" translatable="false">settings_preference_key_check_update</string>
+    <string name="preference_key_net_check" translatable="false">settings_preference_key_net_check</string>
+    <string name="preference_key_clear_cache" translatable="false">settings_preference_key_clear_cache</string>
+    <string name="preference_key_download_auto" translatable="false">settings_preference_key_download_auto</string>
+    <string name="preference_key_openSource_gratitude" translatable="false">settings_preference_key_openSource_gratitude</string>
+    <string name="preference_key_reset_preference" translatable="false">settings_preference_key_reset_preference</string>
+
 </resources>

@@ -16,7 +16,7 @@
         android:layout_height="0dp"
         android:src="@mipmap/testcover"
         android:scaleType="fitXY"
-        app:layout_constraintDimensionRatio="H,4:3"
+        app:layout_constraintDimensionRatio="H,16:9"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/related_title"
