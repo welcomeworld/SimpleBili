@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <View
+        android:id="@+id/search_background"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <EditText
+        android:id="@+id/search_input"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:background="@drawable/background_white_ring"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:paddingStart="32dp"
+        android:paddingEnd="8dp"
+        android:importantForAutofill="no"
+        android:textColor="@color/black"
+        android:imeOptions="actionSearch|actionGo"
+        android:inputType="text"
+        android:hint="@string/my_king"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/search_cancel"
+        app:layout_constraintBottom_toBottomOf="@id/search_background"
+        tools:targetApi="o" />
+    <TextView
+        android:id="@+id/search_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="@id/search_background"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/cancel"
+        />
+</android.support.constraint.ConstraintLayout>

@@ -12,7 +12,7 @@ import com.github.welcomeworld.simplebili.adapter.GratitudeRecyclerViewAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class GratitudeActivity extends AppCompatActivity {
+public class GratitudeActivity extends SimpleBaseActivity {
 
     @BindView(R.id.gratitude_recyclerView)
     RecyclerView recyclerView;

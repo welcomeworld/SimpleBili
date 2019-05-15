@@ -49,7 +49,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class BangumiDetailActivity extends AppCompatActivity {
+public class BangumiDetailActivity extends SimpleBaseActivity{
 
     @BindView(R.id.bangumi_detail_ijkVideoView)
     IjkMediaView ijkMediaView;

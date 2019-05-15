@@ -22,7 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-public class PlayActivity extends Activity {
+public class PlayActivity extends SimpleBaseActivity {
     @BindView(R.id.ijkVideoView)
     IjkMediaView ijkMediaView;
     @Override

@@ -1,6 +1,7 @@
 package com.github.welcomeworld.simplebili.net.okhttp.interceptor;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -20,7 +21,7 @@ public class DynamicParameterInterceptor implements Interceptor {
         HttpUrl.Builder urlBuilder=chain.request().url().newBuilder();
         if(parameters!=null){
             for(String key:parameters.keySet()){
-                urlBuilder.addQueryParameter(key,parameters.get(key));
+                urlBuilder.addQueryParameter(key, URLEncoder.encode(parameters.get(key),"utf-8"));
             }
         }
         return chain.proceed(chain.request().newBuilder().url(urlBuilder.build()).build());

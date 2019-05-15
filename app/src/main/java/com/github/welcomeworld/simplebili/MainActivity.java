@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,7 +28,7 @@ import com.github.welcomeworld.simplebili.utils.NavigationViewUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends SimpleBaseActivity implements View.OnClickListener {
 
     @BindView(R.id.main_drawerLayout)
     DrawerLayout drawerLayout;
@@ -45,7 +46,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                drawerLayout.closeDrawer(navigationView);
                 switch (item.getItemId()){
                     case R.id.item_index:
                         switchFragment("index");
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         switchFragment("cache");
                         break;
                     case R.id.item_favorite:
-                        if(BiliLocalStatus.isLogin(getApplicationContext())){
+                        if(BiliLocalStatus.isLogin()){
                             switchFragment("favorite");
                         }else{
                             Intent intent=new Intent(MainActivity.this,LoginActivity.class);
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         break;
                     case R.id.item_later:
-                        if(BiliLocalStatus.isLogin(getApplicationContext())){
+                        if(BiliLocalStatus.isLogin()){
                             switchFragment("later");
                         }else{
                             Intent intent=new Intent(MainActivity.this,LoginActivity.class);
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         break;
                     case R.id.item_follow:
-                        if(BiliLocalStatus.isLogin(getApplicationContext())){
+                        if(BiliLocalStatus.isLogin()){
                             switchFragment("follow");
                         }else{
                             Intent intent=new Intent(MainActivity.this,LoginActivity.class);
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         break;
                     case R.id.item_uppercenter:
-                        if(BiliLocalStatus.isLogin(getApplicationContext())){
+                        if(BiliLocalStatus.isLogin()){
                             switchFragment("uppercenter");
                         }else{
                             Intent intent=new Intent(MainActivity.this,LoginActivity.class);
@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         break;
                     case R.id.item_live:
-                        if(BiliLocalStatus.isLogin(getApplicationContext())){
+                        if(BiliLocalStatus.isLogin()){
                             switchFragment("live");
                         }else{
                             Intent intent=new Intent(MainActivity.this,LoginActivity.class);
@@ -97,8 +97,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                         break;
                     case R.id.item_myvip:
-                        if(BiliLocalStatus.isLogin(getApplicationContext())){
-                            switchFragment("myvip");
+                        if(BiliLocalStatus.isLogin()){
+                            Intent vipIntent = new Intent(MainActivity.this,BrowserActivity.class);
+                            vipIntent.setData(Uri.parse("https://big.bilibili.com/mobile/home"));
+                            startActivity(vipIntent);
                         }else{
                             Intent intent=new Intent(MainActivity.this,LoginActivity.class);
                             startActivity(intent);
@@ -110,6 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         startActivity(intent);
                         break;
                 }
+                drawerLayout.closeDrawer(navigationView);
                 return true;
             }
         });
@@ -117,8 +120,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         headerProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent=new Intent(MainActivity.this,LoginActivity.class);
-                startActivity(intent);
+                if(!BiliLocalStatus.isLogin()){
+                    Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+                    startActivity(intent);
+                }else {
+                    Intent intent=new Intent(MainActivity.this,UserInfoActivity.class);
+                    startActivity(intent);
+                }
+
             }
         });
         initFragment("index");
@@ -179,6 +188,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @Override
+    public void updateSelf(String command) {
+        if(command.equalsIgnoreCase("search")){
+            startActivity(new Intent(MainActivity.this,SearchActivity.class));
+        }else if(command.equalsIgnoreCase("cache")){
+            switchFragment("cache");
+        }else if(command.equalsIgnoreCase("gameCenter")){
+            Intent gameIntent=new Intent();
+            gameIntent.setData(Uri.parse("https://mobilegame-1.biligame.com/?statusBarHeight=48"));
+            gameIntent.setPackage(getPackageName());
+            startActivity(gameIntent);
+        }
+        else {
+            Log.e(TAG,"unknown command:"+command);
+        }
+    }
 
     @Override
     protected void onDestroy() {

@@ -1,6 +1,8 @@
 package com.github.welcomeworld.simplebili.utils;
 
 import java.text.DecimalFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class StringUtils {
@@ -55,6 +57,22 @@ public class StringUtils {
             return String.format(Locale.getDefault(),"00:%02d",seconds);
         }else{
             return "--:--";
+        }
+    }
+
+    public static String formatDate(long time){
+        Date date = new Date(time);
+        Calendar calendar = Calendar.getInstance();
+        Calendar formatTime = Calendar.getInstance();
+        formatTime.setTime(date);
+        if(calendar.get(Calendar.YEAR)>formatTime.get(Calendar.YEAR)){
+            return formatTime.get(Calendar.YEAR)+" "+formatTime.get(Calendar.MONTH)+"-"+formatTime.get(Calendar.DAY_OF_MONTH);
+        }else if(calendar.get(Calendar.MONTH)>formatTime.get(Calendar.MONTH)){
+            return formatTime.get(Calendar.MONTH)+"-"+formatTime.get(Calendar.DAY_OF_MONTH)+" "+formatTime.get(Calendar.HOUR_OF_DAY)+":"+formatTime.get(Calendar.MINUTE);
+        }else if(calendar.get(Calendar.DAY_OF_MONTH)>formatTime.get(Calendar.DAY_OF_MONTH)){
+            return formatTime.get(Calendar.MONTH)+"-"+formatTime.get(Calendar.DAY_OF_MONTH)+" "+formatTime.get(Calendar.HOUR_OF_DAY)+":"+formatTime.get(Calendar.MINUTE);
+        }else {
+            return formatTime.get(Calendar.HOUR_OF_DAY)+":"+formatTime.get(Calendar.MINUTE);
         }
     }
 }

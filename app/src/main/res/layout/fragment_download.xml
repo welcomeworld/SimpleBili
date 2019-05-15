@@ -5,18 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/base_toolbar"
-        android:minHeight="56dp"
-        app:navigationIcon="@mipmap/player_back"
-        app:contentInsetStartWithNavigation="0dp"
-        android:background="@color/colorPrimary"
-        app:layout_constraintTop_toTopOf="parent"
-        app:title="@string/off_line_cache">
-    </android.support.v7.widget.Toolbar>
+    <include android:id="@+id/toolbar" layout="@layout/toolbar_navigation"/>
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

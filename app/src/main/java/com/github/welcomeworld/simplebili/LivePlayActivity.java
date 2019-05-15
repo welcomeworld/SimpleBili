@@ -62,7 +62,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-public class LivePlayActivity extends AppCompatActivity {
+public class LivePlayActivity extends SimpleBaseActivity {
 
     public static final String TAG="LivePlayActivity";
 

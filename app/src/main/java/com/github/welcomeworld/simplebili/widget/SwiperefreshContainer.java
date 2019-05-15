@@ -49,8 +49,8 @@ public class SwiperefreshContainer extends SwipeRefreshLayout {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if(recyclerView==null){
-            if(getChildAt(1)instanceof RecyclerView) {
-                recyclerView = (RecyclerView) getChildAt(1);
+            if(getChildAt(0)instanceof RecyclerView) {
+                recyclerView = (RecyclerView) getChildAt(0);
             }
         }
     }
@@ -86,4 +86,6 @@ public class SwiperefreshContainer extends SwipeRefreshLayout {
     public void setOnLoadListener(OnLoadListener onLoadListener){
         this.onLoadListener=onLoadListener;
     }
+
+
 }

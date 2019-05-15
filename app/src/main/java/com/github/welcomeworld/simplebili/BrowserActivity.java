@@ -16,7 +16,7 @@ import android.webkit.WebViewClient;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BrowserActivity extends AppCompatActivity {
+public class BrowserActivity extends SimpleBaseActivity {
 
     @BindView(R.id.browser_toolbar)
     Toolbar toolbar;

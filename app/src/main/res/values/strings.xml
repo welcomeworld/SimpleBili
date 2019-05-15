@@ -147,6 +147,9 @@
     <string name="reset_completed">已恢复初始设置</string>
     <string name="clear_completed">清理完成</string>
     <string name="latest_version">您当前已经是最新版本了^_^</string>
+    <string name="cancel">取消</string>
+    <string name="my_king">吾王赛高!!!</string>
+
     <!-- 提示或日志-->
     <string name="uri_null_tip">Uri为空</string>
     <string name="choose__tip">选择文件</string>

@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.github.welcomeworld.simplebili.fragment.SettingsFragment;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends SimpleBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

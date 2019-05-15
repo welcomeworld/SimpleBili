@@ -34,7 +34,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class CategoryPagerActivity extends AppCompatActivity {
+public class CategoryPagerActivity extends SimpleBaseActivity {
     public final static String TAG="CategoryPagerActivity";
 
     @BindView(R.id.category_pager_recyclerview)

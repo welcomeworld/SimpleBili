@@ -14,9 +14,11 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.github.welcomeworld.simplebili.adapter.VideoDetailPagerAdapter;
+import com.github.welcomeworld.simplebili.bean.LocalHistoryBean;
 import com.github.welcomeworld.simplebili.bean.ReplyCursorBean;
 import com.github.welcomeworld.simplebili.bean.VideoDetailPageBean;
 import com.github.welcomeworld.simplebili.bean.VideoUrlBean;
+import com.github.welcomeworld.simplebili.common.BiliLocalStatus;
 import com.github.welcomeworld.simplebili.common.VideoDataSource;
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicHeaderInterceptor;
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicParameterInterceptor;
@@ -58,7 +60,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-public class VideoDetailActivity extends AppCompatActivity {
+public class VideoDetailActivity extends SimpleBaseActivity {
 
     @BindView(R.id.ijkVideoView)
     IjkMediaView ijkMediaView;
@@ -199,6 +201,21 @@ public class VideoDetailActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<VideoDetailPageBean> call, Response<VideoDetailPageBean> response) {
                     ((VideoDetailPagerAdapter)viewPager.getAdapter()).setDescData(response.body().getData());
+                    LocalHistoryBean localHistoryBean = new LocalHistoryBean();
+                    localHistoryBean.setType(LocalHistoryBean.VIDEO);
+                    localHistoryBean.setAid(response.body().getData().getAid());
+                    localHistoryBean.setCover(response.body().getData().getPic());
+                    localHistoryBean.setMid(BiliLocalStatus.getMid());
+                    localHistoryBean.setTitle(response.body().getData().getTitle());
+                    localHistoryBean.setViewTime(System.currentTimeMillis());
+                    localHistoryBean.setViewProgress(0);
+                    localHistoryBean.setUpName(response.body().getData().getOwner().getName());
+                    localHistoryBean.setDuration(response.body().getData().getDuration());
+                    try{
+                        ((MApplication)getApplication()).getDatabase().getDao().setHistory(localHistoryBean);
+                    }catch (Exception e){
+                        ((MApplication)getApplication()).getDatabase().getDao().updateHistory(localHistoryBean);
+                    }
                     for(int i=0;i<response.body().getData().getPages().size();i++){
                         int index=i;
                         VideoDataSource videoDataSource=new VideoDataSource();

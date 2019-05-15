@@ -14,12 +14,15 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -101,5 +104,21 @@ public class APITest {
         assertEquals(httpUrl.newBuilder()
                 .encodedQuery(nameAndValues.stream().collect(Collectors.joining("&")))
                 .build().toString(),nameAndValues.stream().collect(Collectors.joining("&")));
+    }
+
+    @Test
+    public void testPostSign(){
+        try {
+            MessageDigest messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.update(("appkey=1d8b6e7d45233436&build=5360000&device=android&mobi_app=android_b&password=PJQYVH19hXv7xRZ+lLTU61BK+N3Vb1eb0Cag4uL0ClUGW0oyuQeFLHfYZT6wpyr6uUWNZxV/OPQv" +
+                    "9dyTs63XDuVewHLgXMjcTIFr8QRMGhlTsiJxZOWJUqGJnM/BiI1WqbdIaHwtiKPM9tWTw9JS/p2c" +
+                    "EehVQ92zT0vd9nP9kbE=" +
+                    "&platform=android&ts=1557554706636&username=jhfyyf"+ "560c52ccd288fed045859ed18bffd973").getBytes());
+            String md5 = new BigInteger(1, messageDigest.digest()).toString(16);
+            //md5 不满 32 位时左边加 0
+            assertEquals(("00000000000000000000000000000000" + md5).substring(md5.length()),"fdfs");
+        } catch (NoSuchAlgorithmException e) {
+            throw new Error(e);
+        }
     }
 }

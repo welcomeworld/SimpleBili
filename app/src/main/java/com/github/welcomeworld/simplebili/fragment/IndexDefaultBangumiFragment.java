@@ -108,6 +108,8 @@ public class IndexDefaultBangumiFragment extends Fragment {
     @BindView(R.id.mine_group)
     Group mineGroup;
 
+    IndexBangumiBean data;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -122,111 +124,7 @@ public class IndexDefaultBangumiFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Map<String,String> parameters=new HashMap<>();
-                parameters.put("ts",""+System.currentTimeMillis());
-                OkHttpClient.Builder okHttpClientBuilder=new OkHttpClient.Builder()
-                        .addInterceptor(new FixedHeaderInterceptor())
-                        .addInterceptor(new DynamicHeaderInterceptor(null))
-                        .addInterceptor(new FixedParameterInterceptor())
-                        .addInterceptor(new DynamicParameterInterceptor(parameters))
-                        .addInterceptor(new SortAndSignInterceptor())
-                        .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
-                Retrofit retrofit=new Retrofit.Builder()
-                        .baseUrl(BaseUrl.APIURL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .client(okHttpClientBuilder.build())
-                        .build();
-                IndexNetAPI indexNetAPI=retrofit.create(IndexNetAPI.class);
-                Call<IndexBangumiBean> indexBangumiBeanCall=indexNetAPI.getIndexBangumi();
-                indexBangumiBeanCall.enqueue(new Callback<IndexBangumiBean>() {
-                    @Override
-                    public void onResponse(Call<IndexBangumiBean> call, Response<IndexBangumiBean> response) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        if(response.body()==null||response.body().getResult()==null){
-                            return;
-                        }
-                        //BANGUMI
-                        Glide.with(getContext()).load(response.body().getResult().getModules().get(1).getItems().get(0).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover1);
-                        bangumiCover1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
-                                intent.setData(Uri.parse(response.body().getResult().getModules().get(1).getItems().get(0).getLink()));
-                                startActivity(intent);
-                            }
-                        });
-                        bangumiCover2.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
-                                intent.setData(Uri.parse(response.body().getResult().getModules().get(1).getItems().get(1).getLink()));
-                                startActivity(intent);
-                            }
-                        });
-                        bangumiCover3.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
-                                intent.setData(Uri.parse(response.body().getResult().getModules().get(1).getItems().get(2).getLink()));
-                                startActivity(intent);
-                            }
-                        });
-                        Glide.with(getContext()).load(response.body().getResult().getModules().get(1).getItems().get(1).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover2);
-                        Glide.with(getContext()).load(response.body().getResult().getModules().get(1).getItems().get(2).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover3);
-                        bangumiTitle1.setText(response.body().getResult().getModules().get(1).getItems().get(0).getTitle());
-                        bangumiTitle2.setText(response.body().getResult().getModules().get(1).getItems().get(1).getTitle());
-                        bangumiTitle3.setText(response.body().getResult().getModules().get(1).getItems().get(2).getTitle());
-                        bangumiDesc1.setText(response.body().getResult().getModules().get(1).getItems().get(0).getDesc());
-                        bangumiDesc2.setText(response.body().getResult().getModules().get(1).getItems().get(1).getDesc());
-                        bangumiDesc3.setText(response.body().getResult().getModules().get(1).getItems().get(2).getDesc());
-
-                        //HOPE
-                        hopeCover1.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
-                                intent.setData(Uri.parse(response.body().getResult().getModules().get(3).getItems().get(0).getLink()));
-                                startActivity(intent);
-                            }
-                        });
-                        hopeCover2.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
-                                intent.setData(Uri.parse(response.body().getResult().getModules().get(3).getItems().get(1).getLink()));
-                                startActivity(intent);
-                            }
-                        });
-                        hopeCover3.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
-                                intent.setData(Uri.parse(response.body().getResult().getModules().get(3).getItems().get(2).getLink()));
-                                startActivity(intent);
-                            }
-                        });
-                        Glide.with(getContext()).load(response.body().getResult().getModules().get(3).getItems().get(0).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover1);
-                        Glide.with(getContext()).load(response.body().getResult().getModules().get(3).getItems().get(1).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover2);
-                        Glide.with(getContext()).load(response.body().getResult().getModules().get(3).getItems().get(2).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover3);
-                        hopeTitle1.setText(response.body().getResult().getModules().get(3).getItems().get(0).getTitle());
-                        hopeTitle2.setText(response.body().getResult().getModules().get(3).getItems().get(1).getTitle());
-                        hopeTitle3.setText(response.body().getResult().getModules().get(3).getItems().get(2).getTitle());
-                        hopeDesc1.setText(response.body().getResult().getModules().get(3).getItems().get(0).getDesc());
-                        hopeDesc2.setText(response.body().getResult().getModules().get(3).getItems().get(1).getDesc());
-                        hopeDesc3.setText(response.body().getResult().getModules().get(3).getItems().get(2).getDesc());
-                        IndexBangumiBannerPagerAdapter pagerAdapter=new IndexBangumiBannerPagerAdapter(bannerViewPager,response.body().getResult().getModules().get(0));
-                        bannerViewPager.setAdapter(pagerAdapter);
-                        bannerViewPager.addOnPageChangeListener(pagerAdapter);
-                        bannerViewPager.setCurrentItem(1);
-                        editorRecyclerView.setAdapter(new IndexBangumiEditorRecyclerViewAdapter(response.body().getResult().getModules().get(response.body().getResult().getModules().size()-1)));
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<IndexBangumiBean> call, Throwable t) {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                });
+                refresh(true);
             }
         });
         swipeRefreshLayout.setOnLoadListener(new SwiperefreshContainer.OnLoadListener() {
@@ -238,4 +136,126 @@ public class IndexDefaultBangumiFragment extends Fragment {
         return view;
     }
 
+    public void refresh(boolean force){
+        if((!force&&data!=null)||swipeRefreshLayout ==null){
+            return;
+        }
+        if(swipeRefreshLayout.isRefreshing()&&!force){
+            return;
+        }
+        swipeRefreshLayout.setRefreshing(true);
+        Map<String,String> parameters=new HashMap<>();
+        parameters.put("ts",""+System.currentTimeMillis());
+        OkHttpClient.Builder okHttpClientBuilder=new OkHttpClient.Builder()
+                .addInterceptor(new FixedHeaderInterceptor())
+                .addInterceptor(new DynamicHeaderInterceptor(null))
+                .addInterceptor(new FixedParameterInterceptor())
+                .addInterceptor(new DynamicParameterInterceptor(parameters))
+                .addInterceptor(new SortAndSignInterceptor())
+                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+        Retrofit retrofit=new Retrofit.Builder()
+                .baseUrl(BaseUrl.APIURL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClientBuilder.build())
+                .build();
+        IndexNetAPI indexNetAPI=retrofit.create(IndexNetAPI.class);
+        Call<IndexBangumiBean> indexBangumiBeanCall=indexNetAPI.getIndexBangumi();
+        indexBangumiBeanCall.enqueue(new Callback<IndexBangumiBean>() {
+            @Override
+            public void onResponse(Call<IndexBangumiBean> call, Response<IndexBangumiBean> response) {
+                swipeRefreshLayout.setRefreshing(false);
+                data = response.body();
+                if(response.body()==null||response.body().getResult()==null){
+                    return;
+                }
+                //BANGUMI
+                Glide.with(getContext()).load(response.body().getResult().getModules().get(1).getItems().get(0).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover1);
+                bangumiCover1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
+                        intent.setData(Uri.parse(response.body().getResult().getModules().get(1).getItems().get(0).getLink()));
+                        startActivity(intent);
+                    }
+                });
+                bangumiCover2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
+                        intent.setData(Uri.parse(response.body().getResult().getModules().get(1).getItems().get(1).getLink()));
+                        startActivity(intent);
+                    }
+                });
+                bangumiCover3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
+                        intent.setData(Uri.parse(response.body().getResult().getModules().get(1).getItems().get(2).getLink()));
+                        startActivity(intent);
+                    }
+                });
+                Glide.with(getContext()).load(response.body().getResult().getModules().get(1).getItems().get(1).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover2);
+                Glide.with(getContext()).load(response.body().getResult().getModules().get(1).getItems().get(2).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover3);
+                bangumiTitle1.setText(response.body().getResult().getModules().get(1).getItems().get(0).getTitle());
+                bangumiTitle2.setText(response.body().getResult().getModules().get(1).getItems().get(1).getTitle());
+                bangumiTitle3.setText(response.body().getResult().getModules().get(1).getItems().get(2).getTitle());
+                bangumiDesc1.setText(response.body().getResult().getModules().get(1).getItems().get(0).getDesc());
+                bangumiDesc2.setText(response.body().getResult().getModules().get(1).getItems().get(1).getDesc());
+                bangumiDesc3.setText(response.body().getResult().getModules().get(1).getItems().get(2).getDesc());
+
+                //HOPE
+                hopeCover1.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
+                        intent.setData(Uri.parse(response.body().getResult().getModules().get(3).getItems().get(0).getLink()));
+                        startActivity(intent);
+                    }
+                });
+                hopeCover2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
+                        intent.setData(Uri.parse(response.body().getResult().getModules().get(3).getItems().get(1).getLink()));
+                        startActivity(intent);
+                    }
+                });
+                hopeCover3.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
+                        intent.setData(Uri.parse(response.body().getResult().getModules().get(3).getItems().get(2).getLink()));
+                        startActivity(intent);
+                    }
+                });
+                Glide.with(getContext()).load(response.body().getResult().getModules().get(3).getItems().get(0).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover1);
+                Glide.with(getContext()).load(response.body().getResult().getModules().get(3).getItems().get(1).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover2);
+                Glide.with(getContext()).load(response.body().getResult().getModules().get(3).getItems().get(2).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover3);
+                hopeTitle1.setText(response.body().getResult().getModules().get(3).getItems().get(0).getTitle());
+                hopeTitle2.setText(response.body().getResult().getModules().get(3).getItems().get(1).getTitle());
+                hopeTitle3.setText(response.body().getResult().getModules().get(3).getItems().get(2).getTitle());
+                hopeDesc1.setText(response.body().getResult().getModules().get(3).getItems().get(0).getDesc());
+                hopeDesc2.setText(response.body().getResult().getModules().get(3).getItems().get(1).getDesc());
+                hopeDesc3.setText(response.body().getResult().getModules().get(3).getItems().get(2).getDesc());
+                IndexBangumiBannerPagerAdapter pagerAdapter=new IndexBangumiBannerPagerAdapter(bannerViewPager,response.body().getResult().getModules().get(0));
+                bannerViewPager.setAdapter(pagerAdapter);
+                bannerViewPager.addOnPageChangeListener(pagerAdapter);
+                bannerViewPager.setCurrentItem(1);
+                editorRecyclerView.setAdapter(new IndexBangumiEditorRecyclerViewAdapter(response.body().getResult().getModules().get(response.body().getResult().getModules().size()-1)));
+
+            }
+            @Override
+            public void onFailure(Call<IndexBangumiBean> call, Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            refresh(false);
+        }
+    }
 }

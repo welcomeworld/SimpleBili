@@ -58,6 +58,8 @@ public class IndexDefaultLiveFragment extends Fragment {
     @BindView(R.id.index_default_live_swipeRefresh)
     SwiperefreshContainer swipeRefreshLayout;
 
+    IndexLiveBean.DataBean data;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -81,42 +83,62 @@ public class IndexDefaultLiveFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Map<String,String> parameters=new HashMap<>();
-                parameters.put("actionKey","appkey");
-                parameters.put("quality","0");
-                parameters.put("rec_page","4");
-                parameters.put("relation_page","2");
-                parameters.put("scale","xxhdpi");
-                parameters.put("ts",""+System.currentTimeMillis());
-                OkHttpClient.Builder okHttpClientBuilder=new OkHttpClient.Builder()
-                        .addInterceptor(new FixedHeaderInterceptor())
-                        .addInterceptor(new DynamicHeaderInterceptor(null))
-                        .addInterceptor(new FixedParameterInterceptor())
-                        .addInterceptor(new DynamicParameterInterceptor(parameters))
-                        .addInterceptor(new SortAndSignInterceptor())
-                        .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
-                Retrofit retrofit=new Retrofit.Builder()
-                        .baseUrl(BaseUrl.APILIVEURL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .client(okHttpClientBuilder.build())
-                        .build();
-                IndexNetAPI indexNetAPI=retrofit.create(IndexNetAPI.class);
-                Call<IndexLiveBean> liveBeanCall=indexNetAPI.getIndexLive();
-                liveBeanCall.enqueue(new Callback<IndexLiveBean>() {
-                    @Override
-                    public void onResponse(Call<IndexLiveBean> call, Response<IndexLiveBean> response) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        recyclerView.setAdapter(new IndexLiveRecyclerViewAdapter(response.body().getData()));
-                    }
-
-                    @Override
-                    public void onFailure(Call<IndexLiveBean> call, Throwable t) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        Log.e("Live",t.getMessage());
-                    }
-                });
+                refresh(true);
             }
         });
         return view;
+    }
+
+    public void refresh(boolean force){
+        if((!force&&data!=null)||swipeRefreshLayout ==null){
+            return;
+        }
+        if(swipeRefreshLayout.isRefreshing()&&!force){
+            return;
+        }
+        swipeRefreshLayout.setRefreshing(true);
+        Map<String,String> parameters=new HashMap<>();
+        parameters.put("actionKey","appkey");
+        parameters.put("quality","0");
+        parameters.put("rec_page","4");
+        parameters.put("relation_page","2");
+        parameters.put("scale","xxhdpi");
+        parameters.put("ts",""+System.currentTimeMillis());
+        OkHttpClient.Builder okHttpClientBuilder=new OkHttpClient.Builder()
+                .addInterceptor(new FixedHeaderInterceptor())
+                .addInterceptor(new DynamicHeaderInterceptor(null))
+                .addInterceptor(new FixedParameterInterceptor())
+                .addInterceptor(new DynamicParameterInterceptor(parameters))
+                .addInterceptor(new SortAndSignInterceptor())
+                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+        Retrofit retrofit=new Retrofit.Builder()
+                .baseUrl(BaseUrl.APILIVEURL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClientBuilder.build())
+                .build();
+        IndexNetAPI indexNetAPI=retrofit.create(IndexNetAPI.class);
+        Call<IndexLiveBean> liveBeanCall=indexNetAPI.getIndexLive();
+        liveBeanCall.enqueue(new Callback<IndexLiveBean>() {
+            @Override
+            public void onResponse(Call<IndexLiveBean> call, Response<IndexLiveBean> response) {
+                swipeRefreshLayout.setRefreshing(false);
+                data = response.body().getData();
+                recyclerView.setAdapter(new IndexLiveRecyclerViewAdapter(response.body().getData()));
+            }
+
+            @Override
+            public void onFailure(Call<IndexLiveBean> call, Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
+                Log.e("Live",t.getMessage());
+            }
+        });
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            refresh(false);
+        }
     }
 }

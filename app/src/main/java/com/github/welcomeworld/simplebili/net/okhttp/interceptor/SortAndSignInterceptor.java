@@ -11,7 +11,9 @@ import java.util.TreeSet;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class SortAndSignInterceptor implements Interceptor {
@@ -36,12 +38,22 @@ public class SortAndSignInterceptor implements Interceptor {
             }
         }
         queryString=String.format("%s&sign=%s",queryString,getSign(queryString));
+        if(request.method().equalsIgnoreCase("post")){
+            return chain.proceed(
+                    request.newBuilder()
+                            .url(url.newBuilder()
+                                    .encodedQuery(null)
+                                    .build())
+                            .post(RequestBody.create(MediaType.parse("application/x-www-form-urlencoded;charset=UTF-8"),queryString))
+                            .build()
+            );
+        }
         return chain.proceed(
                 request.newBuilder()
                         .url(url.newBuilder()
                                 .encodedQuery(queryString)
-                                .build()
-                        ).build()
+                                .build())
+                        .build()
         );
     }
 

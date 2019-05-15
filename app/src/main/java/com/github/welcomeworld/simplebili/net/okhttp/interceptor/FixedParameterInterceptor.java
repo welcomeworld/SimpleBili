@@ -1,5 +1,7 @@
 package com.github.welcomeworld.simplebili.net.okhttp.interceptor;
 
+import com.github.welcomeworld.simplebili.common.BiliLocalStatus;
+
 import java.io.IOException;
 
 import okhttp3.HttpUrl;
@@ -17,6 +19,9 @@ public class FixedParameterInterceptor implements Interceptor{
         urlBuilder.addQueryParameter("platform","android");
         urlBuilder.addQueryParameter("appkey","1d8b6e7d45233436");
         urlBuilder.addQueryParameter("device","android");
+        if(BiliLocalStatus.isLogin()){
+            urlBuilder.addQueryParameter("access_key",BiliLocalStatus.getAccessKey());
+        }
         return chain.proceed(request.newBuilder().url(urlBuilder.build()).build());
     }
 }

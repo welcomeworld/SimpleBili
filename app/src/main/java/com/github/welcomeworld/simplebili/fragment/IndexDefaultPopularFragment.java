@@ -61,6 +61,8 @@ public class IndexDefaultPopularFragment extends Fragment {
     @BindView(R.id.index_default_film_swipeRefresh)
     SwiperefreshContainer swipeRefreshLayout;
 
+    IndexPopularBean data;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -77,41 +79,7 @@ public class IndexDefaultPopularFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Map<String,String> parameters=new HashMap<>();
-                parameters.put("fnval","16");
-                parameters.put("fnver","0");
-                parameters.put("ver","1549982418");
-                parameters.put("idx","0");
-                parameters.put("last_param","");
-                parameters.put("login_event","0");
-                parameters.put("qn","112");
-                parameters.put("ts",""+System.currentTimeMillis());
-                OkHttpClient.Builder okHttpClientBuilder=new OkHttpClient.Builder()
-                        .addInterceptor(new FixedHeaderInterceptor())
-                        .addInterceptor(new DynamicHeaderInterceptor(null))
-                        .addInterceptor(new FixedParameterInterceptor())
-                        .addInterceptor(new DynamicParameterInterceptor(parameters))
-                        .addInterceptor(new SortAndSignInterceptor())
-                        .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
-                Retrofit retrofit=new Retrofit.Builder()
-                        .baseUrl(BaseUrl.APPURL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .client(okHttpClientBuilder.build())
-                        .build();
-                IndexNetAPI indexNetAPI=retrofit.create(IndexNetAPI.class);
-                Call<IndexPopularBean> popularBeanCall=indexNetAPI.getIndexPopular();
-                popularBeanCall.enqueue(new Callback<IndexPopularBean>() {
-                    @Override
-                    public void onResponse(Call<IndexPopularBean> call, Response<IndexPopularBean> response) {
-                        swipeRefreshLayout.setRefreshing(false);
-                        recyclerView.setAdapter(new IndexPopularRecyclerViewAdapter(response.body()));
-                    }
-
-                    @Override
-                    public void onFailure(Call<IndexPopularBean> call, Throwable t) {
-                        swipeRefreshLayout.setRefreshing(false);
-                    }
-                });
+                refresh(true);
             }
         });
         swipeRefreshLayout.setOnLoadListener(new SwiperefreshContainer.OnLoadListener() {
@@ -122,5 +90,67 @@ public class IndexDefaultPopularFragment extends Fragment {
         });
         return view;
 
+    }
+
+    public void refresh(boolean force){
+        if((!force&&data!=null)||swipeRefreshLayout ==null){
+            return;
+        }
+        if(swipeRefreshLayout.isRefreshing()&&!force){
+            return;
+        }
+        swipeRefreshLayout.setRefreshing(true);
+        Map<String,String> parameters=new HashMap<>();
+        parameters.put("fnval","16");
+        parameters.put("fnver","0");
+        parameters.put("ver","1549982418");
+        parameters.put("idx","0");
+        parameters.put("last_param","");
+        parameters.put("login_event","0");
+        parameters.put("qn","112");
+        parameters.put("ts",""+System.currentTimeMillis());
+        OkHttpClient.Builder okHttpClientBuilder=new OkHttpClient.Builder()
+                .addInterceptor(new FixedHeaderInterceptor())
+                .addInterceptor(new DynamicHeaderInterceptor(null))
+                .addInterceptor(new FixedParameterInterceptor())
+                .addInterceptor(new DynamicParameterInterceptor(parameters))
+                .addInterceptor(new SortAndSignInterceptor())
+                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+        Retrofit retrofit=new Retrofit.Builder()
+                .baseUrl(BaseUrl.APPURL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClientBuilder.build())
+                .build();
+        IndexNetAPI indexNetAPI=retrofit.create(IndexNetAPI.class);
+        Call<IndexPopularBean> popularBeanCall=indexNetAPI.getIndexPopular();
+        popularBeanCall.enqueue(new Callback<IndexPopularBean>() {
+            @Override
+            public void onResponse(Call<IndexPopularBean> call, Response<IndexPopularBean> response) {
+                swipeRefreshLayout.setRefreshing(false);
+                data = response.body();
+                if(data.getData()!=null){
+                    for(int i=0;i<data.getData().size();i++){
+                        if(!data.getData().get(i).getGotoX().equalsIgnoreCase("av")){
+                            data.getData().remove(i);
+                            i--;
+                        }
+                    }
+                }
+                recyclerView.setAdapter(new IndexPopularRecyclerViewAdapter(response.body()));
+            }
+
+            @Override
+            public void onFailure(Call<IndexPopularBean> call, Throwable t) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser){
+            refresh(false);
+        }
     }
 }

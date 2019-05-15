@@ -49,7 +49,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class PingActivity extends AppCompatActivity {
+public class PingActivity extends SimpleBaseActivity {
 
 
     @BindView(R.id.ping_toolbar)
