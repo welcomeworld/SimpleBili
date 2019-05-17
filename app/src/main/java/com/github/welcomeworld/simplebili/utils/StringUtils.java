@@ -66,13 +66,20 @@ public class StringUtils {
         Calendar formatTime = Calendar.getInstance();
         formatTime.setTime(date);
         if(calendar.get(Calendar.YEAR)>formatTime.get(Calendar.YEAR)){
-            return formatTime.get(Calendar.YEAR)+" "+formatTime.get(Calendar.MONTH)+"-"+formatTime.get(Calendar.DAY_OF_MONTH);
+            return String.format(Locale.getDefault(),"%04d %02d-%02d",formatTime.get(Calendar.YEAR),formatTime.get(Calendar.MONTH),formatTime.get(Calendar.DAY_OF_MONTH));
         }else if(calendar.get(Calendar.MONTH)>formatTime.get(Calendar.MONTH)){
-            return formatTime.get(Calendar.MONTH)+"-"+formatTime.get(Calendar.DAY_OF_MONTH)+" "+formatTime.get(Calendar.HOUR_OF_DAY)+":"+formatTime.get(Calendar.MINUTE);
+            return String.format(Locale.getDefault(),"%02d-%02d %02d:%02d",formatTime.get(Calendar.MONTH),formatTime.get(Calendar.DAY_OF_MONTH),formatTime.get(Calendar.HOUR_OF_DAY),formatTime.get(Calendar.MINUTE));
         }else if(calendar.get(Calendar.DAY_OF_MONTH)>formatTime.get(Calendar.DAY_OF_MONTH)){
-            return formatTime.get(Calendar.MONTH)+"-"+formatTime.get(Calendar.DAY_OF_MONTH)+" "+formatTime.get(Calendar.HOUR_OF_DAY)+":"+formatTime.get(Calendar.MINUTE);
+            return String.format(Locale.getDefault(),"%02d-%02d %02d:%02d",formatTime.get(Calendar.MONTH),formatTime.get(Calendar.DAY_OF_MONTH),formatTime.get(Calendar.HOUR_OF_DAY),formatTime.get(Calendar.MINUTE));
         }else {
-            return formatTime.get(Calendar.HOUR_OF_DAY)+":"+formatTime.get(Calendar.MINUTE);
+            return String.format(Locale.getDefault(),"%02d:%02d",formatTime.get(Calendar.HOUR_OF_DAY),formatTime.get(Calendar.MINUTE));
         }
+    }
+
+    public static String formatDate(long time,int unit){
+        if(unit == SECOND){
+            time = time*1000;
+        }
+        return formatDate(time);
     }
 }

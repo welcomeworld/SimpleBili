@@ -110,6 +110,14 @@
     <string name="dislike">差评</string>
     <string name="hot_divider_tips">以上为热评</string>
     <string name="send">发送</string>
+    <string name="video">视频</string>
+    <string name="reply">评论</string>
+    <string name="introduction">简介</string>
+    <string name="interaction">互动</string>
+    <string name="anchor">主播</string>
+    <string name="more_live">更多直播</string>
+    <string name="my_create">我的创建</string>
+
     <!-- 说明-->
     <string name="play_desc">播放或暂停按钮</string>
     <string name="fullscreen_desc">全屏</string>
@@ -149,6 +157,10 @@
     <string name="latest_version">您当前已经是最新版本了^_^</string>
     <string name="cancel">取消</string>
     <string name="my_king">吾王赛高!!!</string>
+    <string name="number_0">0</string>
+    <string name="favorite_list_desc"><xliff:g id="bili">%1$d个内容·%2$s</xliff:g></string>
+    <string name="favorite_cinema_desc"><xliff:g id="bili">%1$s|%2$s</xliff:g></string>
+    <string name="favorite_topic_time"><xliff:g id="bili">收藏于%1$s</xliff:g></string>
 
     <!-- 提示或日志-->
     <string name="uri_null_tip">Uri为空</string>

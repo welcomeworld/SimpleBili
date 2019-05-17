@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/related_layout"
+    android:id="@+id/recyclerview_favorite_list_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="8dp"
@@ -11,7 +11,7 @@
     android:foreground="?android:attr/selectableItemBackground"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <ImageView
-        android:id="@+id/related_cover"
+        android:id="@+id/recyclerview_favorite_list_cover"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:src="@mipmap/testcover"
@@ -19,10 +19,10 @@
         app:layout_constraintDimensionRatio="H,16:9"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/related_title"
+        app:layout_constraintEnd_toStartOf="@id/recyclerview_favorite_list_title"
         app:layout_constraintHorizontal_weight="5"/>
     <TextView
-        android:id="@+id/related_title"
+        android:id="@+id/recyclerview_favorite_list_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -31,12 +31,12 @@
         android:textSize="14sp"
         android:textColor="@color/black"
         tools:text="用《还珠格格》音乐打开《如懿传》，简直神无违和感"
-        app:layout_constraintStart_toEndOf="@id/related_cover"
+        app:layout_constraintStart_toEndOf="@id/recyclerview_favorite_list_cover"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_weight="9"/>
     <com.github.welcomeworld.simplebili.widget.ImageTextView
-        android:id="@+id/related_upper"
+        android:id="@+id/recyclerview_favorite_list_upper"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -49,11 +49,11 @@
         android:drawablePadding="4dp"
         app:drawableStartWidth="16dp"
         app:drawableStartHeight="16dp"
-        app:layout_constraintStart_toEndOf="@id/related_cover"
-        app:layout_constraintTop_toBottomOf="@id/related_title"
-        app:layout_constraintBottom_toTopOf="@id/related_play_num"/>
+        app:layout_constraintStart_toEndOf="@id/recyclerview_favorite_list_cover"
+        app:layout_constraintTop_toBottomOf="@id/recyclerview_favorite_list_title"
+        app:layout_constraintBottom_toTopOf="@id/recyclerview_favorite_list_play_num"/>
     <com.github.welcomeworld.simplebili.widget.ImageTextView
-        android:id="@+id/related_play_num"
+        android:id="@+id/recyclerview_favorite_list_play_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -64,10 +64,10 @@
         android:drawablePadding="4dp"
         app:drawableStartWidth="16dp"
         app:drawableStartHeight="16dp"
-        app:layout_constraintStart_toEndOf="@id/related_cover"
+        app:layout_constraintStart_toEndOf="@id/recyclerview_favorite_list_cover"
         app:layout_constraintBottom_toBottomOf="parent"/>
     <com.github.welcomeworld.simplebili.widget.ImageTextView
-        android:id="@+id/related_danmaku_num"
+        android:id="@+id/recyclerview_favorite_list_danmaku_num"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -78,7 +78,7 @@
         android:drawablePadding="4dp"
         app:drawableStartWidth="16dp"
         app:drawableStartHeight="16dp"
-        app:layout_constraintStart_toEndOf="@id/related_play_num"
+        app:layout_constraintStart_toEndOf="@id/recyclerview_favorite_list_play_num"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
 </android.support.constraint.ConstraintLayout>

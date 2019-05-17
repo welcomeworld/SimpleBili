@@ -6,22 +6,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.github.welcomeworld.simplebili.R;
-import com.github.welcomeworld.simplebili.adapter.IndexDefaultRecyclerViewAdapter;
-import com.github.welcomeworld.simplebili.adapter.IndexLiveRecyclerViewAdapter;
 import com.github.welcomeworld.simplebili.adapter.IndexPopularRecyclerViewAdapter;
-import com.github.welcomeworld.simplebili.bean.IndexLiveBean;
 import com.github.welcomeworld.simplebili.bean.IndexPopularBean;
-import com.github.welcomeworld.simplebili.common.IndexGridItemDecoration;
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicHeaderInterceptor;
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicParameterInterceptor;
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.FixedHeaderInterceptor;
@@ -30,22 +23,11 @@ import com.github.welcomeworld.simplebili.net.okhttp.interceptor.SortAndSignInte
 import com.github.welcomeworld.simplebili.net.retrofit.BaseUrl;
 import com.github.welcomeworld.simplebili.net.retrofit.IndexNetAPI;
 import com.github.welcomeworld.simplebili.widget.SwiperefreshContainer;
-import com.google.gson.Gson;
-
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;

@@ -1,11 +1,16 @@
 package com.github.welcomeworld.simplebili.bean;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class IndexBangumiBean {
 
+    @SerializedName("code")
     private int code;
+    @SerializedName("message")
     private String message;
+    @SerializedName("result")
     private ResultBean result;
 
     public int getCode() {
@@ -33,7 +38,9 @@ public class IndexBangumiBean {
     }
 
     public static class ResultBean {
+        @SerializedName("modules")
         private List<ModulesBean> modules;
+        @SerializedName("regions")
         private List<RegionsBean> regions;
 
         public List<ModulesBean> getModules() {
@@ -53,13 +60,23 @@ public class IndexBangumiBean {
         }
 
         public static class ModulesBean {
+            @SerializedName("attr")
             private AttrBean attr;
-            private int module_id;
+            @SerializedName("module_id")
+            private int moduleId;
+            @SerializedName("size")
             private int size;
+            @SerializedName("style")
             private String style;
+            @SerializedName("title")
             private String title;
+            @SerializedName("type")
+            private int type;
+            @SerializedName("headers")
             private List<HeadersBean> headers;
+            @SerializedName("items")
             private List<ItemsBean> items;
+            @SerializedName("wid")
             private List<Integer> wid;
 
             public AttrBean getAttr() {
@@ -70,12 +87,12 @@ public class IndexBangumiBean {
                 this.attr = attr;
             }
 
-            public int getModule_id() {
-                return module_id;
+            public int getModuleId() {
+                return moduleId;
             }
 
-            public void setModule_id(int module_id) {
-                this.module_id = module_id;
+            public void setModuleId(int moduleId) {
+                this.moduleId = moduleId;
             }
 
             public int getSize() {
@@ -100,6 +117,14 @@ public class IndexBangumiBean {
 
             public void setTitle(String title) {
                 this.title = title;
+            }
+
+            public int getType() {
+                return type;
+            }
+
+            public void setType(int type) {
+                this.type = type;
             }
 
             public List<HeadersBean> getHeaders() {
@@ -127,8 +152,11 @@ public class IndexBangumiBean {
             }
 
             public static class AttrBean {
+                @SerializedName("follow")
                 private int follow;
+                @SerializedName("header")
                 private int header;
+                @SerializedName("random")
                 private int random;
 
                 public int getFollow() {
@@ -157,8 +185,11 @@ public class IndexBangumiBean {
             }
 
             public static class HeadersBean {
+                @SerializedName("icon")
                 private String icon;
+                @SerializedName("title")
                 private String title;
+                @SerializedName("url")
                 private String url;
 
                 public String getIcon() {
@@ -187,17 +218,33 @@ public class IndexBangumiBean {
             }
 
             public static class ItemsBean {
+                @SerializedName("badge")
                 private String badge;
-                private int badge_type;
+                @SerializedName("badge_type")
+                private int badgeType;
+                @SerializedName("cover")
                 private String cover;
+                @SerializedName("cursor")
+                private String cursor;
+                @SerializedName("desc")
                 private String desc;
-                private int is_auto;
+                @SerializedName("is_auto")
+                private int isAuto;
+                @SerializedName("is_new")
+                private int isNew;
+                @SerializedName("link")
                 private String link;
-                private int season_id;
-                private int season_type;
+                @SerializedName("season_id")
+                private int seasonId;
+                @SerializedName("season_type")
+                private int seasonType;
+                @SerializedName("stat")
                 private StatBean stat;
+                @SerializedName("status")
                 private StatusBean status;
+                @SerializedName("title")
                 private String title;
+                @SerializedName("wid")
                 private int wid;
 
                 public String getBadge() {
@@ -208,12 +255,12 @@ public class IndexBangumiBean {
                     this.badge = badge;
                 }
 
-                public int getBadge_type() {
-                    return badge_type;
+                public int getBadgeType() {
+                    return badgeType;
                 }
 
-                public void setBadge_type(int badge_type) {
-                    this.badge_type = badge_type;
+                public void setBadgeType(int badgeType) {
+                    this.badgeType = badgeType;
                 }
 
                 public String getCover() {
@@ -224,6 +271,14 @@ public class IndexBangumiBean {
                     this.cover = cover;
                 }
 
+                public String getCursor() {
+                    return cursor;
+                }
+
+                public void setCursor(String cursor) {
+                    this.cursor = cursor;
+                }
+
                 public String getDesc() {
                     return desc;
                 }
@@ -232,12 +287,20 @@ public class IndexBangumiBean {
                     this.desc = desc;
                 }
 
-                public int getIs_auto() {
-                    return is_auto;
+                public int getIsAuto() {
+                    return isAuto;
                 }
 
-                public void setIs_auto(int is_auto) {
-                    this.is_auto = is_auto;
+                public void setIsAuto(int isAuto) {
+                    this.isAuto = isAuto;
+                }
+
+                public int getIsNew() {
+                    return isNew;
+                }
+
+                public void setIsNew(int isNew) {
+                    this.isNew = isNew;
                 }
 
                 public String getLink() {
@@ -248,20 +311,20 @@ public class IndexBangumiBean {
                     this.link = link;
                 }
 
-                public int getSeason_id() {
-                    return season_id;
+                public int getSeasonId() {
+                    return seasonId;
                 }
 
-                public void setSeason_id(int season_id) {
-                    this.season_id = season_id;
+                public void setSeasonId(int seasonId) {
+                    this.seasonId = seasonId;
                 }
 
-                public int getSeason_type() {
-                    return season_type;
+                public int getSeasonType() {
+                    return seasonType;
                 }
 
-                public void setSeason_type(int season_type) {
-                    this.season_type = season_type;
+                public void setSeasonType(int seasonType) {
+                    this.seasonType = seasonType;
                 }
 
                 public StatBean getStat() {
@@ -297,8 +360,11 @@ public class IndexBangumiBean {
                 }
 
                 public static class StatBean {
+                    @SerializedName("danmaku")
                     private int danmaku;
+                    @SerializedName("follow")
                     private int follow;
+                    @SerializedName("view")
                     private int view;
 
                     public int getDanmaku() {
@@ -327,6 +393,7 @@ public class IndexBangumiBean {
                 }
 
                 public static class StatusBean {
+                    @SerializedName("follow")
                     private int follow;
 
                     public int getFollow() {
@@ -341,8 +408,11 @@ public class IndexBangumiBean {
         }
 
         public static class RegionsBean {
+            @SerializedName("icon")
             private String icon;
+            @SerializedName("title")
             private String title;
+            @SerializedName("url")
             private String url;
 
             public String getIcon() {

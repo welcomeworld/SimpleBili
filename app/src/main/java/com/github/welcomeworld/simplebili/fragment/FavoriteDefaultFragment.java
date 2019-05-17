@@ -1,25 +1,19 @@
 package com.github.welcomeworld.simplebili.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TabItem;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.welcomeworld.simplebili.R;
-import com.github.welcomeworld.simplebili.SimpleBaseActivity;
-import com.github.welcomeworld.simplebili.adapter.FavoritePagerAdapter;
+import com.github.welcomeworld.simplebili.adapter.FavoriteDefaultRecyclerViewAdapter;
 import com.github.welcomeworld.simplebili.bean.FavoriteDefaultBean;
 import com.github.welcomeworld.simplebili.common.BiliLocalStatus;
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicHeaderInterceptor;
@@ -29,6 +23,7 @@ import com.github.welcomeworld.simplebili.net.okhttp.interceptor.FixedParameterI
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.SortAndSignInterceptor;
 import com.github.welcomeworld.simplebili.net.retrofit.BaseUrl;
 import com.github.welcomeworld.simplebili.net.retrofit.FavoriteNetAPI;
+import com.github.welcomeworld.simplebili.widget.SwiperefreshContainer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -43,80 +38,51 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class FavoriteFragment extends Fragment {
-    @BindView(R.id.navigation_toolbar)
-    Toolbar toolbar;
-    DrawerLayout drawerLayout;
-    SimpleBaseActivity activity;
-    @BindView(R.id.favorite_tablayout)
-    TabLayout tabLayout;
-    @BindView(R.id.favorite_viewpager)
-    ViewPager viewPager;
+public class FavoriteDefaultFragment extends Fragment {
+    @BindView(R.id.favorite_default_swiperefresh)
+    SwiperefreshContainer swiperefreshContainer;
+    @BindView(R.id.favorite_default_recyclerview)
+    RecyclerView recyclerView;
 
-    FavoriteDefaultBean data;
+    FavoriteDefaultBean.DataBean data;
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_favorite,container,false);
-        ButterKnife.bind(this,view);
-        toolbar.setTitle(R.string.favorites);
-        toolbar.inflateMenu(R.menu.index_downlaod);
-        toolbar.inflateMenu(R.menu.index_search);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(drawerLayout!=null){
-                    drawerLayout.openDrawer(Gravity.START);
-                }
-            }
-        });
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.item_download:
-                        activity.updateSelf("cache");
-                        return true;
-                    case R.id.item_home_search:
-                        activity.updateSelf("search");
-                        return true;
-                    default:return false;
-                }
-            }
-        });
-        tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
-        viewPager.setAdapter(new FavoritePagerAdapter(getChildFragmentManager()));
-        refresh(false);
-        return view;
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        activity= (SimpleBaseActivity) context;
-        Bundle bundle=getArguments();
-        if(bundle!=null){
-            int drawerLayoutId=bundle.getInt("drawerLayoutId",-1);
-            if(drawerLayoutId!=-1){
-                drawerLayout=activity.findViewById(drawerLayoutId);
-            }
-        }
+        data = (FavoriteDefaultBean.DataBean) getArguments().getSerializable("data");
     }
 
+    @Nullable
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        if(isVisibleToUser){
-            refresh(false);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_favorite_default,container,false);
+        ButterKnife.bind(this,view);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        if(data!=null){
+            recyclerView.setAdapter(new FavoriteDefaultRecyclerViewAdapter(data.getFavorite()));
+        }else {
+            recyclerView.setAdapter(new FavoriteDefaultRecyclerViewAdapter(null));
         }
-        super.setUserVisibleHint(isVisibleToUser);
+        recyclerView.getItemAnimator().setChangeDuration(3000);
+        recyclerView.getItemAnimator().setMoveDuration(3000);
+        swiperefreshContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refresh(true);
+            }
+        });
+        refresh(false);
+        return view;
     }
 
     public void refresh(boolean force){
-        if(!force&&data!=null){
+        if(!force&&data!=null&&data.getFavorite()!=null||swiperefreshContainer==null){
             return;
         }
+        swiperefreshContainer.setRefreshing(true);
         Map<String,String> parameters=new HashMap<>();
         parameters.put("ps","20");
         parameters.put("pn","1");
@@ -140,25 +106,25 @@ public class FavoriteFragment extends Fragment {
         retrofit.create(FavoriteNetAPI.class).getFavoriteData().enqueue(new Callback<FavoriteDefaultBean>() {
             @Override
             public void onResponse(Call<FavoriteDefaultBean> call, Response<FavoriteDefaultBean> response) {
+                swiperefreshContainer.setRefreshing(false);
                 if(response.body().getCode() == 0){
-                    data = response.body();
-                    viewPager.setAdapter(new FavoritePagerAdapter(getChildFragmentManager(),data.getData()));
-                    if(data.getData().getTab().isFavorite()){
-                        tabLayout.addTab(tabLayout.newTab().setText("追番"));
-                    }
-                    if(data.getData().getTab().isCinema()){
-                        tabLayout.addTab(tabLayout.newTab().setText("追剧"));
-                    }
-                    if(data.getData().getTab().isTopic()){
-                        tabLayout.addTab(tabLayout.newTab().setText("话题"));
-                    }
+                    data = response.body().getData();
+                    recyclerView.setAdapter(new FavoriteDefaultRecyclerViewAdapter(data.getFavorite()));
                 }
             }
 
             @Override
             public void onFailure(Call<FavoriteDefaultBean> call, Throwable t) {
-
+                swiperefreshContainer.setRefreshing(false);
             }
         });
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if(isVisibleToUser){
+            refresh(false);
+        }
+        super.setUserVisibleHint(isVisibleToUser);
     }
 }

@@ -9,15 +9,14 @@ import android.support.constraint.Group;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -25,9 +24,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.github.welcomeworld.simplebili.R;
 import com.github.welcomeworld.simplebili.adapter.IndexBangumiBannerPagerAdapter;
 import com.github.welcomeworld.simplebili.adapter.IndexBangumiEditorRecyclerViewAdapter;
-import com.github.welcomeworld.simplebili.adapter.IndexDefaultRecyclerViewAdapter;
 import com.github.welcomeworld.simplebili.bean.IndexBangumiBean;
-import com.github.welcomeworld.simplebili.common.IndexGridItemDecoration;
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicHeaderInterceptor;
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicParameterInterceptor;
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.FixedHeaderInterceptor;
@@ -37,20 +34,11 @@ import com.github.welcomeworld.simplebili.net.retrofit.BaseUrl;
 import com.github.welcomeworld.simplebili.net.retrofit.IndexNetAPI;
 import com.github.welcomeworld.simplebili.widget.SwiperefreshContainer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -164,84 +152,114 @@ public class IndexDefaultBangumiFragment extends Fragment {
             @Override
             public void onResponse(Call<IndexBangumiBean> call, Response<IndexBangumiBean> response) {
                 swipeRefreshLayout.setRefreshing(false);
-                data = response.body();
                 if(response.body()==null||response.body().getResult()==null){
                     return;
                 }
+                if(response.body().getCode() !=0){
+                    return;
+                }
+                data = response.body();
                 //BANGUMI
-                Glide.with(getContext()).load(response.body().getResult().getModules().get(1).getItems().get(0).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover1);
-                bangumiCover1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
-                        intent.setData(Uri.parse(response.body().getResult().getModules().get(1).getItems().get(0).getLink()));
-                        startActivity(intent);
+                IndexBangumiBean.ResultBean.ModulesBean bangumiModuletemp = null;
+                IndexBangumiBean.ResultBean.ModulesBean hopeModuletemp =null;
+                IndexBangumiBean.ResultBean.ModulesBean bannerModuletemp = null;
+                IndexBangumiBean.ResultBean.ModulesBean editModuletemp = null;
+                for(IndexBangumiBean.ResultBean.ModulesBean module:data.getResult().getModules()){
+                    switch (module.getModuleId()){
+                        case 4:
+                            hopeModuletemp = module;
+                            break;
+                        case 10:
+                            bangumiModuletemp = module;
+                            break;
+                        case 16:
+                            bannerModuletemp = module;
+                            break;
+                        case  6:
+                            editModuletemp = module;
+                            break;
                     }
-                });
-                bangumiCover2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
-                        intent.setData(Uri.parse(response.body().getResult().getModules().get(1).getItems().get(1).getLink()));
-                        startActivity(intent);
-                    }
-                });
-                bangumiCover3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
-                        intent.setData(Uri.parse(response.body().getResult().getModules().get(1).getItems().get(2).getLink()));
-                        startActivity(intent);
-                    }
-                });
-                Glide.with(getContext()).load(response.body().getResult().getModules().get(1).getItems().get(1).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover2);
-                Glide.with(getContext()).load(response.body().getResult().getModules().get(1).getItems().get(2).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover3);
-                bangumiTitle1.setText(response.body().getResult().getModules().get(1).getItems().get(0).getTitle());
-                bangumiTitle2.setText(response.body().getResult().getModules().get(1).getItems().get(1).getTitle());
-                bangumiTitle3.setText(response.body().getResult().getModules().get(1).getItems().get(2).getTitle());
-                bangumiDesc1.setText(response.body().getResult().getModules().get(1).getItems().get(0).getDesc());
-                bangumiDesc2.setText(response.body().getResult().getModules().get(1).getItems().get(1).getDesc());
-                bangumiDesc3.setText(response.body().getResult().getModules().get(1).getItems().get(2).getDesc());
-
-                //HOPE
-                hopeCover1.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
-                        intent.setData(Uri.parse(response.body().getResult().getModules().get(3).getItems().get(0).getLink()));
-                        startActivity(intent);
-                    }
-                });
-                hopeCover2.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
-                        intent.setData(Uri.parse(response.body().getResult().getModules().get(3).getItems().get(1).getLink()));
-                        startActivity(intent);
-                    }
-                });
-                hopeCover3.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
-                        intent.setData(Uri.parse(response.body().getResult().getModules().get(3).getItems().get(2).getLink()));
-                        startActivity(intent);
-                    }
-                });
-                Glide.with(getContext()).load(response.body().getResult().getModules().get(3).getItems().get(0).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover1);
-                Glide.with(getContext()).load(response.body().getResult().getModules().get(3).getItems().get(1).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover2);
-                Glide.with(getContext()).load(response.body().getResult().getModules().get(3).getItems().get(2).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover3);
-                hopeTitle1.setText(response.body().getResult().getModules().get(3).getItems().get(0).getTitle());
-                hopeTitle2.setText(response.body().getResult().getModules().get(3).getItems().get(1).getTitle());
-                hopeTitle3.setText(response.body().getResult().getModules().get(3).getItems().get(2).getTitle());
-                hopeDesc1.setText(response.body().getResult().getModules().get(3).getItems().get(0).getDesc());
-                hopeDesc2.setText(response.body().getResult().getModules().get(3).getItems().get(1).getDesc());
-                hopeDesc3.setText(response.body().getResult().getModules().get(3).getItems().get(2).getDesc());
-                IndexBangumiBannerPagerAdapter pagerAdapter=new IndexBangumiBannerPagerAdapter(bannerViewPager,response.body().getResult().getModules().get(0));
+                }
+                IndexBangumiBean.ResultBean.ModulesBean hopeModule = hopeModuletemp;
+                IndexBangumiBean.ResultBean.ModulesBean bangumiModule = bangumiModuletemp;
+                IndexBangumiBean.ResultBean.ModulesBean bannerModule = bannerModuletemp;
+                IndexBangumiBean.ResultBean.ModulesBean editModule = editModuletemp;
+                if(hopeModule!=null&&hopeModule.getItems()!=null&&hopeModule.getItems().size()>0){
+                    //HOPE
+                    hopeCover1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
+                            intent.setData(Uri.parse(hopeModule.getItems().get(0).getLink()));
+                            startActivity(intent);
+                        }
+                    });
+                    hopeCover2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
+                            intent.setData(Uri.parse(hopeModule.getItems().get(1).getLink()));
+                            startActivity(intent);
+                        }
+                    });
+                    hopeCover3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
+                            intent.setData(Uri.parse(hopeModule.getItems().get(2).getLink()));
+                            startActivity(intent);
+                        }
+                    });
+                    Glide.with(getContext()).load(hopeModule.getItems().get(0).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover1);
+                    Glide.with(getContext()).load(hopeModule.getItems().get(1).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover2);
+                    Glide.with(getContext()).load(hopeModule.getItems().get(2).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover3);
+                    hopeTitle1.setText(hopeModule.getItems().get(0).getTitle());
+                    hopeTitle2.setText(hopeModule.getItems().get(1).getTitle());
+                    hopeTitle3.setText(hopeModule.getItems().get(2).getTitle());
+                    hopeDesc1.setText(hopeModule.getItems().get(0).getDesc());
+                    hopeDesc2.setText(hopeModule.getItems().get(1).getDesc());
+                    hopeDesc3.setText(hopeModule.getItems().get(2).getDesc());
+                }
+                if(bangumiModule!=null&&bangumiModule.getItems()!=null&&bangumiModule.getItems().size()>0){
+                    Glide.with(getContext()).load(bangumiModule.getItems().get(0).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover1);
+                    bangumiCover1.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
+                            intent.setData(Uri.parse(bangumiModule.getItems().get(0).getLink()));
+                            startActivity(intent);
+                        }
+                    });
+                    bangumiCover2.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
+                            intent.setData(Uri.parse(bangumiModule.getItems().get(1).getLink()));
+                            startActivity(intent);
+                        }
+                    });
+                    bangumiCover3.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent=new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
+                            intent.setData(Uri.parse(bangumiModule.getItems().get(2).getLink()));
+                            startActivity(intent);
+                        }
+                    });
+                    Glide.with(getContext()).load(bangumiModule.getItems().get(1).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover2);
+                    Glide.with(getContext()).load(bangumiModule.getItems().get(2).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover3);
+                    bangumiTitle1.setText(bangumiModule.getItems().get(0).getTitle());
+                    bangumiTitle2.setText(bangumiModule.getItems().get(1).getTitle());
+                    bangumiTitle3.setText(bangumiModule.getItems().get(2).getTitle());
+                    bangumiDesc1.setText(bangumiModule.getItems().get(0).getDesc());
+                    bangumiDesc2.setText(bangumiModule.getItems().get(1).getDesc());
+                    bangumiDesc3.setText(bangumiModule.getItems().get(2).getDesc());
+                }
+                IndexBangumiBannerPagerAdapter pagerAdapter=new IndexBangumiBannerPagerAdapter(bannerViewPager,bannerModule);
                 bannerViewPager.setAdapter(pagerAdapter);
                 bannerViewPager.addOnPageChangeListener(pagerAdapter);
                 bannerViewPager.setCurrentItem(1);
-                editorRecyclerView.setAdapter(new IndexBangumiEditorRecyclerViewAdapter(response.body().getResult().getModules().get(response.body().getResult().getModules().size()-1)));
+                editorRecyclerView.setAdapter(new IndexBangumiEditorRecyclerViewAdapter(editModule));
 
             }
             @Override

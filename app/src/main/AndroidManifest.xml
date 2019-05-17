@@ -138,6 +138,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".SearchActivity" />
+        <activity android:name=".FavoriteListActivity">
+            <intent-filter>
+                <action android:name="com.github.welcomeworld.simplebili.action.FAVORITELIST" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
         <service android:name=".service.FirebaseMessagingService">
             <intent-filter>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/recommend_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="2dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="2dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -34,7 +34,7 @@
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     android:gravity="center_vertical"
-                    android:text="186.2万"/>
+                    tools:text="186.2万"/>
                 <ImageView
                     android:layout_width="16dp"
                     android:layout_height="16dp"
@@ -49,7 +49,7 @@
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     android:gravity="center_vertical"
-                    android:text="4735"/>
+                    tools:text="4735"/>
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     android:gravity="top"
-                    android:text="03:28"/>
+                    tools:text="03:28"/>
             </LinearLayout>
             <TextView
                 android:id="@+id/card_video_title"
@@ -76,7 +76,7 @@
                 android:ellipsize="end"
                 android:textSize="14sp"
                 android:textColor="@color/black"
-                android:text="用《还珠格格》音乐打开《如懿传》，简直神无违和感"/>
+                tools:text="用《还珠格格》音乐打开《如懿传》，简直神无违和感"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="20dp"
@@ -95,7 +95,7 @@
                     android:textSize="14sp"
                     android:lines="1"
                     android:ellipsize="end"
-                    android:text="影视剪辑 还珠格格"/>
+                    tools:text="影视剪辑 还珠格格"/>
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="match_parent"

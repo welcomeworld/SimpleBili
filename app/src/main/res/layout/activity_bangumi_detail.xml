@@ -28,12 +28,12 @@
         app:layout_constraintEnd_toEndOf="parent">
         <android.support.design.widget.TabItem
             android:textAlignment="center"
-            android:text="简介"
+            android:text="@string/introduction"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <android.support.design.widget.TabItem
             android:textAlignment="center"
-            android:text="评论"
+            android:text="@string/reply"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </android.support.design.widget.TabLayout>

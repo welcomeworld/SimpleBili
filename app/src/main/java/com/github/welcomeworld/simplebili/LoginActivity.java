@@ -140,6 +140,7 @@ public class LoginActivity extends SimpleBaseActivity{
                             BiliLocalStatus.setMid(response.body().getData().getTokenInfo().getMid());
                             startActivity(new Intent(LoginActivity.this,UserInfoActivity.class));
                             ((MApplication)getApplication()).getDatabase().getDao().setToken(response.body().getData().getTokenInfo());
+                            finish();
                             //Log.e("LoginActivity", "accessToken" + response.body().getData().getTokenInfo().getAccessToken() + "refreshToken" + response.body().getData().getTokenInfo().getRefreshToken());
                         } else {
                             Toast.makeText(LoginActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
