@@ -24,28 +24,13 @@
         android:title="@string/favorites"
         android:icon="@drawable/vector_navigation_favorite"
         android:checkable="true"/>
-        <item
-            android:id="@+id/item_follow"
-            android:title="@string/my_follow"
-            android:icon="@drawable/vector_navigation_follow"
-            android:checkable="true"/>
     <item
         android:id="@+id/item_later"
         android:title="@string/watch_later"
         android:icon="@drawable/vector_navigation_watchlater"
         android:checkable="true"/>
-        <item
-            android:id="@+id/item_uppercenter"
-            android:title="@string/upper_center"
-            android:icon="@drawable/vector_navigation_uppercenter"
-            android:checkable="true"/>
     </group>
     <group android:id="@+id/item_second_group">
-        <item
-            android:id="@+id/item_live"
-            android:title="@string/live"
-            android:icon="@drawable/vector_navigation_live"
-            android:checkable="true"/>
         <item
             android:id="@+id/item_myvip"
             android:title="@string/my_vip"

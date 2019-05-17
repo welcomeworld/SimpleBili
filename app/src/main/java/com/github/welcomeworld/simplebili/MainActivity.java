@@ -72,30 +72,6 @@ public class MainActivity extends SimpleBaseActivity implements View.OnClickList
                             startActivity(intent);
                         }
                         break;
-                    case R.id.item_follow:
-                        if(BiliLocalStatus.isLogin()){
-                            switchFragment("follow");
-                        }else{
-                            Intent intent=new Intent(MainActivity.this,LoginActivity.class);
-                            startActivity(intent);
-                        }
-                        break;
-                    case R.id.item_uppercenter:
-                        if(BiliLocalStatus.isLogin()){
-                            switchFragment("uppercenter");
-                        }else{
-                            Intent intent=new Intent(MainActivity.this,LoginActivity.class);
-                            startActivity(intent);
-                        }
-                        break;
-                    case R.id.item_live:
-                        if(BiliLocalStatus.isLogin()){
-                            switchFragment("live");
-                        }else{
-                            Intent intent=new Intent(MainActivity.this,LoginActivity.class);
-                            startActivity(intent);
-                        }
-                        break;
                     case R.id.item_myvip:
                         if(BiliLocalStatus.isLogin()){
                             Intent vipIntent = new Intent(MainActivity.this,BrowserActivity.class);
