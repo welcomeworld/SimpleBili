@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -138,10 +139,16 @@ public class LoginActivity extends SimpleBaseActivity{
                             BiliLocalStatus.setLogin(true);
                             BiliLocalStatus.setAccessKey(response.body().getData().getTokenInfo().getAccessToken());
                             BiliLocalStatus.setMid(response.body().getData().getTokenInfo().getMid());
+                            CookieManager cookieManager = CookieManager.getInstance();
+                            LoginResultBean.CookieInfoBean cookieInfoBean = response.body().getData().getCookieInfo();
+                            for(String domain:cookieInfoBean.getDomains()){
+                                for(int i =0;i<cookieInfoBean.getCookies().size();i++){
+                                    cookieManager.setCookie(domain,cookieInfoBean.getCookies().get(i).getName()+"="+cookieInfoBean.getCookies().get(i).getValue());
+                                }
+                            }
                             startActivity(new Intent(LoginActivity.this,UserInfoActivity.class));
                             ((MApplication)getApplication()).getDatabase().getDao().setToken(response.body().getData().getTokenInfo());
                             finish();
-                            //Log.e("LoginActivity", "accessToken" + response.body().getData().getTokenInfo().getAccessToken() + "refreshToken" + response.body().getData().getTokenInfo().getRefreshToken());
                         } else {
                             Toast.makeText(LoginActivity.this, ""+response.body().getMessage(), Toast.LENGTH_SHORT).show();
                             Log.e("LoginActivity","fail:"+response.body().getCode());

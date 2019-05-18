@@ -12,7 +12,7 @@
         android:minHeight="56dp"
         app:navigationIcon="@mipmap/player_back"
         app:contentInsetStartWithNavigation="0dp"
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
         app:title="@string/openSource_gratitude">
     </android.support.v7.widget.Toolbar>

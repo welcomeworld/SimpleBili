@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="128dp"
-    android:background="@color/colorPrimary">
+    android:background="?attr/colorPrimary">
     <ImageView
         android:background="@color/transparent"
         android:tint="@color/transparent_a30"
@@ -15,6 +15,7 @@
         android:src="@mipmap/drawerbg_not_logined"
         android:contentDescription="@string/play_desc"/>
     <TextView
+        android:id="@+id/main_header_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/main_header_profile"

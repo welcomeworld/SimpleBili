@@ -5,6 +5,8 @@ public class BiliLocalStatus {
     private static String accessKey = "";
     private static boolean isLogin = false;
     private static int mid =-1;
+    private static String cover;
+    private static String name="";
 
 
 
@@ -30,5 +32,21 @@ public class BiliLocalStatus {
 
     public static void setMid(int mid) {
         BiliLocalStatus.mid = mid;
+    }
+
+    public static String getCover() {
+        return cover;
+    }
+
+    public static void setCover(String cover) {
+        BiliLocalStatus.cover = cover;
+    }
+
+    public static String getName() {
+        return name;
+    }
+
+    public static void setName(String name) {
+        BiliLocalStatus.name = name;
     }
 }

@@ -8,4 +8,5 @@ public class BaseUrl {
     public static final String APPAPIURL="https://app.biliapi.com/";
     public static final String PASSPORTURL = "https://passport.bilibili.com/";
     public static final String BANGUMIURL = "https://bangumi.bilibili.com/";
+    public static final String APIVCURL = "https://api.vc.bilibili.com/";
 }

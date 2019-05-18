@@ -103,7 +103,7 @@
             android:layout_marginEnd="4dp"
             android:text="@string/register"
             android:background="@drawable/button_pink_stroke"
-            android:textColor="@color/colorAccent"
+            android:textColor="?attr/colorAccent"
             android:layout_weight="1"
             android:contentDescription="@string/login_desc" />
         <Button

@@ -117,6 +117,10 @@
     <string name="anchor">主播</string>
     <string name="more_live">更多直播</string>
     <string name="my_create">我的创建</string>
+    <string name="downloading">正在缓存</string>
+    <string name="downloaded">已缓存</string>
+    <string name="dynamic_bangumi_update"><xliff:g id="bili">%1$s·更新了</xliff:g></string>
+    <string name="dynamic_video_update"><xliff:g id="bili">%1$s·投稿了视频</xliff:g></string>
 
     <!-- 说明-->
     <string name="play_desc">播放或暂停按钮</string>

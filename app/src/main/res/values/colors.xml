@@ -23,4 +23,10 @@
     <color name="blue">#FF2196F3</color>
     <color name="color_FFA726">#FFFFA726</color>
     <color name="black_overlay">#66000000</color>
+    <color name="real_black">#000000</color>
+    <color name="red_theme">#F44336</color>
+    <color name="yellow_theme">#FFC107</color>
+    <color name="green_theme">#8BC34A</color>
+    <color name="blue_theme">#2196F3</color>
+    <color name="violet_theme">#9C27B0</color>
 </resources>

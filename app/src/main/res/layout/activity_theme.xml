@@ -5,5 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ThemeActivity">
-
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/theme_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/base_toolbar"
+        android:minHeight="56dp"
+        app:navigationIcon="@mipmap/player_back"
+        app:contentInsetStartWithNavigation="0dp"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="@string/theme">
+    </android.support.v7.widget.Toolbar>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/theme_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/theme_toolbar"
+        >
+    </android.support.v7.widget.RecyclerView>
 </android.support.constraint.ConstraintLayout>

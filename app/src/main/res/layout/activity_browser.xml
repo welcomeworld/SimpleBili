@@ -14,7 +14,7 @@
         android:theme="@style/base_toolbar"
         app:navigationIcon="@mipmap/player_back"
         app:contentInsetStartWithNavigation="0dp"
-        android:background="@color/colorPrimary"
+        android:background="?attr/colorPrimary"
         app:title="@string/loading">
     </android.support.v7.widget.Toolbar>
     <WebView

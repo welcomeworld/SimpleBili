@@ -6,12 +6,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include android:id="@+id/toolbar" layout="@layout/toolbar_navigation"/>
-    <ImageView
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TabLayout
+        android:id="@+id/download_tablaout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_no_income"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+        <android.support.design.widget.TabItem
+            android:text="@string/downloading"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <android.support.design.widget.TabItem
+            android:text="@string/downloaded"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </android.support.design.widget.TabLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/download_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/download_tablaout"
+        >
+    </android.support.v4.view.ViewPager>
 </android.support.constraint.ConstraintLayout>

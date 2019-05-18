@@ -16,7 +16,7 @@
             app:tabSelectedTextColor="@color/white"
             app:tabTextColor="@color/white_transparent"
             app:tabIndicatorColor="@color/white"
-            android:background="@color/colorPrimaryDark">
+            android:background="?attr/colorPrimary">
             <android.support.design.widget.TabItem
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

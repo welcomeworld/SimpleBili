@@ -14,9 +14,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.welcomeworld.simplebili.R;
+import com.github.welcomeworld.simplebili.common.BiliLocalStatus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -67,5 +73,18 @@ public class MessageFragment extends Fragment {
         Intent loginIntent=new Intent("com.github.welcomeworld.simplebili.action.LOGIN");
         loginIntent.setPackage(getContext().getPackageName());
         startActivity(loginIntent);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser&&toolbar!=null){
+            ImageView avator = toolbar.findViewById(R.id.index_toolbar_avatar);
+            if(BiliLocalStatus.getCover()!=null){
+                Glide.with(avator).load(BiliLocalStatus.getCover()).apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop())).into(avator);
+            }else {
+                avator.setImageResource(R.mipmap.ic_default_avatar);
+            }
+        }
     }
 }

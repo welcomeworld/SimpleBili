@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_gravity="bottom"
+            app:itemIconTint="@color/gary2white_color"
             app:menu="@menu/navigation_bottom_main">
         </android.support.design.widget.BottomNavigationView>
 </android.support.design.widget.CoordinatorLayout>

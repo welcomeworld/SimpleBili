@@ -39,7 +39,6 @@ public class IndexFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View contentView=inflater.inflate(R.layout.fragment_index,container,false);
         ButterKnife.bind(this,contentView);
-        bottomNavigationView.setItemIconTintList(getResources().getColorStateList(R.color.gary2white_color));
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {

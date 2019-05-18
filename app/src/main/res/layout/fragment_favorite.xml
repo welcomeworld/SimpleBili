@@ -9,7 +9,7 @@
         android:id="@+id/favorite_tablayout"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="?attr/colorPrimaryDark"
         app:tabSelectedTextColor="@color/white"
         app:tabTextColor="@color/white_transparent"
         app:tabIndicatorColor="@color/white"
@@ -24,7 +24,7 @@
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="@color/colorPrimaryDark"
+        android:background="?attr/colorPrimaryDark"
         app:layout_constraintTop_toTopOf="@id/favorite_tablayout"
         app:layout_constraintStart_toEndOf="@id/favorite_tablayout"
         app:layout_constraintBottom_toBottomOf="@id/favorite_tablayout"

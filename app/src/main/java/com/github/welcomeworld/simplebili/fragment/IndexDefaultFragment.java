@@ -20,17 +20,39 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.RequestOptions;
 import com.github.welcomeworld.simplebili.R;
 import com.github.welcomeworld.simplebili.SearchActivity;
 import com.github.welcomeworld.simplebili.SimpleBaseActivity;
 import com.github.welcomeworld.simplebili.adapter.IndexDefaultPagerAdapter;
+import com.github.welcomeworld.simplebili.bean.UserInfoMineBean;
+import com.github.welcomeworld.simplebili.common.BiliLocalStatus;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicHeaderInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicParameterInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.FixedHeaderInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.FixedParameterInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.SortAndSignInterceptor;
+import com.github.welcomeworld.simplebili.net.retrofit.BaseUrl;
+import com.github.welcomeworld.simplebili.net.retrofit.UserNetAPI;
 import com.github.welcomeworld.simplebili.widget.BiliViewPager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class IndexDefaultFragment extends Fragment {
 
@@ -88,13 +110,73 @@ public class IndexDefaultFragment extends Fragment {
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
         viewPager.setCurrentItem(1);
         viewPager.setOffscreenPageLimit(3);
+        if(BiliLocalStatus.isLogin()){
+            if(BiliLocalStatus.getCover()!=null){
+                ImageView avator = toolbar.findViewById(R.id.index_toolbar_avatar);
+                if(BiliLocalStatus.getCover()!=null){
+                    Glide.with(avator).load(BiliLocalStatus.getCover()).apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop())).into(avator);
+                }else {
+                    avator.setImageResource(R.mipmap.ic_default_avatar);
+                }
+            }else {
+                getMineInfo();
+            }
+        }
         return view;
+    }
+
+    public void getMineInfo(){
+        Map<String,String> parameters1=new HashMap<>();
+        parameters1.put("ts",""+System.currentTimeMillis());
+        OkHttpClient.Builder okHttpClientBuilder1=new OkHttpClient.Builder()
+                .addInterceptor(new FixedHeaderInterceptor())
+                .addInterceptor(new DynamicHeaderInterceptor(null))
+                .addInterceptor(new FixedParameterInterceptor())
+                .addInterceptor(new DynamicParameterInterceptor(parameters1))
+                .addInterceptor(new SortAndSignInterceptor())
+                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+        Retrofit retrofit1=new Retrofit.Builder()
+                .baseUrl(BaseUrl.APPURL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClientBuilder1.build())
+                .build();
+        retrofit1.create(UserNetAPI.class).getMine().enqueue(new Callback<UserInfoMineBean>() {
+            @Override
+            public void onResponse(Call<UserInfoMineBean> call, Response<UserInfoMineBean> response) {
+                if(response.body()==null||response.body().getCode()!=0){
+                    return;
+                }
+                if(BiliLocalStatus.isLogin()){
+                    BiliLocalStatus.setName(response.body().getData().getName());
+                    BiliLocalStatus.setCover(response.body().getData().getFace());
+                }
+                ImageView avator = toolbar.findViewById(R.id.index_toolbar_avatar);
+                Glide.with(avator).load(BiliLocalStatus.getCover()).apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop())).into(avator);
+            }
+
+            @Override
+            public void onFailure(Call<UserInfoMineBean> call, Throwable t) {
+            }
+        });
     }
 
    @OnClick({R.id.index_toolbar_drawer,R.id.index_toolbar_avatar})
     public void openDrawer(){
         if(drawerLayout!=null){
             drawerLayout.openDrawer(Gravity.START);
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser&&toolbar!=null){
+            ImageView avator = toolbar.findViewById(R.id.index_toolbar_avatar);
+            if(BiliLocalStatus.getCover()!=null){
+                Glide.with(avator).load(BiliLocalStatus.getCover()).apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop())).into(avator);
+            }else {
+                avator.setImageResource(R.mipmap.ic_default_avatar);
+            }
         }
     }
 }

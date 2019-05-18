@@ -16,6 +16,7 @@
         android:id="@+id/main_navigation"
         android:layout_width="256dp"
         android:layout_height="match_parent"
+        app:itemIconTint="@color/gary2white_color"
         android:background="@color/white"
         android:layout_gravity="start"
         app:headerLayout="@layout/navigation_header_main"

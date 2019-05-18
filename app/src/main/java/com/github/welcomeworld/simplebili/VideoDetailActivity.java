@@ -70,6 +70,9 @@ public class VideoDetailActivity extends SimpleBaseActivity {
     TabLayout tabLayout;
     @BindView(R.id.video_detail_viewpager)
     ViewPager viewPager;
+
+    private String currentAid = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +91,7 @@ public class VideoDetailActivity extends SimpleBaseActivity {
                 if(videoDetailPagerAdapter.getMaxId()!=0){
                     replyParameters.put("max_id",videoDetailPagerAdapter.getMaxId()+"");
                 }
-                replyParameters.put("oid",uri.getPath().substring(1));
+                replyParameters.put("oid",currentAid);
                 replyParameters.put("plat","2");
                 replyParameters.put("sort","0");
                 replyParameters.put("size","20");
@@ -128,7 +131,7 @@ public class VideoDetailActivity extends SimpleBaseActivity {
             @Override
             public void onRefresh() {
                 Map<String,String> replyParameters=new HashMap<>();
-                replyParameters.put("oid",uri.getPath().substring(1));
+                replyParameters.put("oid",currentAid);
                 replyParameters.put("plat","2");
                 replyParameters.put("sort","0");
                 replyParameters.put("size","20");
@@ -172,9 +175,11 @@ public class VideoDetailActivity extends SimpleBaseActivity {
             this.finish();
         }
         if(uri!=null) {
+            currentAid = uri.getPath().substring(1);
+            currentAid = currentAid.substring(0,currentAid.contains("/")?currentAid.indexOf("/"):currentAid.length());
             Map<String,String> parameters=new HashMap<>();
             parameters.put("ad_extra","6BCCA2213B3B094292DFF9454EB02128A5CD624F226D40F0B86CA8263CE1D50C927F2F8DF2FD134C361A06FAA537402E66E53155D1C1F218BE42D2AFE4A6A701C496E5196401D81A1E390498A1CA24C20C25C97600C552962682D90C9D9DF8B9EDAD866490BE972EA37F92AA7A1040F2BEA5122D039B942437307F298336AAF27EFB5AF87961F6F852401DD8BBD0BFB92309D3B60C12E307ECD02D9BCBB19725E2964F77CDE07BFAC45A34884CE0167EEDBB0EBC8926A3CC9CB9B27536BF9C0DF87AB6DABAE86D1E6D4E714BC140A1D500E27446265DC85C226B381E10AF2299D961E06FA60A84EE34DFCB65E1253339112FD0D5ECE9C9C58C084D028DD7E26A70DC806C36C46E9D5C08169A2571B8BAC2BC0AE91AE8D36F3CBDCD2768950CD1CE9C3A3F53B5FE145A20B020435E79CA");
-            parameters.put("aid",uri.getPath().substring(1));
+            parameters.put("aid",currentAid);
             parameters.put("autoplay","0");
             parameters.put("fnval","16");
             parameters.put("fnver","0");
@@ -200,6 +205,9 @@ public class VideoDetailActivity extends SimpleBaseActivity {
             videoDetailNetAPI.getVideoDetailPageInfo().enqueue(new Callback<VideoDetailPageBean>() {
                 @Override
                 public void onResponse(Call<VideoDetailPageBean> call, Response<VideoDetailPageBean> response) {
+                    if(response.body() ==null||response.body().getCode() !=0){
+                        return;
+                    }
                     ((VideoDetailPagerAdapter)viewPager.getAdapter()).setDescData(response.body().getData());
                     LocalHistoryBean localHistoryBean = new LocalHistoryBean();
                     localHistoryBean.setType(LocalHistoryBean.VIDEO);
@@ -223,7 +231,7 @@ public class VideoDetailActivity extends SimpleBaseActivity {
                         videoDataSource.setTitle(response.body().getData().getPages().get(i).getPart());
                         Map<String,String> parameters=new HashMap<>();
                         parameters.put("device","android");
-                        parameters.put("aid",uri.getPath().substring(1));
+                        parameters.put("aid",currentAid);
                         parameters.put("expire","0");
                         parameters.put("fnval","16");
                         parameters.put("fnver","0");
@@ -307,7 +315,7 @@ public class VideoDetailActivity extends SimpleBaseActivity {
             });
 
             Map<String,String> replyParameters=new HashMap<>();
-            replyParameters.put("oid",uri.getPath().substring(1));
+            replyParameters.put("oid",currentAid);
             replyParameters.put("plat","2");
             replyParameters.put("sort","0");
             replyParameters.put("size","20");

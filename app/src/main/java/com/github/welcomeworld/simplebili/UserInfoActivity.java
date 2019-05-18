@@ -36,7 +36,7 @@ public class UserInfoActivity extends SimpleBaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_info);
         ButterKnife.bind(this);
-        if(!BiliLocalStatus.isLogin()){
+        if(!BiliLocalStatus.isLogin()&&getIntent().getIntExtra("mid",-1)==-1){
             infoView.setText("还没有登录");
             return;
         }

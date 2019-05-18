@@ -174,7 +174,11 @@ public class BangumiDetailActivity extends SimpleBaseActivity{
         viewPager.setAdapter(bangumiDetailPagerAdapter);
         if(currentUri!=null){
             Map<String,String> parameters=new HashMap<>();
-            parameters.put("season_id",currentUri.getPath().substring(currentUri.getPath().lastIndexOf('/')+3));
+            if(currentUri.getPath()!=null&&currentUri.getPath().contains("ss")){
+                parameters.put("season_id",currentUri.getPath().substring(currentUri.getPath().lastIndexOf('/')+3));
+            }else if(currentUri.getPath()!=null&&currentUri.getPath().contains("ep")){
+                parameters.put("ep_id",currentUri.getPath().substring(currentUri.getPath().lastIndexOf('/')+3));
+            }
             parameters.put("ts",""+System.currentTimeMillis());
             parameters.put("qn","32");
             OkHttpClient.Builder okHttpClientBuilder=new OkHttpClient.Builder()
@@ -193,14 +197,15 @@ public class BangumiDetailActivity extends SimpleBaseActivity{
             gangumiDetailNetAPI.getBangumiDetailPageInfo().enqueue(new Callback<BangumiDetailPageBean>() {
                 @Override
                 public void onResponse(Call<BangumiDetailPageBean> call, Response<BangumiDetailPageBean> response) {
+                    if(response.body()==null||response.body().getCode()!=0){
+                        return;
+                    }
                     ((BangumiDetailPagerAdapter)viewPager.getAdapter()).setDescData(response.body().getResult());
                     if(currentUri.getPath().substring(currentUri.getPath().lastIndexOf('/')+1).startsWith("ss")){
                         currentUri = Uri.parse(response.body().getResult().getEpisodes().get(0).getShareUrl());
                         bangumiDetailPagerAdapter.setMaxId(0);
                     }
                     for(int i=0;i<response.body().getResult().getEpisodes().size();i++){
-                        Log.e("ok","currentUri"+currentUri.getPath());
-                        Log.e("ok","getUri"+Uri.parse(response.body().getResult().getEpisodes().get(i).getShareUrl()).getPath());
                         if(currentUri.getPath().equals(Uri.parse(response.body().getResult().getEpisodes().get(i).getShareUrl()).getPath())){
                             currentAid = response.body().getResult().getEpisodes().get(i).getAid();
                             bangumiDetailPagerAdapter.setRefreshing(true);

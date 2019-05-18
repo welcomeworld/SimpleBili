@@ -5,14 +5,32 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/toolbar_index"/>
+    <include layout="@layout/toolbar_index" android:id="@+id/dynamic_toolbar"/>
     <ImageView
         android:id="@+id/dynamic_login_guide"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:src="@mipmap/bangumi_follow_home_login_guide"
+        android:src="@mipmap/login_picture"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+    <com.github.welcomeworld.simplebili.widget.SwiperefreshContainer
+        android:id="@+id/index_dynamic_swiprefresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dynamic_toolbar"
+        >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/index_dynamic_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="8dp"
+            android:background="@color/gray_light"
+            >
+        </android.support.v7.widget.RecyclerView>
+    </com.github.welcomeworld.simplebili.widget.SwiperefreshContainer>
 </android.support.constraint.ConstraintLayout>
