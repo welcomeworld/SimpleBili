@@ -20,6 +20,12 @@ public class VideoDetailPagerAdapter extends PagerAdapter {
 
     private boolean descChanged=false;
     private boolean replyChanged=false;
+
+    public void setListener(View.OnClickListener listener) {
+        this.listener = listener;
+    }
+
+    private View.OnClickListener listener;
     private VideoDetailReplyRecyclerViewAdapter replyRecyclerViewAdapter;
 
     public int getMaxId() {
@@ -127,7 +133,9 @@ public class VideoDetailPagerAdapter extends PagerAdapter {
             LinearLayoutManager linearLayoutManager=new LinearLayoutManager(container.getContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             descView.setLayoutManager(linearLayoutManager);
-            descView.setAdapter(new VideoDetailDescRecyclerViewAdapter(descData));
+            VideoDetailDescRecyclerViewAdapter recyclerViewAdapter = new VideoDetailDescRecyclerViewAdapter(descData);
+            recyclerViewAdapter.setListener(listener);
+            descView.setAdapter(recyclerViewAdapter);
             container.addView(descView);
             return descView;
         }else{
@@ -151,4 +159,6 @@ public class VideoDetailPagerAdapter extends PagerAdapter {
     public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
         return view==object;
     }
+
+
 }

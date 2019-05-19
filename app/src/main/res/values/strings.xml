@@ -121,6 +121,8 @@
     <string name="downloaded">已缓存</string>
     <string name="dynamic_bangumi_update"><xliff:g id="bili">%1$s·更新了</xliff:g></string>
     <string name="dynamic_video_update"><xliff:g id="bili">%1$s·投稿了视频</xliff:g></string>
+    <string name="pause">暂停</string>
+
 
     <!-- 说明-->
     <string name="play_desc">播放或暂停按钮</string>
@@ -165,6 +167,7 @@
     <string name="favorite_list_desc"><xliff:g id="bili">%1$d个内容·%2$s</xliff:g></string>
     <string name="favorite_cinema_desc"><xliff:g id="bili">%1$s|%2$s</xliff:g></string>
     <string name="favorite_topic_time"><xliff:g id="bili">收藏于%1$s</xliff:g></string>
+    <string name="detail_page">详情页</string>
 
     <!-- 提示或日志-->
     <string name="uri_null_tip">Uri为空</string>

@@ -30,6 +30,16 @@ public class VideoDetailDescRecyclerViewAdapter extends RecyclerView.Adapter<Vid
     private VideoDetailPageBean.DataBean data;
     Context context;
 
+    public View.OnClickListener getListener() {
+        return listener;
+    }
+
+    public void setListener(View.OnClickListener listener) {
+        this.listener = listener;
+    }
+
+    private View.OnClickListener listener;
+
     private static final int HEADERVIEWTYPE=0x233;
 
     public VideoDetailDescRecyclerViewAdapter(VideoDetailPageBean.DataBean data){
@@ -64,7 +74,7 @@ public class VideoDetailDescRecyclerViewAdapter extends RecyclerView.Adapter<Vid
             holder.likeView.setText(StringUtils.formatNumber(data.getStat().getLike()));
             holder.coinView.setText(StringUtils.formatNumber(data.getStat().getCoin()));
             holder.favoriteView.setText(StringUtils.formatNumber(data.getStat().getFavorite()));
-            holder.shareView.setText(StringUtils.formatNumber(data.getStat().getShare()));
+            holder.downloadView.setOnClickListener(listener);
         }else{
             VideoDetailPageBean.DataBean.RelatesBean currentData=data.getRelates().get(position-1);
             Glide.with(context).load(currentData.getPic()).apply(new RequestOptions().transforms(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
@@ -162,8 +172,8 @@ public class VideoDetailDescRecyclerViewAdapter extends RecyclerView.Adapter<Vid
         @BindView(R.id.video_desc_favorite)
         TextView favoriteView;
         @Nullable
-        @BindView(R.id.video_desc_share)
-        TextView shareView;
+        @BindView(R.id.video_desc_download)
+        TextView downloadView;
 
         public MyInnerViewHolder(View itemView) {
             super(itemView);

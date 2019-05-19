@@ -7,6 +7,7 @@ import com.crashlytics.android.Crashlytics;
 import com.github.welcomeworld.simplebili.bean.LoginResultBean;
 import com.github.welcomeworld.simplebili.common.BiliLocalStatus;
 import com.github.welcomeworld.simplebili.dao.SimpleDatabase;
+import com.github.welcomeworld.simplebili.utils.DownloadManager;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class MApplication extends Application {
             BiliLocalStatus.setAccessKey(tokens.get(0).getAccessToken());
             BiliLocalStatus.setMid(tokens.get(0).getMid());
         }
+        DownloadManager.getInstance().setApplication(this);
     }
 
     public SimpleDatabase getDatabase(){

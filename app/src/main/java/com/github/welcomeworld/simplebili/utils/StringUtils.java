@@ -82,4 +82,16 @@ public class StringUtils {
         }
         return formatDate(time);
     }
+
+    public static String formatFlow(long flow){
+        if(flow<1024){
+            return flow+"B";
+        }else if(flow<1048576){
+            return flow/1024+"KB";
+        }else if(flow<1073741824){
+            return flow/1024/1024+"M";
+        }else {
+            return flow/1024/1024/1024+"GB";
+        }
+    }
 }

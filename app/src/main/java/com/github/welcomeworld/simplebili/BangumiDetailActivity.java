@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.github.welcomeworld.simplebili.adapter.BangumiDetailPagerAdapter;
 import com.github.welcomeworld.simplebili.bean.BangumiDetailPageBean;
 import com.github.welcomeworld.simplebili.bean.BangumiUrlBean;
+import com.github.welcomeworld.simplebili.bean.DownloadInfoBean;
 import com.github.welcomeworld.simplebili.bean.ReplyCursorBean;
 import com.github.welcomeworld.simplebili.bean.VideoUrlBean;
 import com.github.welcomeworld.simplebili.common.VideoDataSource;
@@ -28,6 +30,7 @@ import com.github.welcomeworld.simplebili.net.okhttp.interceptor.FixedParameterI
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.SortAndSignInterceptor;
 import com.github.welcomeworld.simplebili.net.retrofit.BangumiDetailNetAPI;
 import com.github.welcomeworld.simplebili.net.retrofit.BaseUrl;
+import com.github.welcomeworld.simplebili.utils.DownloadManager;
 import com.github.welcomeworld.simplebili.widget.IjkMediaView;
 import com.github.welcomeworld.simplebili.widget.SwiperefreshContainer;
 import java.util.ArrayList;
@@ -49,7 +52,7 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class BangumiDetailActivity extends SimpleBaseActivity{
+public class BangumiDetailActivity extends SimpleBaseActivity implements View.OnClickListener{
 
     @BindView(R.id.bangumi_detail_ijkVideoView)
     IjkMediaView ijkMediaView;
@@ -61,6 +64,10 @@ public class BangumiDetailActivity extends SimpleBaseActivity{
     ViewPager viewPager;
     Uri currentUri;
     int currentAid=-1;
+    int currentCid =-1;
+    String currentTitle ="";
+    String currentUrl = "";
+    String currentCover = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,6 +87,7 @@ public class BangumiDetailActivity extends SimpleBaseActivity{
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         BangumiDetailPagerAdapter bangumiDetailPagerAdapter=new BangumiDetailPagerAdapter(null,null);
+        bangumiDetailPagerAdapter.setOnClickListener(this);
         bangumiDetailPagerAdapter.setLoadListener(new SwiperefreshContainer.OnLoadListener() {
             @Override
             public void onLoad() {
@@ -208,6 +216,9 @@ public class BangumiDetailActivity extends SimpleBaseActivity{
                     for(int i=0;i<response.body().getResult().getEpisodes().size();i++){
                         if(currentUri.getPath().equals(Uri.parse(response.body().getResult().getEpisodes().get(i).getShareUrl()).getPath())){
                             currentAid = response.body().getResult().getEpisodes().get(i).getAid();
+                            currentCid = response.body().getResult().getEpisodes().get(i).getCid();
+                            currentTitle = response.body().getResult().getEpisodes().get(i).getLongTitle();
+                            currentCover = response.body().getResult().getCover();
                             bangumiDetailPagerAdapter.setRefreshing(true);
                         }else {
                             Log.e("ok","not match");
@@ -215,6 +226,7 @@ public class BangumiDetailActivity extends SimpleBaseActivity{
                         VideoDataSource videoDataSource=new VideoDataSource();
                         videoDataSource.setDanmakuSource("http://comment.bilibili.com/"+response.body().getResult().getEpisodes().get(i).getCid()+".xml");
                         videoDataSource.setTitle(response.body().getResult().getEpisodes().get(i).getLongTitle());
+                        int cid = response.body().getResult().getEpisodes().get(i).getCid();
                         Map<String,String> parameters=new HashMap<>();
                         parameters.put("aid",response.body().getResult().getEpisodes().get(i).getAid()+"");
                         parameters.put("expire","0");
@@ -244,9 +256,11 @@ public class BangumiDetailActivity extends SimpleBaseActivity{
                         videoDetailNetAPI.getBangumiUrl().enqueue(new Callback<BangumiUrlBean>() {
                             @Override
                             public void onResponse(Call<BangumiUrlBean> call, Response<BangumiUrlBean> response) {
-                                String urlString;
                                 if(response.body().getDash()!=null){
                                     videoDataSource.setDash(true);
+                                    if(cid == currentCid){
+                                        currentUrl = response.body().getDash().getVideo().get(0).getBaseUrl();
+                                    }
                                     ArrayList<String> videoSources=new ArrayList<>();
                                     ArrayList<String> descriptions=new ArrayList<>();
                                     ArrayList<String> audioSources=new ArrayList<>();
@@ -273,7 +287,6 @@ public class BangumiDetailActivity extends SimpleBaseActivity{
                                     videoDataSource.setVideoSources(videoSources);
                                     videoDataSource.setDescriptions(descriptions);
                                     videoDataSource.setAudioSources(audioSources);
-                                    urlString=response.body().getDash().getVideo().get(0).getBaseUrl();
                                 }else {
                                     Toast.makeText(BangumiDetailActivity.this,"dash is null",Toast.LENGTH_LONG).show();
                                 }
@@ -326,5 +339,23 @@ public class BangumiDetailActivity extends SimpleBaseActivity{
         super.onDestroy();
         ijkMediaView.release();
         IjkMediaPlayer.native_profileEnd();
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.bangumi_detail_desc_download:
+                DownloadInfoBean info = new DownloadInfoBean();
+                info.setType(DownloadInfoBean.BANGUMI_TYPE);
+                info.setCid(currentCid);
+                info.setTitle(currentTitle);
+                info.setSourceUrl(currentUrl);
+                info.setCover(currentCover);
+                info.setOriginalUrl(currentUri.toString());
+                DownloadManager.getInstance().preparedDownload(info);
+                Toast.makeText(this,"开始下载",Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

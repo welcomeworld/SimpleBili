@@ -40,33 +40,36 @@ public class PlayActivity extends SimpleBaseActivity {
         }
         Uri uri=getIntent().getData();
         if(uri!=null) {
-            String path= FileUtils.getPath(this,uri);
+            String path;
+            if(getIntent().getBooleanExtra("real_path",false)){
+                path = uri.toString();
+            }else {
+                path= FileUtils.getPath(this,uri);
+            }
             File pathDir;
             if(path!=null&&path.lastIndexOf('/')>0){
                 pathDir=new File(path.substring(0,path.lastIndexOf('/')));
             }else{
                 return;
             }
-            if(pathDir.listFiles()==null||pathDir.listFiles().length<1){
-                VideoDataSource videoDataSource=new VideoDataSource();
-                videoDataSource.setTitle(path);
-                ArrayList<String> paths=new ArrayList<>();
-                paths.add(path);
-                videoDataSource.setVideoSources(paths);
-                ijkMediaView.addVideoDataSource(videoDataSource);
-                ijkMediaView.changeToLandscape();
-                return;
-            }
             List<VideoDataSource> dataSources=new ArrayList<>();
-            for(File child:pathDir.listFiles()){
-                if(!child.isDirectory()){
-                    if(child.getName().endsWith("mp4")){
-                        VideoDataSource videoDataSource=new VideoDataSource();
-                        videoDataSource.setTitle(child.getAbsolutePath());
-                        ArrayList<String> paths=new ArrayList<>();
-                        paths.add(child.getAbsolutePath());
-                        videoDataSource.setVideoSources(paths);
-                        dataSources.add(videoDataSource);
+            VideoDataSource videoDataSource1=new VideoDataSource();
+            videoDataSource1.setTitle(path);
+            ArrayList<String> paths1=new ArrayList<>();
+            paths1.add(path);
+            videoDataSource1.setVideoSources(paths1);
+            dataSources.add(videoDataSource1);
+            if(pathDir.listFiles()!=null&&pathDir.listFiles().length>1){
+                for(File child:pathDir.listFiles()){
+                    if(!child.isDirectory()){
+                        if(child.getName().endsWith("mp4")&&!child.getAbsolutePath().equalsIgnoreCase(path)){
+                            VideoDataSource videoDataSource=new VideoDataSource();
+                            videoDataSource.setTitle(child.getAbsolutePath());
+                            ArrayList<String> paths=new ArrayList<>();
+                            paths.add(child.getAbsolutePath());
+                            videoDataSource.setVideoSources(paths);
+                            dataSources.add(videoDataSource);
+                        }
                     }
                 }
             }

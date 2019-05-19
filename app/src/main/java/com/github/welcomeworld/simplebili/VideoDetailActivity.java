@@ -9,11 +9,13 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.github.welcomeworld.simplebili.adapter.VideoDetailPagerAdapter;
+import com.github.welcomeworld.simplebili.bean.DownloadInfoBean;
 import com.github.welcomeworld.simplebili.bean.LocalHistoryBean;
 import com.github.welcomeworld.simplebili.bean.ReplyCursorBean;
 import com.github.welcomeworld.simplebili.bean.VideoDetailPageBean;
@@ -28,6 +30,7 @@ import com.github.welcomeworld.simplebili.net.okhttp.interceptor.SortAndSignInte
 import com.github.welcomeworld.simplebili.net.retrofit.BaseUrl;
 import com.github.welcomeworld.simplebili.net.retrofit.IndexNetAPI;
 import com.github.welcomeworld.simplebili.net.retrofit.VideoDetailNetAPI;
+import com.github.welcomeworld.simplebili.utils.DownloadManager;
 import com.github.welcomeworld.simplebili.widget.IjkMediaView;
 import com.github.welcomeworld.simplebili.widget.SwiperefreshContainer;
 
@@ -60,7 +63,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
-public class VideoDetailActivity extends SimpleBaseActivity {
+public class VideoDetailActivity extends SimpleBaseActivity implements View.OnClickListener{
 
     @BindView(R.id.ijkVideoView)
     IjkMediaView ijkMediaView;
@@ -72,6 +75,11 @@ public class VideoDetailActivity extends SimpleBaseActivity {
     ViewPager viewPager;
 
     private String currentAid = "";
+    int currentCid =-1;
+    String currentTitle ="";
+    String currentUrl = "";
+    String currentCover = "";
+    Uri currentUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +88,7 @@ public class VideoDetailActivity extends SimpleBaseActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_video_detail);
         ButterKnife.bind(this);
-        Uri uri=getIntent().getData();
+        currentUri=getIntent().getData();
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         VideoDetailPagerAdapter videoDetailPagerAdapter=new VideoDetailPagerAdapter(null,null);
@@ -127,6 +135,7 @@ public class VideoDetailActivity extends SimpleBaseActivity {
                 });
             }
         });
+        videoDetailPagerAdapter.setListener(this);
         videoDetailPagerAdapter.setRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -174,8 +183,8 @@ public class VideoDetailActivity extends SimpleBaseActivity {
         } catch (Exception e) {
             this.finish();
         }
-        if(uri!=null) {
-            currentAid = uri.getPath().substring(1);
+        if(currentUri!=null) {
+            currentAid = currentUri.getPath().substring(1);
             currentAid = currentAid.substring(0,currentAid.contains("/")?currentAid.indexOf("/"):currentAid.length());
             Map<String,String> parameters=new HashMap<>();
             parameters.put("ad_extra","6BCCA2213B3B094292DFF9454EB02128A5CD624F226D40F0B86CA8263CE1D50C927F2F8DF2FD134C361A06FAA537402E66E53155D1C1F218BE42D2AFE4A6A701C496E5196401D81A1E390498A1CA24C20C25C97600C552962682D90C9D9DF8B9EDAD866490BE972EA37F92AA7A1040F2BEA5122D039B942437307F298336AAF27EFB5AF87961F6F852401DD8BBD0BFB92309D3B60C12E307ECD02D9BCBB19725E2964F77CDE07BFAC45A34884CE0167EEDBB0EBC8926A3CC9CB9B27536BF9C0DF87AB6DABAE86D1E6D4E714BC140A1D500E27446265DC85C226B381E10AF2299D961E06FA60A84EE34DFCB65E1253339112FD0D5ECE9C9C58C084D028DD7E26A70DC806C36C46E9D5C08169A2571B8BAC2BC0AE91AE8D36F3CBDCD2768950CD1CE9C3A3F53B5FE145A20B020435E79CA");
@@ -225,7 +234,12 @@ public class VideoDetailActivity extends SimpleBaseActivity {
                         ((MApplication)getApplication()).getDatabase().getDao().updateHistory(localHistoryBean);
                     }
                     for(int i=0;i<response.body().getData().getPages().size();i++){
-                        int index=i;
+                        if(i ==0){
+                            currentCid = response.body().getData().getPages().get(0).getCid();
+                            currentTitle = response.body().getData().getTitle();
+                            currentCover = response.body().getData().getPic();
+                        }
+                        int cid = response.body().getData().getPages().get(i).getCid();
                         VideoDataSource videoDataSource=new VideoDataSource();
                         videoDataSource.setDanmakuSource(response.body().getData().getPages().get(i).getDmlink());
                         videoDataSource.setTitle(response.body().getData().getPages().get(i).getPart());
@@ -259,6 +273,9 @@ public class VideoDetailActivity extends SimpleBaseActivity {
                             public void onResponse(Call<VideoUrlBean> call, Response<VideoUrlBean> response) {
                                 String urlString;
                                 if(response.body().getData().getDash()!=null){
+                                    if(cid == currentCid){
+                                        currentUrl = response.body().getData().getDash().getVideo().get(0).getBase_url();
+                                    }
                                     videoDataSource.setDash(true);
                                     ArrayList<String> videoSources=new ArrayList<>();
                                     ArrayList<String> descriptions=new ArrayList<>();
@@ -286,8 +303,10 @@ public class VideoDetailActivity extends SimpleBaseActivity {
                                     videoDataSource.setVideoSources(videoSources);
                                     videoDataSource.setDescriptions(descriptions);
                                     videoDataSource.setAudioSources(audioSources);
-                                    urlString=response.body().getData().getDash().getVideo().get(0).getBase_url();
                                 }else {
+                                    if(cid == currentCid){
+                                        currentUrl = response.body().getData().getDurl().get(0).getUrl();
+                                    }
                                     videoDataSource.setDash(false);
                                     ArrayList<String> videoSources=new ArrayList<>();
                                     ArrayList<String> descriptions=new ArrayList<>();
@@ -295,7 +314,6 @@ public class VideoDetailActivity extends SimpleBaseActivity {
                                     descriptions.add(response.body().getData().getFormat());
                                     videoDataSource.setVideoSources(videoSources);
                                     videoDataSource.setDescriptions(descriptions);
-                                    urlString=response.body().getData().getDurl().get(0).getUrl();
                                 }
                                 ijkMediaView.addVideoDataSource(videoDataSource);
                             }
@@ -377,5 +395,22 @@ public class VideoDetailActivity extends SimpleBaseActivity {
         super.onDestroy();
         ijkMediaView.release();
         IjkMediaPlayer.native_profileEnd();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.video_desc_download:
+                DownloadInfoBean info = new DownloadInfoBean();
+                info.setTitle(currentTitle);
+                info.setCover(currentCover);
+                info.setType(DownloadInfoBean.VIDEO_TYPE);
+                info.setCid(currentCid);
+                info.setSourceUrl(currentUrl);
+                info.setOriginalUrl(currentUri.toString());
+                DownloadManager.getInstance().preparedDownload(info);
+                Toast.makeText(this,"开始下载",Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 }

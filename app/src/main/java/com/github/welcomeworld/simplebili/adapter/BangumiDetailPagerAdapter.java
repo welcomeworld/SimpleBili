@@ -53,6 +53,7 @@ public class BangumiDetailPagerAdapter extends PagerAdapter {
     private SwiperefreshContainer replyView;
     private ConstraintLayout descView;
     private boolean descChanged=false;
+    private View.OnClickListener listener;
     private boolean replyChanged=false;
     private int maxId=0;
     private VideoDetailReplyRecyclerViewAdapter replyRecyclerViewAdapter;
@@ -73,6 +74,10 @@ public class BangumiDetailPagerAdapter extends PagerAdapter {
         }else{
             return replyChanged?POSITION_NONE:POSITION_UNCHANGED;
         }
+    }
+
+    public void setOnClickListener(View.OnClickListener v){
+        this.listener = v;
     }
 
     @NonNull
@@ -98,6 +103,7 @@ public class BangumiDetailPagerAdapter extends PagerAdapter {
                 }
                 ((TextView)descView.findViewById(R.id.bangumi_detail_desc_coin)).setText(StringUtils.formatNumber(descData.getStat().getCoins()));
                 ((TextView)descView.findViewById(R.id.bangumi_detail_desc_share)).setText(StringUtils.formatNumber(descData.getStat().getShare()));
+                descView.findViewById(R.id.bangumi_detail_desc_download).setOnClickListener(listener);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(container.getContext());
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 BangumiDetailDescRecyclerViewAdapter recyclerViewAdapter = new BangumiDetailDescRecyclerViewAdapter(recommendData);
