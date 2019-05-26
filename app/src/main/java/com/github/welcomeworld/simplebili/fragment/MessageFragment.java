@@ -3,9 +3,11 @@ package com.github.welcomeworld.simplebili.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.Group;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -21,6 +23,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
+import com.github.welcomeworld.simplebili.BrowserActivity;
+import com.github.welcomeworld.simplebili.NotificationActivity;
 import com.github.welcomeworld.simplebili.R;
 import com.github.welcomeworld.simplebili.common.BiliLocalStatus;
 
@@ -35,6 +39,10 @@ public class MessageFragment extends Fragment {
     TextView titleView;
     DrawerLayout drawerLayout;
     Activity activity;
+    @BindView(R.id.login_group)
+    Group loginGuide;
+    @BindView(R.id.message_group)
+    Group messageGroup;
 
     @Override
     public void onAttach(Context context) {
@@ -75,6 +83,32 @@ public class MessageFragment extends Fragment {
         startActivity(loginIntent);
     }
 
+    @OnClick(R.id.message_notification)
+    public void openWebNotification(){
+        Intent notificationIntent = new Intent(getActivity(), BrowserActivity.class);
+        notificationIntent.setData(Uri.parse("https://message.bilibili.com/h5/app/system-message"));
+        startActivity(notificationIntent);
+    }
+
+    @OnClick({R.id.message_reply_me,R.id.message_at_me,R.id.message_praise_me})
+    public void openNotification(View v){
+        Intent notificationIntent = new Intent(getActivity(), NotificationActivity.class);
+        switch (v.getId()){
+            case R.id.message_reply_me:
+                notificationIntent.putExtra("type",0);
+                break;
+            case R.id.message_at_me:
+                notificationIntent.putExtra("type",1);
+                break;
+            case R.id.message_praise_me:
+                notificationIntent.putExtra("type",2);
+                break;
+                default:
+                    notificationIntent.putExtra("type",0);
+        }
+        startActivity(notificationIntent);
+    }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -84,6 +118,13 @@ public class MessageFragment extends Fragment {
                 Glide.with(avator).load(BiliLocalStatus.getCover()).apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop())).into(avator);
             }else {
                 avator.setImageResource(R.mipmap.ic_default_avatar);
+            }
+            if(BiliLocalStatus.isLogin()){
+                loginGuide.setVisibility(View.GONE);
+                messageGroup.setVisibility(View.VISIBLE);
+            }else {
+                loginGuide.setVisibility(View.VISIBLE);
+                messageGroup.setVisibility(View.GONE);
             }
         }
     }

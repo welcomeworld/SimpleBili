@@ -570,25 +570,6 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
                     @Override
                     public void onCompletion(IMediaPlayer iMediaPlayer) {
                         Log.d(TAG,"audioCompletion");
-                        /*switch (playMode){
-                            case 0:
-                                pause();
-                                break;
-                            case 1:
-                                if(currentSourceIndex<videoDataSources.size()-1){
-                                    currentSourceIndex++;
-                                    load();
-                                }else{
-                                    pause();
-                                }
-                                break;
-                            case 2:
-                                currentSourceIndex=currentSourceIndex>=videoDataSources.size()-1?0:currentSourceIndex+1;
-                                load();
-                                break;
-                            case 3:
-                                break;
-                        }*/
                     }
 
                     @Override

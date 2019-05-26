@@ -72,10 +72,10 @@ public class DownloadViewPager extends PagerAdapter {
 
     public void notifyItemCompleted(int position,int completedPosition){
         if(position != -1&&downloadingRecyclerView!=null&&downloadingRecyclerView.getAdapter()!=null){
-            downloadingRecyclerView.getAdapter().notifyItemRemoved(position);
+            downloadingRecyclerView.getAdapter().notifyDataSetChanged();
         }
         if(completedPosition!=-1&&completedRecyclerView!=null&&completedRecyclerView.getAdapter()!=null){
-            completedRecyclerView.getAdapter().notifyItemInserted(completedPosition);
+            completedRecyclerView.getAdapter().notifyDataSetChanged();
         }
     }
 

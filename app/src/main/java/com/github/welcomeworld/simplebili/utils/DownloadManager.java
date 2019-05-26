@@ -96,13 +96,19 @@ public class DownloadManager {
                         while ((len = is.read(buffer)) != -1) {
                             fileOutputStream.write(buffer, 0, len);
                             downloadLength += len;
-                            if(info.getDownloadState() == DownloadInfoBean.DOWNLOADING){
-                                emitter.onNext(info);
-                            }else {
-                                return;
-                            }
+                            emitter.onNext(info);
                         }
                         fileOutputStream.flush();
+                        if(file.length()>info.getContentLength()){
+                            info.setContentLength(file.length());
+                            if(application!=null){
+                                try {
+                                    application.getDatabase().getDao().updateDownload(info);
+                                }catch (Exception e){
+                                    e.printStackTrace();
+                                }
+                            }
+                        }
                         info.setDownloadState(DownloadInfoBean.COMPLETE);
                         emitter.onNext(info);
                         downCalls.remove(info.getDownloadId());

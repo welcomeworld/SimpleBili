@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import com.github.welcomeworld.simplebili.bean.UserInfoMineBean;
+import com.github.welcomeworld.simplebili.bean.UserSpaceBean;
 import com.github.welcomeworld.simplebili.common.BiliLocalStatus;
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicHeaderInterceptor;
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicParameterInterceptor;
@@ -28,8 +29,6 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class UserInfoActivity extends SimpleBaseActivity {
-    @BindView(R.id.userInfo)
-    TextView infoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +36,6 @@ public class UserInfoActivity extends SimpleBaseActivity {
         setContentView(R.layout.activity_user_info);
         ButterKnife.bind(this);
         if(!BiliLocalStatus.isLogin()&&getIntent().getIntExtra("mid",-1)==-1){
-            infoView.setText("还没有登录");
             return;
         }
         Map<String,String> parameters1=new HashMap<>();
@@ -54,19 +52,17 @@ public class UserInfoActivity extends SimpleBaseActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClientBuilder1.build())
                 .build();
-        retrofit1.create(UserNetAPI.class).getMine().enqueue(new Callback<UserInfoMineBean>() {
+        retrofit1.create(UserNetAPI.class).getSpace().enqueue(new Callback<UserSpaceBean>() {
             @Override
-            public void onResponse(Call<UserInfoMineBean> call, Response<UserInfoMineBean> response) {
-                if(response.body()==null||response.body().getCode()!=0){
-                    infoView.setText("获取信息失败");
+            public void onResponse(Call<UserSpaceBean> call, Response<UserSpaceBean> response) {
+                if(response.body()==null){
                     return;
                 }
-                infoView.setText(response.body().getData().getName());
             }
 
             @Override
-            public void onFailure(Call<UserInfoMineBean> call, Throwable t) {
-                infoView.setText("获取信息失败");
+            public void onFailure(Call<UserSpaceBean> call, Throwable t) {
+
             }
         });
     }

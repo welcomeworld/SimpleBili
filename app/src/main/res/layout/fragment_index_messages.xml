@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <include layout="@layout/toolbar_index" />
+    <include layout="@layout/toolbar_index" android:id="@+id/message_toolbar" />
     <ImageView
         android:id="@+id/message_login_guide"
         android:layout_width="match_parent"
@@ -16,6 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <TextView
+        android:id="@+id/message_login_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -23,4 +24,68 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/message_login_guide"/>
+    <android.support.constraint.Group
+        android:id="@+id/login_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="message_login_guide,message_login_text"
+        />
+    <TextView
+        android:id="@+id/message_reply_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:drawablePadding="8dp"
+        android:paddingTop="8dp"
+        android:drawableTop="@mipmap/ic_notification_reply"
+        android:text="@string/notification_reply_me"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/message_toolbar"
+        app:layout_constraintEnd_toStartOf="@id/message_at_me"
+        />
+    <TextView
+        android:id="@+id/message_at_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:gravity="center"
+        android:drawablePadding="8dp"
+        android:drawableTop="@mipmap/ic_notification_at"
+        android:text="@string/notification_at_me"
+        app:layout_constraintStart_toEndOf="@id/message_reply_me"
+        app:layout_constraintTop_toBottomOf="@id/message_toolbar"
+        app:layout_constraintEnd_toStartOf="@id/message_praise_me"
+        />
+    <TextView
+        android:id="@+id/message_praise_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:drawablePadding="8dp"
+        android:gravity="center"
+        android:drawableTop="@mipmap/ic_notification_rating"
+        android:text="@string/notification_praise_me"
+        app:layout_constraintStart_toEndOf="@id/message_at_me"
+        app:layout_constraintTop_toBottomOf="@id/message_toolbar"
+        app:layout_constraintEnd_toStartOf="@id/message_notification"
+        />
+    <TextView
+        android:id="@+id/message_notification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:drawablePadding="8dp"
+        android:paddingTop="8dp"
+        android:drawableTop="@mipmap/ic_notification_sys"
+        android:gravity="center"
+        android:text="@string/notification_sys"
+        app:layout_constraintStart_toEndOf="@id/message_praise_me"
+        app:layout_constraintTop_toBottomOf="@id/message_toolbar"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+    <android.support.constraint.Group
+        android:id="@+id/message_group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="message_notification,message_praise_me,message_at_me,message_reply_me"
+        />
 </android.support.constraint.ConstraintLayout>
