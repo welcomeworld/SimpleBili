@@ -1,9 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".UserInfoActivity">
-    <include layout="@layout/toolbar_index"/>
-</android.support.design.widget.CoordinatorLayout>
+    <ImageView
+        android:id="@+id/userinfo_space_face"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintDimensionRatio="H,3:1"
+        />
+    <ImageView
+        android:id="@+id/userinfo_avatar"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="16dp"
+        android:src="@mipmap/ic_default_avatar"
+        app:layout_constraintTop_toBottomOf="@id/userinfo_space_face"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+    <TextView
+        android:id="@+id/userinfo_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:ellipsize="end"
+        tools:text="孤独自由死亡"
+        android:textSize="20sp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="@id/userinfo_avatar"
+        app:layout_constraintTop_toBottomOf="@id/userinfo_avatar"
+        />
+    <ImageView
+        android:id="@+id/userinfo_sex"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/ic_sex"
+        app:layout_constraintStart_toEndOf="@id/userinfo_name"
+        app:layout_constraintTop_toTopOf="@id/userinfo_name"
+        app:layout_constraintBottom_toBottomOf="@id/userinfo_name"
+        />
+    <ImageView
+        android:id="@+id/userinfo_level"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/ic_user_level"
+        app:layout_constraintStart_toEndOf="@id/userinfo_sex"
+        app:layout_constraintTop_toTopOf="@id/userinfo_name"
+        app:layout_constraintBottom_toBottomOf="@id/userinfo_name"
+        />
+    <TextView
+        android:id="@+id/userinfo_follow_prefix"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:textColor="@color/black"
+        tools:text="27"
+        app:layout_constraintStart_toStartOf="@id/userinfo_avatar"
+        app:layout_constraintTop_toBottomOf="@id/userinfo_name"
+        />
+    <TextView
+        android:id="@+id/userinfo_follow_suffix"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="关注"
+        app:layout_constraintStart_toEndOf="@id/userinfo_follow_prefix"
+        app:layout_constraintTop_toBottomOf="@id/userinfo_name"
+        />
+    <TextView
+        android:id="@+id/userinfo_fans_prefix"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginStart="24dp"
+        android:textColor="@color/black"
+        tools:text="3"
+        app:layout_constraintStart_toEndOf="@id/userinfo_follow_suffix"
+        app:layout_constraintTop_toBottomOf="@id/userinfo_name"
+        />
+    <TextView
+        android:id="@+id/userinfo_fans_suffix"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="粉丝"
+        app:layout_constraintStart_toEndOf="@id/userinfo_fans_prefix"
+        app:layout_constraintTop_toBottomOf="@id/userinfo_name"
+        />
+    <TextView
+        android:id="@+id/userinfo_sign"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:maxLines="3"
+        android:ellipsize="end"
+        tools:text="我们二次永远都是一家人"
+        app:layout_constraintStart_toStartOf="@id/userinfo_avatar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/userinfo_follow_prefix"
+        />
+</android.support.constraint.ConstraintLayout>

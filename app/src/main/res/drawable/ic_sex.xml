@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<level-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:maxLevel="33" android:drawable="@mipmap/ic_sex_man"/>
+    <item android:maxLevel="66" android:drawable="@mipmap/ic_sex_woman"/>
+    <item android:maxLevel="100" android:drawable="@mipmap/ic_sex_unsure"/>
+</level-list>
