@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,6 +24,7 @@ import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.welcomeworld.simplebili.R;
+import com.github.welcomeworld.simplebili.SimpleBaseActivity;
 import com.github.welcomeworld.simplebili.adapter.IndexCategoryRecyclerViewAdapter;
 import com.github.welcomeworld.simplebili.common.BiliLocalStatus;
 
@@ -61,6 +63,20 @@ public class CategoryFragment extends Fragment {
         ButterKnife.bind(this,view);
         toolbar.inflateMenu(R.menu.index_downlaod);
         toolbar.inflateMenu(R.menu.index_search);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()){
+                    case R.id.item_home_search:
+                        ((SimpleBaseActivity)getActivity()).updateSelf("search");
+                        return true;
+                    case R.id.item_download:
+                        ((SimpleBaseActivity)getActivity()).updateSelf("cache");
+                        return true;
+                    default:return false;
+                }
+            }
+        });
         titleView.setText(R.string.category);
         GridLayoutManager gridLayoutManager=new GridLayoutManager(recyclerView.getContext(),4,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(gridLayoutManager);

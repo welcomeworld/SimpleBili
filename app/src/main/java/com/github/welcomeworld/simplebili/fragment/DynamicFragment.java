@@ -88,8 +88,8 @@ public class DynamicFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_index_dynamic,container,false);
         ButterKnife.bind(this,view);
-        toolbar.inflateMenu(R.menu.index_rank);
-        toolbar.inflateMenu(R.menu.index_post);
+        //toolbar.inflateMenu(R.menu.index_rank);
+        //toolbar.inflateMenu(R.menu.index_post);
         titleView.setText(R.string.dynamic);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(recyclerView.getContext());
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

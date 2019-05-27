@@ -6,6 +6,7 @@ import android.util.SparseArray;
 
 import com.github.welcomeworld.simplebili.MApplication;
 import com.github.welcomeworld.simplebili.bean.DownloadInfoBean;
+import com.github.welcomeworld.simplebili.bean.UpdateBean;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -273,4 +275,50 @@ public class DownloadManager {
         listeners.remove(listener);
     }
 
+    public void downloadUpdate(UpdateBean updateBean,Observer<Long> observer){
+        long downloadLength =0;
+        File path = new File(Environment.getExternalStorageDirectory().getAbsoluteFile()+"/SimpleBili/update");
+        if(!path.exists()){
+            path.mkdirs();
+        }
+        File file = new File(path.getPath(),updateBean.getVersionName()+".apk");
+        if(file.exists()){
+            downloadLength  = file.length();
+        }
+        Request request = new Request.Builder()
+                //确定下载的范围,添加此头,则服务器就可以跳过已经下载好的部分
+                .addHeader("RANGE", "bytes=" + downloadLength + "-")
+                .url(updateBean.getPath())
+                .build();
+        Observable.create(new ObservableOnSubscribe<Long>() {
+            @Override
+            public void subscribe(ObservableEmitter<Long> emitter) throws Exception {
+                InputStream is = null;
+                FileOutputStream fileOutputStream = null;
+                try {
+                    Response response = mClient.newCall(request).execute();
+                    if(!file.exists()){
+                        file.createNewFile();
+                    }
+                    long downloadLength = file.length();
+                    is = response.body().byteStream();
+                    fileOutputStream = new FileOutputStream(file, true);
+                    byte[] buffer = new byte[2048];//缓冲数组2kB
+                    int len;
+                    while ((len = is.read(buffer)) != -1) {
+                        fileOutputStream.write(buffer, 0, len);
+                        downloadLength += len;
+                        emitter.onNext(downloadLength);
+                    }
+                    emitter.onComplete();
+                    fileOutputStream.flush();
+                }catch (Exception e){
+                    throw e;
+                }finally {
+                    fileOutputStream.close();
+                    is.close();
+                }
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(observer);
+    }
 }

@@ -2,6 +2,7 @@ package com.github.welcomeworld.simplebili;
 
 import android.app.Application;
 import android.arch.persistence.room.Room;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import com.crashlytics.android.Crashlytics;
 import com.github.welcomeworld.simplebili.bean.LoginResultBean;
@@ -28,7 +29,13 @@ public class MApplication extends Application {
             BiliLocalStatus.setAccessKey(tokens.get(0).getAccessToken());
             BiliLocalStatus.setMid(tokens.get(0).getMid());
         }
+        strictMode();
         DownloadManager.getInstance().setApplication(this);
+    }
+
+    public void strictMode(){
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
     }
 
     public SimpleDatabase getDatabase(){

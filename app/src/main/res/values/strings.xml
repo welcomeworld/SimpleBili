@@ -126,6 +126,7 @@
     <string name="notification_at_me">\@我</string>
     <string name="notification_praise_me">收到的赞</string>
     <string name="notification_sys">系统通知</string>
+    <string name="can_not_arrive">电波无法到达哟</string>
 
 
     <!-- 说明-->
@@ -172,6 +173,8 @@
     <string name="favorite_cinema_desc"><xliff:g id="bili">%1$s|%2$s</xliff:g></string>
     <string name="favorite_topic_time"><xliff:g id="bili">收藏于%1$s</xliff:g></string>
     <string name="detail_page">详情页</string>
+    <string name="version_update">版本更新</string>
+    <string name="update">更新</string>
 
     <!-- 提示或日志-->
     <string name="uri_null_tip">Uri为空</string>

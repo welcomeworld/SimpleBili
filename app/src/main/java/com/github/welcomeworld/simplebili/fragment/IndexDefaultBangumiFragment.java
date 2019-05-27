@@ -25,6 +25,7 @@ import com.github.welcomeworld.simplebili.R;
 import com.github.welcomeworld.simplebili.adapter.IndexBangumiBannerPagerAdapter;
 import com.github.welcomeworld.simplebili.adapter.IndexBangumiEditorRecyclerViewAdapter;
 import com.github.welcomeworld.simplebili.bean.IndexBangumiBean;
+import com.github.welcomeworld.simplebili.common.BiliLocalStatus;
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicHeaderInterceptor;
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicParameterInterceptor;
 import com.github.welcomeworld.simplebili.net.okhttp.interceptor.FixedHeaderInterceptor;
@@ -39,6 +40,7 @@ import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -95,6 +97,8 @@ public class IndexDefaultBangumiFragment extends Fragment {
     TextView hopeDesc3;
     @BindView(R.id.mine_group)
     Group mineGroup;
+    @BindView(R.id.bangumi_login_guide)
+    ImageView loginGuide;
 
     IndexBangumiBean data;
 
@@ -269,11 +273,23 @@ public class IndexDefaultBangumiFragment extends Fragment {
         });
     }
 
+    @OnClick(R.id.bangumi_login_guide)
+    public void login(){
+        Intent loginIntent=new Intent("com.github.welcomeworld.simplebili.action.LOGIN");
+        loginIntent.setPackage(getContext().getPackageName());
+        startActivity(loginIntent);
+    }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser){
+        if(isVisibleToUser&&swipeRefreshLayout!=null){
             refresh(false);
+            if(BiliLocalStatus.isLogin()){
+                loginGuide.setVisibility(View.GONE);
+            }else {
+                loginGuide.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

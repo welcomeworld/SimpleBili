@@ -63,8 +63,8 @@ public class MessageFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_index_messages,container,false);
         ButterKnife.bind(this,view);
-        toolbar.inflateMenu(R.menu.index_contacts);
-        toolbar.inflateMenu(R.menu.index_message_more);
+        //toolbar.inflateMenu(R.menu.index_contacts);
+        //toolbar.inflateMenu(R.menu.index_message_more);
         titleView.setText(R.string.message);
         return view;
     }

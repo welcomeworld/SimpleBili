@@ -10,4 +10,5 @@ public class BaseUrl {
     public static final String BANGUMIURL = "https://bangumi.bilibili.com/";
     public static final String APIVCURL = "https://api.vc.bilibili.com/";
     public static final String MESSAGEURL = "https://message.bilibili.com/";
+    public static final String GITHUBRAWURL = "https://raw.githubusercontent.com/";
 }
