@@ -61,7 +61,7 @@ public class LiveDetailRelatedRecyclerViewAdapter extends RecyclerView.Adapter<L
         holder.upnameView.setText(data.get(position).getUname());
         holder.countView.setText(""+data.get(position).getOnline());
         holder.labelView.setText(data.get(position).getAreaV2Name());
-        Glide.with(context).load(data.get(position).getCover()).apply(new RequestOptions().transforms(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
+        Glide.with(context).load(data.get(position).getCover()+"@320w_180h_1e_1c.webp").apply(new RequestOptions().transforms(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
     }
 
     @Override

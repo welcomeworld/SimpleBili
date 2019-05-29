@@ -87,8 +87,8 @@ public class UserInfoActivity extends SimpleBaseActivity {
                 }
                 UserSpaceBean.DataBean data = response.body().getData();
                 nameView.setText(data.getCard().getName());
-                Glide.with(faceView).load(data.getImages().getImgUrl()).into(faceView);
-                Glide.with(avatarView).load(data.getCard().getFace()).apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop())).into(avatarView);
+                Glide.with(faceView).load(data.getImages().getImgUrl()+"@720w_240h_1e_1c.webp").into(faceView);
+                Glide.with(avatarView).load(data.getCard().getFace()+"@200w_200h_1e_1c.webp").apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop()).error(R.mipmap.ic_default_avatar).placeholder(avatarView.getDrawable())).into(avatarView);
                 followView.setText(data.getCard().getAttention()+"");
                 fanView.setText(data.getCard().getFans()+"");
                 signView.setText(data.getCard().getSign());

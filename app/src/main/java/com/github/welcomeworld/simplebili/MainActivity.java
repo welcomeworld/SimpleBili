@@ -78,7 +78,7 @@ public class MainActivity extends SimpleBaseActivity implements View.OnClickList
                 if(BiliLocalStatus.isLogin()){
                     if(BiliLocalStatus.getCover()!=null){
                         headerName.setText(BiliLocalStatus.getName());
-                        Glide.with(headerProfile).load(BiliLocalStatus.getCover()).apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop())).into(headerProfile);
+                        Glide.with(headerProfile).load(BiliLocalStatus.getCover()+"@200w_200h_1e_1c.webp").apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop()).error(R.mipmap.ic_default_avatar).placeholder(headerProfile.getDrawable())).into(headerProfile);
                     }else {
                         getMineInfo();
                     }
@@ -203,7 +203,7 @@ public class MainActivity extends SimpleBaseActivity implements View.OnClickList
                     BiliLocalStatus.setCover(response.body().getData().getFace());
                 }
                 headerName.setText(BiliLocalStatus.getName());
-                Glide.with(headerProfile).load(BiliLocalStatus.getCover()).apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop())).into(headerProfile);
+                Glide.with(headerProfile).load(BiliLocalStatus.getCover()+"@200w_200h_1e_1c.webp").apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop()).error(R.mipmap.ic_default_avatar).placeholder(headerProfile.getDrawable())).into(headerProfile);
 
             }
 

@@ -42,7 +42,7 @@ public class DownloadedRecyclerViewAdapter extends RecyclerView.Adapter<Download
         completedData.keyAt(position);
         DownloadInfoBean currentData = completedData.get(completedData.keyAt(position));
         holder.titleView.setText(currentData.getTitle());
-        Glide.with(holder.coverView).load(currentData.getCover()).apply(new RequestOptions().transform(new CenterCrop(),new RoundedCorners(10))).into(holder.coverView);
+        Glide.with(holder.coverView).load(currentData.getCover()+"@320w_200h_1e_1c.webp").apply(new RequestOptions().transform(new CenterCrop(),new RoundedCorners(10))).into(holder.coverView);
         holder.descView.setText(StringUtils.formatFlow(currentData.getContentLength()));
         holder.detailView.setOnClickListener(new View.OnClickListener() {
             @Override

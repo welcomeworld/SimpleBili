@@ -38,7 +38,7 @@ public class NotificationRecyclerViewAdapter extends RecyclerView.Adapter<Notifi
         NotificationReplyBean.DataBean currentData = data.get(position);
         holder.nameView.setText(currentData.getPublisher().getName());
         holder.descView.setText(currentData.getContent());
-        Glide.with(holder.avatorView).load(currentData.getPublisher().getFace()).apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop())).into(holder.avatorView);
+        Glide.with(holder.avatorView).load(currentData.getPublisher().getFace()+"@200w_200h_1e_1c.webp").apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop()).error(R.mipmap.ic_default_avatar).placeholder(holder.avatorView.getDrawable())).into(holder.avatorView);
         holder.timeView.setText(currentData.getTimeAt());
         holder.referenceView.setText(currentData.getTitle());
     }

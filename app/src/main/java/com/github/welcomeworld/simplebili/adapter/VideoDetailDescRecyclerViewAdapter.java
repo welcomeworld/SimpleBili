@@ -64,7 +64,7 @@ public class VideoDetailDescRecyclerViewAdapter extends RecyclerView.Adapter<Vid
         if(getItemViewType(position)==HEADERVIEWTYPE){
             holder.titleView.setText(data.getTitle());
             holder.uppernameView.setText(data.getOwner().getName());
-            Glide.with(context).load(data.getOwner().getFace()).apply(new RequestOptions().transforms(new FitCenter(),new CircleCrop())).into(holder.avatorView);
+            Glide.with(context).load(data.getOwner().getFace()+"@200w_200h_1e_1c.webp").apply(new RequestOptions().transform(new FitCenter(),new CircleCrop()).error(R.mipmap.ic_default_avatar).placeholder(holder.avatorView.getDrawable())).into(holder.avatorView);
             holder.followNumView.setText(StringUtils.formatNumber(data.getOwner_ext().getFans())+"粉丝");
             holder.playNumView.setText(data.getStat().getView()+"");
             holder.danmakuNumView.setText(data.getStat().getDanmaku()+"");
@@ -77,7 +77,7 @@ public class VideoDetailDescRecyclerViewAdapter extends RecyclerView.Adapter<Vid
             holder.downloadView.setOnClickListener(listener);
         }else{
             VideoDetailPageBean.DataBean.RelatesBean currentData=data.getRelates().get(position-1);
-            Glide.with(context).load(currentData.getPic()).apply(new RequestOptions().transforms(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
+            Glide.with(context).load(currentData.getPic()+"@320w_200h_1e_1c.webp").apply(new RequestOptions().transforms(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
             holder.relatedTitleView.setText(currentData.getTitle());
             if(currentData.getOwner()==null){
                 holder.upperView.setText("用户信息为空？");

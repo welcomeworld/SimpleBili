@@ -53,7 +53,7 @@ public class IndexRecommendRecyclerViewAdapter extends RecyclerView.Adapter<Inde
         }
         holder.titleView.setText(currentData.getTitle());
         holder.tagView.setText(String.format(Locale.CHINA,"%s·%s",currentData.getTname(),currentData.getTag().getTag_name()));
-        Glide.with(context).load(currentData.getCover()).into(holder.coverView);
+        Glide.with(context).load(currentData.getCover()+"@320w_200h_1e_1c.webp").into(holder.coverView);
         holder.danmakuView.setText(StringUtils.formatNumber(currentData.getDanmaku()));
         holder.playView.setText(StringUtils.formatNumber(currentData.getPlay()));
         holder.durationView.setText(StringUtils.formatTime(currentData.getDuration(),StringUtils.SECOND));

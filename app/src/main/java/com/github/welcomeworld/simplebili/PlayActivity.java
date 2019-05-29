@@ -85,10 +85,16 @@ public class PlayActivity extends SimpleBaseActivity {
         super.onConfigurationChanged(newConfig);
     }
 
+    @Override
+    protected void onStop() {
+        ijkMediaView.pause();
+        super.onStop();
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ijkMediaView.release();
         IjkMediaPlayer.native_profileEnd();
     }
 }

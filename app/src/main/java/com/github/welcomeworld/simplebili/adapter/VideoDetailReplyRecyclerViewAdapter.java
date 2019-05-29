@@ -56,7 +56,7 @@ public class VideoDetailReplyRecyclerViewAdapter extends RecyclerView.Adapter<Vi
         if(position<top){
             clipText=data.getTop().getUpper().getContent().getMessage();
             ReplyCursorBean.DataBean.TopBean.UpperBean currentTop=data.getTop().getUpper();
-            Glide.with(context).load(data.getTop().getUpper().getMember().getAvatar()).apply(new RequestOptions().transforms(new FitCenter(),new CircleCrop())).into(holder.avatorView);
+            Glide.with(context).load(data.getTop().getUpper().getMember().getAvatar()+"@200w_200h_1e_1c.webp").apply(new RequestOptions().transform(new FitCenter(),new CircleCrop()).error(R.mipmap.ic_default_avatar).placeholder(holder.avatorView.getDrawable())).into(holder.avatorView);
             holder.nameView.setText(data.getTop().getUpper().getMember().getUname());
             holder.floorView.setText("#"+data.getTop().getUpper().getFloor());
             holder.dateView.setText(DateUtils.getDay(((long)data.getTop().getUpper().getCtime())*1000));
@@ -128,7 +128,7 @@ public class VideoDetailReplyRecyclerViewAdapter extends RecyclerView.Adapter<Vi
             }
             ReplyCursorBean.DataBean.HotsBean currentHot=data.getHots().get(position-top);
             clipText=currentHot.getContent().getMessage();
-            Glide.with(context).load(currentHot.getMember().getAvatar()).apply(new RequestOptions().transforms(new FitCenter(),new CircleCrop())).into(holder.avatorView);
+            Glide.with(context).load(currentHot.getMember().getAvatar()+"@200w_200h_1e_1c.webp").apply(new RequestOptions().transform(new FitCenter(),new CircleCrop()).error(R.mipmap.ic_default_avatar).placeholder(holder.avatorView.getDrawable())).into(holder.avatorView);
             holder.nameView.setText(currentHot.getMember().getUname());
             holder.floorView.setText("#"+currentHot.getFloor());
             holder.dateView.setText(DateUtils.getDay(((long)currentHot.getCtime())*1000));
@@ -195,7 +195,7 @@ public class VideoDetailReplyRecyclerViewAdapter extends RecyclerView.Adapter<Vi
                 holder.subreplyLayout.setVisibility(View.GONE);
             }
         }else{
-            Glide.with(context).load(data.getReplies().get(position-top-hot).getMember().getAvatar()).apply(new RequestOptions().transforms(new FitCenter(),new CircleCrop())).into(holder.avatorView);
+            Glide.with(context).load(data.getReplies().get(position-top-hot).getMember().getAvatar()+"@200w_200h_1e_1c.webp").apply(new RequestOptions().transform(new FitCenter(),new CircleCrop()).error(R.mipmap.ic_default_avatar).placeholder(holder.avatorView.getDrawable())).into(holder.avatorView);
             holder.nameView.setText(data.getReplies().get(position-top-hot).getMember().getUname());
             holder.floorView.setText("#"+data.getReplies().get(position-top-hot).getFloor());
             holder.dateView.setText(DateUtils.getDay(((long)data.getReplies().get(position-top-hot).getCtime())*1000));

@@ -44,7 +44,7 @@ public class FavoriteCinemaRecyclerViewAdapter extends RecyclerView.Adapter<Favo
         holder.titleView.setText(currentData.getTitle());
         holder.descView.setText(holder.descView.getContext().getResources().getString(R.string.favorite_cinema_desc,currentData.getSeasonTypeName(),currentData.getAreas().get(0).getName()));
         holder.progressView.setText(currentData.getProgress());
-        Glide.with(holder.coverView).load(currentData.getCover()).apply(new RequestOptions().transform(new CenterCrop(),new RoundedCorners(10))).into(holder.coverView);
+        Glide.with(holder.coverView).load(currentData.getCover()+"@240w_320h_1e_1c.webp").apply(new RequestOptions().transform(new CenterCrop(),new RoundedCorners(10))).into(holder.coverView);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

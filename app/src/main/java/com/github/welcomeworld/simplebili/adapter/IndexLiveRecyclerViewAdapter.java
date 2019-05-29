@@ -43,7 +43,7 @@ public class IndexLiveRecyclerViewAdapter extends RecyclerView.Adapter<IndexLive
         holder.headerTitleView.setText(currentData.getModule_info().getTitle());
         holder.categoryView1.setText(currentData.getList().get(0).getArea_v2_name());
         holder.titleView1.setText(currentData.getList().get(0).getTitle());
-        Glide.with(context).load(currentData.getList().get(0).getCover()).into(holder.coverView1);
+        Glide.with(context).load(currentData.getList().get(0).getCover()+"@320w_180h_1e_1c.webp").into(holder.coverView1);
         holder.coverView1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -57,7 +57,7 @@ public class IndexLiveRecyclerViewAdapter extends RecyclerView.Adapter<IndexLive
         });
         holder.categoryView2.setText(currentData.getList().get(1).getArea_v2_name());
         holder.titleView2.setText(currentData.getList().get(1).getTitle());
-        Glide.with(context).load(currentData.getList().get(1).getCover()).into(holder.coverView2);
+        Glide.with(context).load(currentData.getList().get(1).getCover()+"@320w_180h_1e_1c.webp").into(holder.coverView2);
         holder.coverView2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +71,7 @@ public class IndexLiveRecyclerViewAdapter extends RecyclerView.Adapter<IndexLive
         });
         holder.categoryView3.setText(currentData.getList().get(2).getArea_v2_name());
         holder.titleView3.setText(currentData.getList().get(2).getTitle());
-        Glide.with(context).load(currentData.getList().get(2).getCover()).into(holder.coverView3);
+        Glide.with(context).load(currentData.getList().get(2).getCover()+"@320w_180h_1e_1c.webp").into(holder.coverView3);
         holder.coverView3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +85,7 @@ public class IndexLiveRecyclerViewAdapter extends RecyclerView.Adapter<IndexLive
         });
         holder.categoryView4.setText(currentData.getList().get(3).getArea_v2_name());
         holder.titleView4.setText(currentData.getList().get(3).getTitle());
-        Glide.with(context).load(currentData.getList().get(3).getCover()).into(holder.coverView4);
+        Glide.with(context).load(currentData.getList().get(3).getCover()+"@320w_180h_1e_1c.webp").into(holder.coverView4);
         holder.coverView4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

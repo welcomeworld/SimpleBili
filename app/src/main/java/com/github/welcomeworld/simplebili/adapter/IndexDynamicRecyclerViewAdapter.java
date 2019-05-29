@@ -46,7 +46,7 @@ public class IndexDynamicRecyclerViewAdapter extends RecyclerView.Adapter<IndexD
         IndexDynamicBean.DataBean.CardsBean currentData = data.get(position);
         if(currentData.getDesc().getType() == 512 ){   //番剧
             IndexDynamicBangumiCardBean card = new Gson().fromJson(currentData.getCard(),IndexDynamicBangumiCardBean.class);
-            Glide.with(holder.avatorView).load(card.getApiSeasonInfo().getCover()).apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop())).into(holder.avatorView);
+            Glide.with(holder.avatorView).load(card.getApiSeasonInfo().getCover()+"@200w_200h_1e_1c.webp ").apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop()).error(R.mipmap.ic_default_avatar).placeholder(holder.avatorView.getDrawable())).into(holder.avatorView);
             holder.nameView.setText(card.getApiSeasonInfo().getTitle());
             holder.updateView.setText(holder.updateView.getContext().getResources().getString(R.string.dynamic_bangumi_update,StringUtils.formatDate(currentData.getDesc().getTimestamp(),StringUtils.SECOND)));
             holder.replyView.setText(""+card.getReplyCount());
@@ -61,10 +61,10 @@ public class IndexDynamicRecyclerViewAdapter extends RecyclerView.Adapter<IndexD
                     v.getContext().startActivity(bangumiIntent);
                 }
             });
-            Glide.with(holder.coverView).load(card.getCover()).apply(new RequestOptions().transform(new CenterCrop(),new RoundedCorners(10))).into(holder.coverView);
+            Glide.with(holder.coverView).load(card.getCover()+"@720w_405h_1e_1c.webp ").apply(new RequestOptions().transform(new CenterCrop(),new RoundedCorners(10))).into(holder.coverView);
         }else if(currentData.getDesc().getType() == 8){  //视频
             IndexDynamicVideoCardBean card = new Gson().fromJson(currentData.getCard(), IndexDynamicVideoCardBean.class);
-            Glide.with(holder.avatorView).load(currentData.getDesc().getUserProfile().getInfo().getFace()).apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop())).into(holder.avatorView);
+            Glide.with(holder.avatorView).load(currentData.getDesc().getUserProfile().getInfo().getFace()+"@200w_200h_1e_1c.webp ").apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop()).error(R.mipmap.ic_default_avatar).placeholder(holder.avatorView.getDrawable())).into(holder.avatorView);
             holder.nameView.setText(currentData.getDesc().getUserProfile().getInfo().getUname());
             holder.descView.setText(card.getDynamic());
             holder.updateView.setText(holder.updateView.getContext().getResources().getString(R.string.dynamic_video_update,StringUtils.formatDate(currentData.getDesc().getTimestamp(),StringUtils.SECOND)));
@@ -80,7 +80,7 @@ public class IndexDynamicRecyclerViewAdapter extends RecyclerView.Adapter<IndexD
                     v.getContext().startActivity(videoIntent);
                 }
             });
-            Glide.with(holder.coverView).load(card.getPic()).apply(new RequestOptions().transform(new CenterCrop(),new RoundedCorners(10))).into(holder.coverView);
+            Glide.with(holder.coverView).load(card.getPic()+"@720w_405h_1e_1c.webp ").apply(new RequestOptions().transform(new CenterCrop(),new RoundedCorners(10))).into(holder.coverView);
         }
     }
 

@@ -85,7 +85,7 @@ public class LiveUpInfoFragment extends Fragment {
             public void onResponse(Call<LiveMasterUserInfoBean> call, Response<LiveMasterUserInfoBean> response) {
                 LiveMasterUserInfoBean data=response.body();
                 if(data!=null){
-                    Glide.with(getContext()).load(data.getData().getInfo().getFace()).apply(RequestOptions.circleCropTransform()).into(avatorView);
+                    Glide.with(getContext()).load(data.getData().getInfo().getFace()+"@200w_200h_1e_1c.webp").apply(RequestOptions.circleCropTransform()).into(avatorView);
                     upnameView.setText(data.getData().getInfo().getUname());
                     roomnumView.setText("房间号： "+data.getData().getRoomId());
                     follownumView.setText("粉丝： "+data.getData().getFollowerNum());

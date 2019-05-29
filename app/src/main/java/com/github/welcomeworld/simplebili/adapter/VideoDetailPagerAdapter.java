@@ -65,6 +65,14 @@ public class VideoDetailPagerAdapter extends PagerAdapter {
 
     public void setDescData(VideoDetailPageBean.DataBean descData) {
         this.descData = descData;
+        if(descData!=null&&descData.getRelates()!=null){
+            for(int i=0;i<descData.getRelates().size();i++){
+                if(descData.getRelates().get(i).getOwner()==null){
+                    descData.getRelates().remove(i);
+                    i--;
+                }
+            }
+        }
         descChanged=true;
         notifyDataSetChanged();
     }
@@ -103,6 +111,14 @@ public class VideoDetailPagerAdapter extends PagerAdapter {
     private ReplyCursorBean.DataBean replyData;
     public VideoDetailPagerAdapter(VideoDetailPageBean.DataBean descData,ReplyCursorBean.DataBean replyData) {
         this.descData=descData;
+        if(descData!=null&&descData.getRelates()!=null){
+            for(int i=0;i<descData.getRelates().size();i++){
+                if(descData.getRelates().get(i).getOwner()==null){
+                    descData.getRelates().remove(i);
+                    i--;
+                }
+            }
+        }
         this.replyData=replyData;
     }
 

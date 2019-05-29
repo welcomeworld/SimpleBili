@@ -39,7 +39,7 @@ public class FavoriteListRecyclerViewAdapter extends RecyclerView.Adapter<Favori
     @Override
     public void onBindViewHolder(@NonNull MyInnerViewHolder holder, int position) {
         FavoriteListBean.DataBean.ItemsBean currentData=data.get(position);
-        Glide.with(holder.coverView).load(currentData.getPic()).apply(new RequestOptions().transform(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
+        Glide.with(holder.coverView).load(currentData.getPic()+"@320w_200h_1e_1c.webp").apply(new RequestOptions().transform(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
         holder.titleView.setText(currentData.getTitle());
         holder.upperView.setText(currentData.getName());
         holder.itemView.setOnClickListener(new View.OnClickListener() {

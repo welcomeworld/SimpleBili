@@ -214,9 +214,9 @@ public class IndexDefaultBangumiFragment extends Fragment {
                             startActivity(intent);
                         }
                     });
-                    Glide.with(getContext()).load(hopeModule.getItems().get(0).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover1);
-                    Glide.with(getContext()).load(hopeModule.getItems().get(1).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover2);
-                    Glide.with(getContext()).load(hopeModule.getItems().get(2).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover3);
+                    Glide.with(getContext()).load(hopeModule.getItems().get(0).getCover()+"@240w_320h_1e_1c.webp").apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover1);
+                    Glide.with(getContext()).load(hopeModule.getItems().get(1).getCover()+"@240w_320h_1e_1c.webp").apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover2);
+                    Glide.with(getContext()).load(hopeModule.getItems().get(2).getCover()+"@240w_320h_1e_1c.webp").apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(hopeCover3);
                     hopeTitle1.setText(hopeModule.getItems().get(0).getTitle());
                     hopeTitle2.setText(hopeModule.getItems().get(1).getTitle());
                     hopeTitle3.setText(hopeModule.getItems().get(2).getTitle());
@@ -225,7 +225,7 @@ public class IndexDefaultBangumiFragment extends Fragment {
                     hopeDesc3.setText(hopeModule.getItems().get(2).getDesc());
                 }
                 if(bangumiModule!=null&&bangumiModule.getItems()!=null&&bangumiModule.getItems().size()>0){
-                    Glide.with(getContext()).load(bangumiModule.getItems().get(0).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover1);
+                    Glide.with(getContext()).load(bangumiModule.getItems().get(0).getCover()+"@240w_320h_1e_1c.webp").apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover1);
                     bangumiCover1.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -250,8 +250,8 @@ public class IndexDefaultBangumiFragment extends Fragment {
                             startActivity(intent);
                         }
                     });
-                    Glide.with(getContext()).load(bangumiModule.getItems().get(1).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover2);
-                    Glide.with(getContext()).load(bangumiModule.getItems().get(2).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover3);
+                    Glide.with(getContext()).load(bangumiModule.getItems().get(1).getCover()+"@240w_320h_1e_1c.webp").apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover2);
+                    Glide.with(getContext()).load(bangumiModule.getItems().get(2).getCover()+"@240w_320h_1e_1c.webp").apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(bangumiCover3);
                     bangumiTitle1.setText(bangumiModule.getItems().get(0).getTitle());
                     bangumiTitle2.setText(bangumiModule.getItems().get(1).getTitle());
                     bangumiTitle3.setText(bangumiModule.getItems().get(2).getTitle());

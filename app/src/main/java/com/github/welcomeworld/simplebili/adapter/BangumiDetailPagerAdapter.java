@@ -86,7 +86,7 @@ public class BangumiDetailPagerAdapter extends PagerAdapter {
         if(position==0){
             descView= (ConstraintLayout) LayoutInflater.from(container.getContext()).inflate(R.layout.bangumi_detail_desc,container,false);
             if(descData!=null){
-                Glide.with(container.getContext()).load(descData.getCover()).apply(new RequestOptions().transform(new FitCenter(),new RoundedCorners(10))).into((ImageView) descView.findViewById(R.id.bangumi_detail_desc_cover));
+                Glide.with(container.getContext()).load(descData.getCover()+"@240w_320h_1e_1c.webp").apply(new RequestOptions().transform(new FitCenter(),new RoundedCorners(10))).into((ImageView) descView.findViewById(R.id.bangumi_detail_desc_cover));
                 ((TextView)descView.findViewById(R.id.bangumi_detail_desc_title)).setText(descData.getSeasonTitle());
                 ((TextView)descView.findViewById(R.id.bangumi_detail_desc_play_num)).setText(StringUtils.formatNumber(descData.getStat().getViews()));
                 ((TextView)descView.findViewById(R.id.bangumi_detail_desc_subscribe_num)).setText(StringUtils.formatNumber(descData.getStat().getFavorites()));

@@ -48,7 +48,7 @@ public class IndexPopularRecyclerViewAdapter  extends RecyclerView.Adapter<Index
     @Override
     public void onBindViewHolder(@NonNull MyInnerViewHolder holder, int position) {
         IndexPopularBean.DataBean currentData=data.getData().get(position);
-        Glide.with(context).load(currentData.getCover()).apply(new RequestOptions().transforms(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
+        Glide.with(context).load(currentData.getCover()+"@320w_200h_1e_1c.webp").apply(new RequestOptions().transforms(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
         holder.titleView.setText(currentData.getTitle());
         holder.upperView.setText(currentData.getRight_desc_1());
         holder.descView.setText(currentData.getRight_desc_2());

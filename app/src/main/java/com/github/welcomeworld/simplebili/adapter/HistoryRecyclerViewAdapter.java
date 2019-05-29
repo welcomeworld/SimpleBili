@@ -44,7 +44,7 @@ public class HistoryRecyclerViewAdapter extends RecyclerView.Adapter<HistoryRecy
         holder.titleView.setText(currentData.getTitle());
         holder.viewTimeView.setText(StringUtils.formatDate(currentData.getViewTime()));
         String url="";
-        Glide.with(holder.coverView).load(currentData.getCover()).apply(new RequestOptions().transform(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
+        Glide.with(holder.coverView).load(currentData.getCover()+"@320w_200h_1e_1c.webp").apply(new RequestOptions().transform(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
         if(currentData.getType() == LocalHistoryBean.LIVE){
             holder.durationView.setVisibility(View.GONE);
             holder.viewProgressView.setVisibility(View.GONE);

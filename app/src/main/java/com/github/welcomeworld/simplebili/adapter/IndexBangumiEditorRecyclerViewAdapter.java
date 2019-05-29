@@ -38,7 +38,7 @@ public class IndexBangumiEditorRecyclerViewAdapter extends RecyclerView.Adapter<
     @Override
     public void onBindViewHolder(@NonNull MyInnerViewHolder holder, int position) {
         IndexBangumiBean.ResultBean.ModulesBean.ItemsBean currentData=data.getItems().get(position);
-        Glide.with(context).load(currentData.getCover()).apply(new RequestOptions().transform(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
+        Glide.with(context).load(currentData.getCover()+"@680w_200h_1e_1c.webp ").apply(new RequestOptions().transform(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
         holder.titleView.setText(currentData.getTitle());
         if(currentData.getDesc()==null){
             holder.descView.setVisibility(View.GONE);

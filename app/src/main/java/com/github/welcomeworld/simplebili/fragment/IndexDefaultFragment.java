@@ -114,7 +114,7 @@ public class IndexDefaultFragment extends Fragment {
             if(BiliLocalStatus.getCover()!=null){
                 ImageView avator = toolbar.findViewById(R.id.index_toolbar_avatar);
                 if(BiliLocalStatus.getCover()!=null){
-                    Glide.with(avator).load(BiliLocalStatus.getCover()).apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop())).into(avator);
+                    Glide.with(avator).load(BiliLocalStatus.getCover()+"@200w_200h_1e_1c.webp").apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop()).error(R.mipmap.ic_default_avatar).placeholder(avator.getDrawable())).into(avator);
                 }else {
                     avator.setImageResource(R.mipmap.ic_default_avatar);
                 }
@@ -151,7 +151,7 @@ public class IndexDefaultFragment extends Fragment {
                     BiliLocalStatus.setCover(response.body().getData().getFace());
                 }
                 ImageView avator = toolbar.findViewById(R.id.index_toolbar_avatar);
-                Glide.with(avator).load(BiliLocalStatus.getCover()).apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop())).into(avator);
+                Glide.with(avator).load(BiliLocalStatus.getCover()+"@200w_200h_1e_1c.webp").apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop()).error(R.mipmap.ic_default_avatar).placeholder(avator.getDrawable())).into(avator);
             }
 
             @Override
@@ -173,7 +173,7 @@ public class IndexDefaultFragment extends Fragment {
         if(isVisibleToUser&&toolbar!=null){
             ImageView avator = toolbar.findViewById(R.id.index_toolbar_avatar);
             if(BiliLocalStatus.getCover()!=null){
-                Glide.with(avator).load(BiliLocalStatus.getCover()).apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop())).into(avator);
+                Glide.with(avator).load(BiliLocalStatus.getCover()+"@200w_200h_1e_1c.webp").apply(new RequestOptions().transform(new CenterCrop(),new CircleCrop()).error(R.mipmap.ic_default_avatar).placeholder(avator.getDrawable())).into(avator);
             }else {
                 avator.setImageResource(R.mipmap.ic_default_avatar);
             }

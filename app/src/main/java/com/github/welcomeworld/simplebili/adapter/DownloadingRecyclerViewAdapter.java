@@ -44,7 +44,7 @@ public class DownloadingRecyclerViewAdapter extends RecyclerView.Adapter<Downloa
         data.keyAt(position);
         DownloadInfoBean currentData = data.get(data.keyAt(position));
         holder.titleView.setText(currentData.getTitle());
-        Glide.with(holder.coverView).load(currentData.getCover()).apply(new RequestOptions().transform(new CenterCrop(),new RoundedCorners(10))).into(holder.coverView);
+        Glide.with(holder.coverView).load(currentData.getCover()+"@320w_200h_1e_1c.webp").apply(new RequestOptions().transform(new CenterCrop(),new RoundedCorners(10))).into(holder.coverView);
         if(currentData.getDownloadState() == DownloadInfoBean.DOWNLOADING){
             holder.descView.setText(R.string.downloading);
         }else if(currentData.getDownloadState() == DownloadInfoBean.PREPARED){

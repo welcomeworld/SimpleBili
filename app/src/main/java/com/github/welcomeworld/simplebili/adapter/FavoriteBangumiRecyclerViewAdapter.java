@@ -48,7 +48,7 @@ public class FavoriteBangumiRecyclerViewAdapter extends RecyclerView.Adapter<Fav
             holder.progressView.setText(currentData.getProgress().getIndexShow());
         }
 
-        Glide.with(holder.coverView).load(currentData.getCover()).apply(new RequestOptions().transform(new CenterCrop(),new RoundedCorners(10))).into(holder.coverView);
+        Glide.with(holder.coverView).load(currentData.getCover()+"@240w_320h_1e_1c.webp").apply(new RequestOptions().transform(new CenterCrop(),new RoundedCorners(10))).into(holder.coverView);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

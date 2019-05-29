@@ -93,6 +93,19 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
 
     private String shareString="";
 
+    public OnClickListener getItemListener() {
+        return itemListener;
+    }
+
+    public void setItemListener(OnClickListener itemListener) {
+        this.itemListener = itemListener;
+    }
+
+    View.OnClickListener itemListener;
+
+
+
+
 
     /** *控件大小*/
     private int width;
@@ -227,6 +240,9 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
 
     @SuppressLint("UseSparseArrays")
     private void initDanmaku() {
+        if(danmakuView == null){
+            return;
+        }
         HashMap<Integer,Integer> maxLinesPair=new HashMap<>();
         maxLinesPair.put(BaseDanmaku.TYPE_SCROLL_RL,5);
         HashMap<Integer,Boolean> overlappingEnable=new HashMap<>();
@@ -1083,6 +1099,11 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
             mMediaPlayer.release();
             mMediaPlayer=null;
         }
+        if(danmakuView!=null){
+            danmakuView.release();
+            danmakuView = null;
+        }
     }
+
 
 }

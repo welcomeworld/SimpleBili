@@ -41,7 +41,7 @@ public class CategoryPagerRecyclerViewAdapter extends RecyclerView.Adapter<Categ
         CategoryListBean.DataBean currentData=data.get(position);
         holder.titleView.setText(currentData.getTitle());
         holder.tagView.setText(currentData.getRname());
-        Glide.with(context).load(currentData.getCover()).into(holder.coverView);
+        Glide.with(context).load(currentData.getCover()+"@320w_200h_1e_1c.webp").into(holder.coverView);
         holder.danmakuView.setText(StringUtils.formatNumber(currentData.getDanmaku()));
         holder.playView.setText(StringUtils.formatNumber(currentData.getPlay()));
         holder.durationView.setText(StringUtils.formatTime(currentData.getDuration(),StringUtils.SECOND));

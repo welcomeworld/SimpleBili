@@ -30,11 +30,11 @@ public class IndexBangumiBannerPagerAdapter extends PagerAdapter implements View
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         ImageView imageView=new ImageView(container.getContext());
         if(position==0){
-            Glide.with(container.getContext()).load(data.getItems().get(getCount()-3).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(imageView);
+            Glide.with(container.getContext()).load(data.getItems().get(getCount()-3).getCover()+"@680w_200h_1e_1c.webp ").apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(imageView);
         }else if(position==getCount()-1){
-            Glide.with(container.getContext()).load(data.getItems().get(0).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(imageView);
+            Glide.with(container.getContext()).load(data.getItems().get(0).getCover()+"@680w_200h_1e_1c.webp ").apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(imageView);
         }else{
-            Glide.with(container.getContext()).load(data.getItems().get(position-1).getCover()).apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(imageView);
+            Glide.with(container.getContext()).load(data.getItems().get(position-1).getCover()+"@680w_200h_1e_1c.webp ").apply(RequestOptions.bitmapTransform(new RoundedCorners(10))).into(imageView);
         }
         container.addView(imageView);
         return imageView;

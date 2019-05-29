@@ -10,8 +10,8 @@ android {
         applicationId "com.github.welcomeworld.simplebili"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 2
-        versionName "0.5.0"
+        versionCode 3
+        versionName "0.6.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -75,5 +75,8 @@ dependencies {
     implementation "android.arch.persistence.room:rxjava2:1.1.1"
     annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
 
+
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.1'
+    debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.1'
 
 }

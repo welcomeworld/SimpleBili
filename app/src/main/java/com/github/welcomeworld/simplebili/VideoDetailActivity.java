@@ -1,5 +1,6 @@
 package com.github.welcomeworld.simplebili;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.support.constraint.Group;
@@ -8,6 +9,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -88,6 +90,7 @@ public class VideoDetailActivity extends SimpleBaseActivity implements View.OnCl
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_video_detail);
         ButterKnife.bind(this);
+        ijkMediaView.setItemListener(this);
         currentUri=getIntent().getData();
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(viewPager));
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -247,12 +250,12 @@ public class VideoDetailActivity extends SimpleBaseActivity implements View.OnCl
                         parameters.put("device","android");
                         parameters.put("aid",currentAid);
                         parameters.put("expire","0");
-                        parameters.put("fnval","16");
+                        parameters.put("fnval","0");
                         parameters.put("fnver","0");
                         parameters.put("otype","json");
                         parameters.put("force_host","0");
                         parameters.put("cid",response.body().getData().getPages().get(i).getCid()+"");
-                        parameters.put("npcybs","0");
+                        parameters.put("npcybs","1");
                         parameters.put("ts",""+System.currentTimeMillis());
                         parameters.put("qn","32");
                         OkHttpClient.Builder okHttpClientBuilder=new OkHttpClient.Builder()
@@ -373,6 +376,15 @@ public class VideoDetailActivity extends SimpleBaseActivity implements View.OnCl
         super.onConfigurationChanged(newConfig);
     }
 
+    @Override
+    public View onCreateView(String name, Context context, AttributeSet attrs) {
+        if(name.equals(IjkMediaView.class.getName())){
+            return new IjkMediaView(context,attrs){
+
+            };
+        }
+        return super.onCreateView(name, context, attrs);
+    }
 
     @Override
     public void onBackPressed() {

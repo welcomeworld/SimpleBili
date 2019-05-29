@@ -97,7 +97,7 @@ public class FavoriteDefaultRecyclerViewAdapter extends RecyclerView.Adapter<Fav
             FavoriteDefaultBean.DataBean.FavoriteBean.ItemsBean currentData = data.getItems().get(position-1);
             holder.titleView.setText(currentData.getName());
             holder.descView.setText(holder.descView.getContext().getString(R.string.favorite_list_desc,currentData.getCurCount(),currentData.getState() == 3?"私密":"公开"));
-            Glide.with(holder.coverView).load(currentData.getCover().get(0).getPic()).apply(new RequestOptions().transform(new CenterCrop(),new RoundedCorners(10))).into(holder.coverView);
+            Glide.with(holder.coverView).load(currentData.getCover().get(0).getPic()+"@320w_200h_1e_1c.webp").apply(new RequestOptions().transform(new CenterCrop(),new RoundedCorners(10))).into(holder.coverView);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,64 +16,58 @@ import com.bumptech.glide.load.resource.bitmap.FitCenter;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.github.welcomeworld.simplebili.R;
-import com.github.welcomeworld.simplebili.bean.FavoriteListBean;
-import com.github.welcomeworld.simplebili.bean.WatchLaterBean;
+import com.github.welcomeworld.simplebili.bean.SearchResultBean;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class WatchLaterRecyclerViewAdapter extends RecyclerView.Adapter<WatchLaterRecyclerViewAdapter.MyInnerViewHolder> {
-    List<WatchLaterBean.DataBean.ListBean> data;
-
-    public WatchLaterRecyclerViewAdapter(List<WatchLaterBean.DataBean.ListBean> data) {
+public class SearchResultRecyclerViewAdapter extends RecyclerView.Adapter<SearchResultRecyclerViewAdapter.MyInnerViewHolder> {
+    List<SearchResultBean.DataBean.ItemBean> data;
+    public SearchResultRecyclerViewAdapter(List<SearchResultBean.DataBean.ItemBean> data) {
         this.data = data;
     }
 
     @NonNull
     @Override
     public MyInnerViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MyInnerViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_watch_later,parent,false));
+        return new MyInnerViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.recyclerview_search_result,parent,false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyInnerViewHolder holder, int position) {
-        WatchLaterBean.DataBean.ListBean currentData=data.get(position);
-        Glide.with(holder.coverView).load(currentData.getPic()+"@320w_200h_1e_1c.webp").apply(new RequestOptions().transform(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
-        holder.titleView.setText(currentData.getTitle());
-        if(currentData.getOwner()!=null){
-            holder.upperView.setText(currentData.getOwner().getName());
-        }else {
-            holder.upperView.setText("空白");
-        }
+        SearchResultBean.DataBean.ItemBean currentData=data.get(position);
+        Glide.with(holder.coverView).load(currentData.getCover()+"@320w_200h_1e_1c.webp").apply(new RequestOptions().transform(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
+        holder.titleView.setText(Html.fromHtml(currentData.getTitle()));
+        holder.upperView.setText(currentData.getAuthor());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent playIntent=new Intent("com.github.welcomeworld.simplebili.action.VIDEODETAIL");
-                playIntent.setData(Uri.parse("bilibili://video/"+currentData.getAid()));
+                playIntent.setData(Uri.parse(currentData.getUri()));
                 v.getContext().startActivity(playIntent);
             }
         });
-        holder.playView.setText(currentData.getStat().getView()+"");
-        holder.danmakuView.setText(currentData.getStat().getDanmaku()+"");
+        holder.playView.setText(currentData.getPlay()+"");
+        holder.danmakuView.setText(currentData.getDanmaku()+"");
     }
 
     @Override
     public int getItemCount() {
-        return data ==null?0:data.size();
+        return data==null?0:data.size();
     }
 
     class MyInnerViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.recyclerview_watch_later_cover)
+        @BindView(R.id.recyclerview_search_result_cover)
         ImageView coverView;
-        @BindView(R.id.recyclerview_watch_later_title)
+        @BindView(R.id.recyclerview_search_result_title)
         TextView titleView;
-        @BindView(R.id.recyclerview_watch_later_upper)
+        @BindView(R.id.recyclerview_search_result_upper)
         TextView upperView;
-        @BindView(R.id.recyclerview_watch_later_play_num)
+        @BindView(R.id.recyclerview_search_result_play_num)
         TextView playView;
-        @BindView(R.id.recyclerview_watch_later_danmaku_num)
+        @BindView(R.id.recyclerview_search_result_danmaku_num)
         TextView danmakuView;
 
 

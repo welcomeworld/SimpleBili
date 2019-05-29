@@ -9,6 +9,7 @@ import com.github.welcomeworld.simplebili.bean.LoginResultBean;
 import com.github.welcomeworld.simplebili.common.BiliLocalStatus;
 import com.github.welcomeworld.simplebili.dao.SimpleDatabase;
 import com.github.welcomeworld.simplebili.utils.DownloadManager;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class MApplication extends Application {
             BiliLocalStatus.setLogin(true);
             BiliLocalStatus.setAccessKey(tokens.get(0).getAccessToken());
             BiliLocalStatus.setMid(tokens.get(0).getMid());
+        }
+        if(BuildConfig.DEBUG){
+            LeakCanary.install(this);
         }
         strictMode();
         DownloadManager.getInstance().setApplication(this);

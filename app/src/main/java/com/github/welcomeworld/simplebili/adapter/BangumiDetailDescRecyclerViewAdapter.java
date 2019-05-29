@@ -40,7 +40,7 @@ public class BangumiDetailDescRecyclerViewAdapter extends RecyclerView.Adapter<B
     @Override
     public void onBindViewHolder(@NonNull MyInnerViewHolder holder, int position) {
         BangumiDetailRecommendBean.ResultBean.SeasonBean currentData = data.getSeason().get(position);
-        Glide.with(holder.coverView).load(currentData.getNewEp().getCover()).apply(new RequestOptions().transform(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
+        Glide.with(holder.coverView).load(currentData.getNewEp().getCover()+"@320w_200h_1e_1c.webp").apply(new RequestOptions().transform(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
         holder.titleView.setText(currentData.getTitle());
         holder.descView.setText(currentData.getNewEp().getIndexShow());
         holder.playView.setText(StringUtils.formatNumber(currentData.getStat().getView()));
