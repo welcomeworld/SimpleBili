@@ -284,7 +284,7 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
     }
 
     private void createDanmakuParser(String uri){
-        if(uri==null){
+        if(uri==null||danmakuView == null){
             return;
         }
         ILoader iLoader= DanmakuLoaderFactory.create(DanmakuLoaderFactory.TAG_BILI);
@@ -531,7 +531,9 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
 
     @OnClick(R.id.play_video_list)
     public void showVideoList(){
-        videoListPopupWindow.showAtLocation(this,Gravity.END,0,0);
+        if(videoListPopupWindow!=null){
+            videoListPopupWindow.showAtLocation(this,Gravity.END,0,0);
+        }
     }
 
     /** * 加载视频 */
@@ -717,6 +719,10 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
                             public void onPrepared(IMediaPlayer iMediaPlayer) {
                                 videoPrepared=true;
                                 mMediaPlayer.pause();
+                                ViewGroup.LayoutParams layoutParams=surfaceView.getLayoutParams();
+                                layoutParams.width=mMediaPlayer.getVideoWidth()*screen_height/mMediaPlayer.getVideoHeight();
+                                layoutParams.height=screen_height;
+                                surfaceView.setLayoutParams(layoutParams);
                                 if(audioPlayer==null||audioPrepared){
                                     mediaPrepared();
                                 }
@@ -873,8 +879,8 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
             switch (checkedId){
                 case R.id.size_default:
                     layoutParams=surfaceView.getLayoutParams();
-                    layoutParams.width=mMediaPlayer.getVideoWidth();
-                    layoutParams.height=mMediaPlayer.getVideoHeight();
+                    layoutParams.width=mMediaPlayer.getVideoWidth()*screen_height/mMediaPlayer.getVideoHeight();
+                    layoutParams.height=screen_height;
                     surfaceView.setLayoutParams(layoutParams);
                     break;
                 case R.id.size_fullscreen:
@@ -1101,7 +1107,6 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
         }
         if(danmakuView!=null){
             danmakuView.release();
-            danmakuView = null;
         }
     }
 

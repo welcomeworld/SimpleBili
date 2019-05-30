@@ -24,16 +24,18 @@ import com.github.welcomeworld.simplebili.bean.IndexPopularBean;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.netty.util.Recycler;
 
 public class IndexPopularRecyclerViewAdapter  extends RecyclerView.Adapter<IndexPopularRecyclerViewAdapter.MyInnerViewHolder>{
 
-    IndexPopularBean data;
+    List<IndexPopularBean.DataBean> data;
     Context context;
 
-    public IndexPopularRecyclerViewAdapter(IndexPopularBean data){
+    public IndexPopularRecyclerViewAdapter(List<IndexPopularBean.DataBean> data){
         this.data=data;
     }
 
@@ -47,13 +49,13 @@ public class IndexPopularRecyclerViewAdapter  extends RecyclerView.Adapter<Index
 
     @Override
     public void onBindViewHolder(@NonNull MyInnerViewHolder holder, int position) {
-        IndexPopularBean.DataBean currentData=data.getData().get(position);
-        Glide.with(context).load(currentData.getCover()+"@320w_200h_1e_1c.webp").apply(new RequestOptions().transforms(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
+        IndexPopularBean.DataBean currentData=data.get(position);
+        Glide.with(context).load(currentData.getCover()+"@320w_200h_1e_1c.webp").apply(new RequestOptions().transform(new FitCenter(),new RoundedCorners(10))).into(holder.coverView);
         holder.titleView.setText(currentData.getTitle());
         holder.upperView.setText(currentData.getRight_desc_1());
         holder.descView.setText(currentData.getRight_desc_2());
         holder.recommendView.setText(currentData.getRcmd_reason_style()==null?"":currentData.getRcmd_reason_style().getText());
-        holder.coverView.setOnClickListener(new View.OnClickListener() {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent playIntent=new Intent("com.github.welcomeworld.simplebili.action.VIDEODETAIL");
@@ -65,7 +67,7 @@ public class IndexPopularRecyclerViewAdapter  extends RecyclerView.Adapter<Index
 
     @Override
     public int getItemCount() {
-        return data==null?0:data.getData().size();
+        return data==null?0:data.size();
     }
 
     class MyInnerViewHolder extends RecyclerView.ViewHolder {

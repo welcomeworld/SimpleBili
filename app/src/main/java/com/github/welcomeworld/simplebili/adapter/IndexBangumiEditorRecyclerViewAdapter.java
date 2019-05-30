@@ -1,6 +1,8 @@
 package com.github.welcomeworld.simplebili.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -45,6 +47,20 @@ public class IndexBangumiEditorRecyclerViewAdapter extends RecyclerView.Adapter<
         }else{
             holder.descView.setText(currentData.getDesc());
         }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(currentData.getSeasonId()!=0){
+                    Intent bangumiIntent = new Intent("com.github.welcomeworld.simplebili.action.BANGUMIDETAIL");
+                    bangumiIntent.setData(Uri.parse(currentData.getLink()));
+                    v.getContext().startActivity(bangumiIntent);
+                }else {
+                    Intent browserIntent = new Intent("com.github.welcomeworld.simplebili.action.BROWSER");
+                    browserIntent.setData(Uri.parse(currentData.getLink()));
+                    v.getContext().startActivity(browserIntent);
+                }
+            }
+        });
     }
 
     @Override

@@ -24,6 +24,7 @@ import com.github.welcomeworld.simplebili.net.retrofit.BaseUrl;
 import com.github.welcomeworld.simplebili.net.retrofit.IndexNetAPI;
 import com.github.welcomeworld.simplebili.widget.SwiperefreshContainer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -43,7 +44,9 @@ public class IndexDefaultPopularFragment extends Fragment {
     @BindView(R.id.index_default_film_swipeRefresh)
     SwiperefreshContainer swipeRefreshLayout;
 
-    IndexPopularBean data;
+    List<IndexPopularBean.DataBean> data;
+
+    private int loadCount=0;
 
     @Nullable
     @Override
@@ -54,9 +57,6 @@ public class IndexDefaultPopularFragment extends Fragment {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(),DividerItemDecoration.VERTICAL));
-        //recyclerView.addItemDecoration(new IndexGridItemDecoration(recyclerView.getContext(),5,2));
-        IndexPopularBean indexPopularBean=null;
-        recyclerView.setAdapter(new IndexPopularRecyclerViewAdapter(indexPopularBean));
         swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -67,7 +67,7 @@ public class IndexDefaultPopularFragment extends Fragment {
         swipeRefreshLayout.setOnLoadListener(new SwiperefreshContainer.OnLoadListener() {
             @Override
             public void onLoad() {
-
+                load();
             }
         });
         return view;
@@ -82,11 +82,12 @@ public class IndexDefaultPopularFragment extends Fragment {
             return;
         }
         swipeRefreshLayout.setRefreshing(true);
+        loadCount = 0;
         Map<String,String> parameters=new HashMap<>();
         parameters.put("fnval","16");
         parameters.put("fnver","0");
         parameters.put("ver","1549982418");
-        parameters.put("idx","0");
+        parameters.put("idx",loadCount+"");
         parameters.put("last_param","");
         parameters.put("login_event","0");
         parameters.put("qn","112");
@@ -109,21 +110,78 @@ public class IndexDefaultPopularFragment extends Fragment {
             @Override
             public void onResponse(Call<IndexPopularBean> call, Response<IndexPopularBean> response) {
                 swipeRefreshLayout.setRefreshing(false);
-                data = response.body();
-                if(data.getData()!=null){
-                    for(int i=0;i<data.getData().size();i++){
-                        if(!data.getData().get(i).getGotoX().equalsIgnoreCase("av")){
-                            data.getData().remove(i);
+                if(response.body()==null||response.body().getCode()!=0){
+                    return;
+                }
+                data = response.body().getData();
+                if(data!=null){
+                    loadCount = data.size();
+                    for(int i=0;i<data.size();i++){
+                        if(!data.get(i).getGotoX().equalsIgnoreCase("av")){
+                            data.remove(i);
                             i--;
                         }
                     }
                 }
-                recyclerView.setAdapter(new IndexPopularRecyclerViewAdapter(response.body()));
+                recyclerView.setAdapter(new IndexPopularRecyclerViewAdapter(data));
             }
 
             @Override
             public void onFailure(Call<IndexPopularBean> call, Throwable t) {
                 swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+    }
+
+    public void load(){
+        Map<String,String> parameters=new HashMap<>();
+        parameters.put("fnval","16");
+        parameters.put("fnver","0");
+        parameters.put("ver","1549982418");
+        parameters.put("idx",loadCount+"");
+        parameters.put("last_param","");
+        parameters.put("login_event","0");
+        parameters.put("qn","112");
+        parameters.put("ts",""+System.currentTimeMillis());
+        OkHttpClient.Builder okHttpClientBuilder=new OkHttpClient.Builder()
+                .addInterceptor(new FixedHeaderInterceptor())
+                .addInterceptor(new DynamicHeaderInterceptor(null))
+                .addInterceptor(new FixedParameterInterceptor())
+                .addInterceptor(new DynamicParameterInterceptor(parameters))
+                .addInterceptor(new SortAndSignInterceptor())
+                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+        Retrofit retrofit=new Retrofit.Builder()
+                .baseUrl(BaseUrl.APPURL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClientBuilder.build())
+                .build();
+        IndexNetAPI indexNetAPI=retrofit.create(IndexNetAPI.class);
+        Call<IndexPopularBean> popularBeanCall=indexNetAPI.getIndexPopular();
+        popularBeanCall.enqueue(new Callback<IndexPopularBean>() {
+            @Override
+            public void onResponse(Call<IndexPopularBean> call, Response<IndexPopularBean> response) {
+                swipeRefreshLayout.setLoading(false);
+                if(response.body()==null||response.body().getCode()!=0){
+                    return;
+                }
+                List<IndexPopularBean.DataBean> data = response.body().getData();
+                if(data!=null){
+                    loadCount = loadCount+data.size();
+                    for(int i=0;i<data.size();i++){
+                        if(!data.get(i).getGotoX().equalsIgnoreCase("av")){
+                            data.remove(i);
+                            i--;
+                        }
+                    }
+                }
+                int index = IndexDefaultPopularFragment.this.data.size();
+                IndexDefaultPopularFragment.this.data.addAll(data);
+                recyclerView.getAdapter().notifyItemRangeInserted(index,data.size());
+            }
+
+            @Override
+            public void onFailure(Call<IndexPopularBean> call, Throwable t) {
+                swipeRefreshLayout.setLoading(false);
             }
         });
     }
