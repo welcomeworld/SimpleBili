@@ -10,6 +10,8 @@ public class BangumiUrlBean {
     private String acceptFormat;
     @SerializedName("code")
     private int code;
+    @SerializedName("durl")
+    private List<DurlBean> durl;
     @SerializedName("seek_param")
     private String seekParam;
     @SerializedName("is_preview")
@@ -34,6 +36,10 @@ public class BangumiUrlBean {
     private String seekType;
     @SerializedName("has_paid")
     private boolean hasPaid;
+    @SerializedName("vip_type")
+    private int vipType;
+    @SerializedName("vip_status")
+    private int vipStatus;
     @SerializedName("from")
     private String from;
     @SerializedName("dash")
@@ -61,6 +67,14 @@ public class BangumiUrlBean {
 
     public void setCode(int code) {
         this.code = code;
+    }
+
+    public List<DurlBean> getDurl() {
+        return durl;
+    }
+
+    public void setDurl(List<DurlBean> durl) {
+        this.durl = durl;
     }
 
     public String getSeekParam() {
@@ -159,6 +173,22 @@ public class BangumiUrlBean {
         this.hasPaid = hasPaid;
     }
 
+    public int getVipType() {
+        return vipType;
+    }
+
+    public void setVipType(int vipType) {
+        this.vipType = vipType;
+    }
+
+    public int getVipStatus() {
+        return vipStatus;
+    }
+
+    public void setVipStatus(int vipStatus) {
+        this.vipStatus = vipStatus;
+    }
+
     public String getFrom() {
         return from;
     }
@@ -205,6 +235,79 @@ public class BangumiUrlBean {
 
     public void setAcceptDescription(List<String> acceptDescription) {
         this.acceptDescription = acceptDescription;
+    }
+
+    public static class DurlBean {
+        @SerializedName("size")
+        private int size;
+        @SerializedName("ahead")
+        private String ahead;
+        @SerializedName("length")
+        private int length;
+        @SerializedName("vhead")
+        private String vhead;
+        @SerializedName("url")
+        private String url;
+        @SerializedName("order")
+        private int order;
+        @SerializedName("backup_url")
+        private List<String> backupUrl;
+
+        public int getSize() {
+            return size;
+        }
+
+        public void setSize(int size) {
+            this.size = size;
+        }
+
+        public String getAhead() {
+            return ahead;
+        }
+
+        public void setAhead(String ahead) {
+            this.ahead = ahead;
+        }
+
+        public int getLength() {
+            return length;
+        }
+
+        public void setLength(int length) {
+            this.length = length;
+        }
+
+        public String getVhead() {
+            return vhead;
+        }
+
+        public void setVhead(String vhead) {
+            this.vhead = vhead;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public int getOrder() {
+            return order;
+        }
+
+        public void setOrder(int order) {
+            this.order = order;
+        }
+
+        public List<String> getBackupUrl() {
+            return backupUrl;
+        }
+
+        public void setBackupUrl(List<String> backupUrl) {
+            this.backupUrl = backupUrl;
+        }
     }
 
     public static class DashBean {

@@ -4,12 +4,21 @@ import java.util.List;
 
 public class VideoDataSource {
 
+    private long cid;
     private String title;
     private List<String> descriptions;
     private List<String> videoSources;
     private boolean isDash=false;
     private List<String> audioSources;
     private String danmakuSource;
+
+    public long getCid() {
+        return cid;
+    }
+
+    public void setCid(long cid) {
+        this.cid = cid;
+    }
 
     public String getTitle() {
         return title;

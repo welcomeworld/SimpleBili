@@ -41,6 +41,12 @@ public class IndexLiveRecyclerViewAdapter extends RecyclerView.Adapter<IndexLive
     public void onBindViewHolder(@NonNull IndexLiveRecyclerViewAdapter.MyInnerViewHolder holder, int position) {
         IndexLiveBean.DataBean.RoomListBean currentData=data.getRoom_list().get(position);
         holder.headerTitleView.setText(currentData.getModule_info().getTitle());
+        if(currentData.getList().size()<1){
+            holder.itemView.setVisibility(View.GONE);
+            return;
+        }else {
+            holder.itemView.setVisibility(View.VISIBLE);
+        }
         holder.categoryView1.setText(currentData.getList().get(0).getArea_v2_name());
         holder.titleView1.setText(currentData.getList().get(0).getTitle());
         Glide.with(context).load(currentData.getList().get(0).getCover()+"@320w_180h_1e_1c.webp").into(holder.coverView1);
@@ -55,6 +61,16 @@ public class IndexLiveRecyclerViewAdapter extends RecyclerView.Adapter<IndexLive
                 context.startActivity(playIntent);
             }
         });
+        if(currentData.getList().size()<2){
+            holder.item2.setVisibility(View.GONE);
+            holder.item3.setVisibility(View.GONE);
+            holder.item4.setVisibility(View.GONE);
+            return;
+        }else {
+            holder.item2.setVisibility(View.VISIBLE);
+            holder.item3.setVisibility(View.VISIBLE);
+            holder.item4.setVisibility(View.VISIBLE);
+        }
         holder.categoryView2.setText(currentData.getList().get(1).getArea_v2_name());
         holder.titleView2.setText(currentData.getList().get(1).getTitle());
         Glide.with(context).load(currentData.getList().get(1).getCover()+"@320w_180h_1e_1c.webp").into(holder.coverView2);
@@ -69,6 +85,14 @@ public class IndexLiveRecyclerViewAdapter extends RecyclerView.Adapter<IndexLive
                 context.startActivity(playIntent);
             }
         });
+        if(currentData.getList().size()<3){
+            holder.item3.setVisibility(View.GONE);
+            holder.item4.setVisibility(View.GONE);
+            return;
+        }else {
+            holder.item3.setVisibility(View.VISIBLE);
+            holder.item4.setVisibility(View.VISIBLE);
+        }
         holder.categoryView3.setText(currentData.getList().get(2).getArea_v2_name());
         holder.titleView3.setText(currentData.getList().get(2).getTitle());
         Glide.with(context).load(currentData.getList().get(2).getCover()+"@320w_180h_1e_1c.webp").into(holder.coverView3);
@@ -83,6 +107,12 @@ public class IndexLiveRecyclerViewAdapter extends RecyclerView.Adapter<IndexLive
                 context.startActivity(playIntent);
             }
         });
+        if(currentData.getList().size()<4){
+            holder.item4.setVisibility(View.GONE);
+            return;
+        }else {
+            holder.item4.setVisibility(View.VISIBLE);
+        }
         holder.categoryView4.setText(currentData.getList().get(3).getArea_v2_name());
         holder.titleView4.setText(currentData.getList().get(3).getTitle());
         Glide.with(context).load(currentData.getList().get(3).getCover()+"@320w_180h_1e_1c.webp").into(holder.coverView4);
@@ -135,6 +165,12 @@ public class IndexLiveRecyclerViewAdapter extends RecyclerView.Adapter<IndexLive
         ImageView coverView4;
         @BindView(R.id.live_4_title)
         TextView titleView4;
+        @BindView(R.id.live_item2)
+        View item2;
+        @BindView(R.id.live_item3)
+        View item3;
+        @BindView(R.id.live_item4)
+        View item4;
 
 
         public MyInnerViewHolder(View itemView) {

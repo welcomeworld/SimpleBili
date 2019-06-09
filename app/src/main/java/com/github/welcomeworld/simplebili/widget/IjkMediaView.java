@@ -1,5 +1,6 @@
 package com.github.welcomeworld.simplebili.widget;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -33,10 +34,19 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.github.welcomeworld.simplebili.BangumiDetailActivity;
 import com.github.welcomeworld.simplebili.R;
 import com.github.welcomeworld.simplebili.adapter.BiliDanmukuParser;
+import com.github.welcomeworld.simplebili.bean.BangumiUrlBean;
 import com.github.welcomeworld.simplebili.common.VideoDataSource;
 import com.github.welcomeworld.simplebili.listener.IjkMediaListener;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicHeaderInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.DynamicParameterInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.FixedHeaderInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.FixedParameterInterceptor;
+import com.github.welcomeworld.simplebili.net.okhttp.interceptor.SortAndSignInterceptor;
+import com.github.welcomeworld.simplebili.net.retrofit.BangumiDetailNetAPI;
+import com.github.welcomeworld.simplebili.net.retrofit.BaseUrl;
 import com.github.welcomeworld.simplebili.utils.StringUtils;
 
 import java.io.ByteArrayInputStream;
@@ -46,6 +56,7 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
@@ -74,6 +85,9 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.IjkMediaPlayer;
 
@@ -204,6 +218,7 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
     private int playMode=1;
     private boolean seekBarTracking=false;
     private boolean stopChangeSeek=false;
+    private boolean needRotation = false;
 
     private IjkMediaListener videoListener;
     private IjkMediaListener audioListener;
@@ -322,6 +337,90 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
                 parser.load(iLoader.getDataSource());
                 baseDanmakuParser=parser;
                 danmakuView.prepare(baseDanmakuParser,danmakuContext);
+            }
+        });
+    }
+
+
+
+    public void updateVideoSource(VideoDataSource videoDataSource,boolean load){
+        Map<String,String> parameters=new HashMap<>();
+        //parameters.put("aid",response.body().getResult().getEpisodes().get(i).getAid()+"");
+        parameters.put("expire","0");
+        parameters.put("fnval","0");
+        parameters.put("fnver","0");
+        parameters.put("otype","json");
+        parameters.put("force_host","0");
+        parameters.put("cid",""+videoDataSource.getCid());
+        parameters.put("npcybs","0");
+        parameters.put("ts",""+System.currentTimeMillis());
+        parameters.put("module","bangumi");
+        parameters.put("buvid","Yh4vH3pDckBzQQExADZRZlYqGytOd0Z0R3VCinfoc");
+        OkHttpClient.Builder okHttpClientBuilder=new OkHttpClient.Builder()
+                .addInterceptor(new FixedHeaderInterceptor())
+                .addInterceptor(new DynamicHeaderInterceptor(null))
+                .addInterceptor(new FixedParameterInterceptor())
+                .addInterceptor(new DynamicParameterInterceptor(parameters))
+                .addInterceptor(new SortAndSignInterceptor())
+                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+        Retrofit retrofit=new Retrofit.Builder()
+                .baseUrl(BaseUrl.APIURL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClientBuilder.build())
+                .build();
+        BangumiDetailNetAPI videoDetailNetAPI=retrofit.create(BangumiDetailNetAPI.class);
+        videoDetailNetAPI.getBangumiUrl().enqueue(new retrofit2.Callback<BangumiUrlBean>() {
+            @Override
+            public void onResponse(retrofit2.Call<BangumiUrlBean> call, retrofit2.Response<BangumiUrlBean> response) {
+                if(response.body() == null||response.body().getCode()!=0){
+                    return;
+                }
+                if(response.body().getDurl()!=null&&response.body().getDurl().size()>0){
+                    videoDataSource.setDash(false);
+                    ArrayList<String> videoSources=new ArrayList<>();
+                    ArrayList<String> descriptions=new ArrayList<>();
+                    for(int j=0;j<response.body().getDurl().size();j++){
+                        videoSources.add(response.body().getDurl().get(j).getUrl());
+                    }
+                    videoDataSource.setVideoSources(videoSources);
+                    videoDataSource.setDescriptions(descriptions);
+                }else if(response.body().getDash()!=null){
+                    videoDataSource.setDash(true);
+                    ArrayList<String> videoSources=new ArrayList<>();
+                    ArrayList<String> descriptions=new ArrayList<>();
+                    ArrayList<String> audioSources=new ArrayList<>();
+                    for(int j=0;j<response.body().getDash().getVideo().size();j++){
+                        videoSources.add(response.body().getDash().getVideo().get(j).getBaseUrl());
+                        String description;
+                        switch (response.body().getDash().getVideo().get(j).getId()){
+                            case 16:
+                                description="360P";
+                                break;
+                            case 32:
+                                description="480P";
+                                break;
+                            case 64:
+                                description="720P";
+                                break;
+                            default:
+                                description="1080P";
+                                break;
+                        }
+                        descriptions.add(description);
+                        audioSources.add(response.body().getDash().getAudio().get(0).getBaseUrl());
+                    }
+                    videoDataSource.setVideoSources(videoSources);
+                    videoDataSource.setDescriptions(descriptions);
+                    videoDataSource.setAudioSources(audioSources);
+                }
+                if(load){
+                    load();
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<BangumiUrlBean> call, Throwable t) {
+
             }
         });
     }
@@ -538,6 +637,10 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
 
     /** * 加载视频 */
     private void load() {
+        if(videoDataSources.get(currentSourceIndex).getVideoSources()==null||videoDataSources.get(currentSourceIndex).getVideoSources().isEmpty()){
+            updateVideoSource(videoDataSources.get(currentSourceIndex),true);
+            return;
+        }
         initDanmaku();
         createPlayer();
         try {
@@ -719,12 +822,12 @@ public class IjkMediaView extends FrameLayout implements SeekBar.OnSeekBarChange
                             public void onPrepared(IMediaPlayer iMediaPlayer) {
                                 videoPrepared=true;
                                 mMediaPlayer.pause();
-                                ViewGroup.LayoutParams layoutParams=surfaceView.getLayoutParams();
+                                ViewGroup.LayoutParams layoutParams;
+                                layoutParams=surfaceView.getLayoutParams();
                                 layoutParams.width=mMediaPlayer.getVideoWidth()*screen_height/mMediaPlayer.getVideoHeight();
                                 layoutParams.height=screen_height;
                                 surfaceView.setLayoutParams(layoutParams);
-                                if(audioPlayer==null||audioPrepared){
-                                    mediaPrepared();
+                                if(audioPlayer==null||audioPrepared){ mediaPrepared();
                                 }
                             }
 

@@ -33,6 +33,7 @@ import com.github.welcomeworld.simplebili.widget.IjkMediaView;
 import com.github.welcomeworld.simplebili.widget.SwiperefreshContainer;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -211,6 +212,8 @@ public class BangumiDetailActivity extends SimpleBaseActivity implements View.On
                         currentUri = Uri.parse(response.body().getResult().getEpisodes().get(0).getShareUrl());
                         bangumiDetailPagerAdapter.setMaxId(0);
                     }
+                    List<VideoDataSource> videoDataSources = new ArrayList<>();
+                    int currentIndex = 0;
                     for(int i=0;i<response.body().getResult().getEpisodes().size();i++){
                         if(currentUri.getPath().equals(Uri.parse(response.body().getResult().getEpisodes().get(i).getShareUrl()).getPath())){
                             currentAid = response.body().getResult().getEpisodes().get(i).getAid();
@@ -218,87 +221,16 @@ public class BangumiDetailActivity extends SimpleBaseActivity implements View.On
                             currentTitle = response.body().getResult().getEpisodes().get(i).getLongTitle();
                             currentCover = response.body().getResult().getCover();
                             bangumiDetailPagerAdapter.setRefreshing(true);
-                        }else {
-                            Log.e("ok","not match");
+                            currentIndex = i;
                         }
                         VideoDataSource videoDataSource=new VideoDataSource();
                         videoDataSource.setDanmakuSource("http://comment.bilibili.com/"+response.body().getResult().getEpisodes().get(i).getCid()+".xml");
                         videoDataSource.setTitle(response.body().getResult().getEpisodes().get(i).getLongTitle());
-                        int cid = response.body().getResult().getEpisodes().get(i).getCid();
-                        Map<String,String> parameters=new HashMap<>();
-                        parameters.put("aid",response.body().getResult().getEpisodes().get(i).getAid()+"");
-                        parameters.put("expire","0");
-                        parameters.put("fnval","0");
-                        parameters.put("fnver","0");
-                        parameters.put("otype","json");
-                        parameters.put("force_host","0");
-                        parameters.put("cid",response.body().getResult().getEpisodes().get(i).getCid()+"");
-                        parameters.put("npcybs","0");
-                        parameters.put("ts",""+System.currentTimeMillis());
-                        parameters.put("qn","32");
-                        parameters.put("module","bangumi");
-                        parameters.put("buvid","Yh4vH3pDckBzQQExADZRZlYqGytOd0Z0R3VCinfoc");
-                        OkHttpClient.Builder okHttpClientBuilder=new OkHttpClient.Builder()
-                                .addInterceptor(new FixedHeaderInterceptor())
-                                .addInterceptor(new DynamicHeaderInterceptor(null))
-                                .addInterceptor(new FixedParameterInterceptor())
-                                .addInterceptor(new DynamicParameterInterceptor(parameters))
-                                .addInterceptor(new SortAndSignInterceptor())
-                                .addNetworkInterceptor(new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
-                        Retrofit retrofit=new Retrofit.Builder()
-                                .baseUrl(BaseUrl.APIURL)
-                                .addConverterFactory(GsonConverterFactory.create())
-                                .client(okHttpClientBuilder.build())
-                                .build();
-                        BangumiDetailNetAPI videoDetailNetAPI=retrofit.create(BangumiDetailNetAPI.class);
-                        videoDetailNetAPI.getBangumiUrl().enqueue(new Callback<BangumiUrlBean>() {
-                            @Override
-                            public void onResponse(Call<BangumiUrlBean> call, Response<BangumiUrlBean> response) {
-                                if(response.body().getDash()!=null){
-                                    videoDataSource.setDash(true);
-                                    if(cid == currentCid){
-                                        currentUrl = response.body().getDash().getVideo().get(0).getBaseUrl();
-                                    }
-                                    ArrayList<String> videoSources=new ArrayList<>();
-                                    ArrayList<String> descriptions=new ArrayList<>();
-                                    ArrayList<String> audioSources=new ArrayList<>();
-                                    for(int j=0;j<response.body().getDash().getVideo().size();j++){
-                                        videoSources.add(response.body().getDash().getVideo().get(j).getBaseUrl());
-                                        String description;
-                                        switch (response.body().getDash().getVideo().get(j).getId()){
-                                            case 16:
-                                                description="360P";
-                                                break;
-                                            case 32:
-                                                description="480P";
-                                                break;
-                                            case 64:
-                                                description="720P";
-                                                break;
-                                            default:
-                                                description="1080P";
-                                                break;
-                                        }
-                                        descriptions.add(description);
-                                        audioSources.add(response.body().getDash().getAudio().get(0).getBaseUrl());
-                                    }
-                                    videoDataSource.setVideoSources(videoSources);
-                                    videoDataSource.setDescriptions(descriptions);
-                                    videoDataSource.setAudioSources(audioSources);
-                                }else {
-                                    Toast.makeText(BangumiDetailActivity.this,"dash is null",Toast.LENGTH_LONG).show();
-                                }
-                                ijkMediaView.addVideoDataSource(videoDataSource);
-                            }
-
-                            @Override
-                            public void onFailure(Call<BangumiUrlBean> call, Throwable t) {
-
-                            }
-                        });
+                        videoDataSource.setCid(response.body().getResult().getEpisodes().get(i).getCid());
+                        videoDataSources.add(videoDataSource);
                     }
+                    ijkMediaView.setVideoDataSources(videoDataSources,currentIndex);
                 }
-
                 @Override
                 public void onFailure(Call<BangumiDetailPageBean> call, Throwable t) {
                     Toast.makeText(getApplicationContext(),"电波无法到达",Toast.LENGTH_SHORT).show();
